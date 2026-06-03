@@ -1,0 +1,307 @@
+Subgraph has 305 nodes and 521 edges.
+Markdown tree representation:
+- __x64_sys_futex
+  - do_futex
+    - futex_requeue
+      - __futex_unqueue
+        - plist_del
+      - fault_in_user_writeable
+        - down_read <profiled>
+          - __down_read_common
+            - rwsem_mark_wake <profiled>
+              - refcount_warn_saturate
+                - __warn_printk
+              - wake_q_add <profiled>
+              - wake_q_add_safe
+        - fixup_user_fault
+          - find_extend_vma
+            - expand_downwards
+              - __anon_vma_prepare
+                - __put_anon_vma
+                  - down_write <profiled>
+                    - __down_write_common
+                      - rwsem_spin_on_owner <profiled>
+                  - up_write <profiled>
+                - anon_vma_interval_tree_insert
+                  - __rb_insert_augmented
+                    - __anon_vma_interval_tree_augment_rotate
+                    - augment_callbacks_rotate
+                    - drm_mm_interval_tree_augment_rotate
+                    - free_vmap_area_rb_augment_cb_rotate
+                    - interval_augment_rotate
+                    - interval_tree_augment_rotate
+                    - vma_interval_tree_augment_rotate
+                    - vma_res_itree_augment_rotate
+                - find_mergeable_anon_vma
+                  - __mpol_equal
+                    - bcmp
+                  - mas_prev
+                    - mas_prev_entry
+                      - mas_ascend
+                    - mas_walk
+                - kmem_cache_alloc <profiled>
+                  - should_failslab <profiled>
+              - anon_vma_interval_tree_remove
+                - __rb_erase_color
+                - rb_next
+              - mas_destroy
+                - kmem_cache_free_bulk
+                  - build_detached_freelist
+                    - cache_from_obj
+                      - print_tracking
+                        - stack_depot_print
+                          - stack_trace_print
+                    - free_large_kmalloc
+                      - mod_node_page_state <profiled>
+                - mas_alloc_nodes
+                  - kmem_cache_alloc_bulk
+                - mas_leaf_max_gap
+                - mas_replace
+                - mas_update_gap
+              - mas_preallocate
+              - mas_store_prealloc
+                - mas_wr_store_entry
+                  - mas_new_root
+                    - mt_destroy_walk
+                  - mas_root_expand
+                  - mas_spanning_rebalance
+                    - mab_calc_split
+                      - mab_no_null_split
+                    - mab_mas_cp
+                    - mas_wmb_replace
+                    - mast_ascend_free
+                    - mast_spanning_rebalance
+                    - mast_topiary
+                  - mas_store_b_node
+                  - mas_wr_modify
+                    - mas_next_sibling
+                    - mas_push_data
+                      - mas_split_final_node
+                      - mast_fill_bnode
+                      - mast_split_data
+                  - mas_wr_walk
+              - perf_event_mmap
+                - arch_vma_name
+                - build_id_parse
+                  - pagecache_get_page <profiled>
+                    - PageHeadHuge <profiled>
+                    - __filemap_get_folio <profiled>
+                      - __filemap_add_folio <profiled>
+                        - __mod_node_page_state <profiled>
+                        - xa_get_order
+                          - xas_load
+                        - xa_load
+                        - xas_find_conflict
+                        - xas_nomem
+                        - xas_split
+                          - workingset_update_node <profiled>
+                            - list_lru_add <profiled>
+                            - list_lru_del <profiled>
+                        - xas_split_alloc
+                      - filemap_alloc_folio <profiled>
+                        - __folio_alloc
+                        - cpuset_mem_spread_node
+                          - __bitmap_weight
+                          - __find_nth_bit
+                          - __get_random_u32_below
+                            - get_random_u32
+                              - crng_make_state
+                                - extract_entropy
+                                  - blake2s_final
+                                  - blake2s_update <profiled>
+                          - _find_first_bit
+                          - _find_next_bit
+                        - dump_stack
+                          - dump_stack_lvl
+                            - __printk_cpu_sync_put
+                            - __printk_cpu_sync_try_get
+                            - __printk_cpu_sync_wait
+                            - dump_stack_print_info
+                              - kexec_crash_loaded
+                              - print_stop_info
+                              - print_tainted
+                              - print_worker_info
+                                - copy_from_kernel_nofault
+                                  - copy_from_kernel_nofault_allowed
+                                - kthread_probe_data
+                                - strcmp
+                              - strcspn
+                            - show_stack
+                              - show_trace_log_lvl
+                                - __kernel_text_address
+                                  - kernel_text_address
+                                    - __is_insn_slot_addr
+                                    - ct_nmi_enter
+                                      - ct_kernel_enter_state
+                                    - ct_nmi_exit
+                                      - ct_kernel_exit_state
+                                    - in_gate_area_no_mm
+                                    - is_module_text_address
+                                      - mod_find
+                                - __show_regs
+                                  - show_iret_regs
+                                    - show_opcodes
+                                      - copy_from_user_nmi
+                                        - nmi_uaccess_okay
+                                - __unwind_start
+                                  - get_stack_info
+                                    - get_stack_info_noinstr
+                                      - in_entry_stack
+                                        - get_cpu_entry_area
+                                      - in_task_stack
+                                  - unwind_next_frame
+                                    - __module_address
+                                    - rethook_find_ret_addr
+                                - stack_type_name
+                                - unwind_get_return_address_ptr
+                        - folio_alloc <profiled>
+                      - folio_add_lru <profiled>
+                        - folio_batch_move_lru <profiled>
+                          - folio_activate_fn <profiled>
+                            - __mod_zone_page_state <profiled>
+                          - lru_add_fn <profiled>
+                            - folio_mapping <profiled>
+                          - lru_deactivate_file_fn
+                            - folio_mapped <profiled>
+                          - lru_deactivate_fn
+                          - lru_lazyfree_fn
+                          - lru_move_tail_fn
+                          - release_pages <profiled>
+                            - __page_cache_release <profiled>
+                              - mod_zone_page_state <profiled>
+                            - free_unref_page_list <profiled>
+                              - free_pcppages_bulk
+                                - __free_one_page
+                      - folio_mark_accessed <profiled>
+                        - folio_activate <profiled>
+                        - workingset_activation <profiled>
+                      - folio_wait_bit_common
+                        - __delayacct_thrashing_end
+                        - __delayacct_thrashing_start
+                        - finish_wait <profiled>
+                        - io_schedule <profiled>
+                      - folio_wait_stable
+                        - folio_wait_bit <profiled>
+                      - folio_wake_bit
+                      - inode_to_bdi <profiled>
+                        - I_BDEV <profiled>
+                      - workingset_refault
+                        - lru_note_cost_folio
+                          - lru_note_cost
+                            - node_page_state
+                - file_path
+                  - d_path
+                    - anon_inodefs_dname
+                      - dynamic_dname
+                    - dmabuffs_dname
+                      - strlcpy
+                    - ns_dname
+                    - pipefs_dname
+                    - prepend_path
+                    - simple_dname
+                    - sockfs_dname
+                - gate_vma_name
+                - kmalloc_trace <profiled>
+                  - __kmem_cache_alloc_node <profiled>
+                - perf_iterate_sb
+                  - perf_event_bpf_output
+                    - __perf_event_header__init_id
+                      - __get_current_cr3_fast
+                      - __static_call_return0
+                      - __task_pid_nr_ns
+                      - cr4_read_shadow
+                      - get_max_files
+                      - get_random_u64
+                      - hv_get_tsc_khz
+                      - iommu_dma_opt_mapping_size
+                        - iova_rcache_range
+                      - kvm_get_tsc_khz
+                      - native_calibrate_cpu
+                        - native_calibrate_cpu_early
+                          - cpu_khz_from_msr
+                            - x86_match_cpu
+                      - native_calibrate_tsc
+                      - nfs_inc_attr_generation_counter
+                      - nr_free_buffer_pages
+                        - __next_zones_zonelist
+                      - paddr_vmcoreinfo_note
+                      - pc_nvram_get_size
+                      - pc_nvram_initialize
+                        - rtc_cmos_read
+                        - rtc_cmos_write
+                      - pc_nvram_set_checksum
+                      - random_get_entropy_fallback
+                        - acpi_pm_read
+                        - acpi_pm_read_slow
+                        - jiffies_read
+                        - read_hpet
+                        - read_tsc
+                      - si_mem_available
+                        - first_online_pgdat
+                        - next_zone
+                      - spec_ctrl_current
+                      - vm_memory_committed
+                        - __percpu_counter_sum
+                      - vmware_get_tsc_khz
+                      - x86_default_get_root_pointer
+                      - xstate_get_guest_group_perm
+                      - zstd_dctx_workspace_bound
+                        - ZSTD_estimateDCtxSize
+                    - perf_event__output_id_sample
+                      - perf_output_copy
+                    - perf_output_begin
+                      - perf_event_header__init_id
+                      - perf_output_put_handle
+                    - perf_output_end
+                  - perf_event_cgroup_output
+                  - perf_event_comm_output
+                  - perf_event_ksymbol_output
+                  - perf_event_mmap_output
+                  - perf_event_namespaces_output
+                  - perf_event_switch_output
+                  - perf_event_task_output
+                  - perf_event_text_poke_output
+                - special_mapping_name
+                - strlen
+              - security_vm_enough_memory_mm
+                - __vm_enough_memory
+                  - hugetlb_total_pages
+                  - percpu_counter_add_batch
+                - cap_vm_enough_memory
+                - selinux_vm_enough_memory
+            - mt_find
+              - mas_next_entry
+            - populate_vma_page_range
+              - lru_add_drain <profiled>
+                - lru_add_drain_cpu <profiled>
+        - up_read <profiled>
+      - futex_hash
+      - futex_top_waiter
+      - futex_wake_mark
+      - get_futex_key
+        - PageHuge
+        - hugetlb_basepage_index
+          - __page_file_index
+      - get_pi_state
+      - plist_add
+      - put_pi_state
+      - refill_pi_state_cache
+      - wait_for_owner_exiting
+      - wake_up_state
+    - futex_wait
+      - __futex_queue
+      - futex_unqueue
+      - futex_wait_setup
+    - futex_wait_requeue_pi
+      - fixup_pi_owner
+        - fixup_pi_state_owner
+          - pi_state_update_owner
+      - futex_unqueue_pi
+      - futex_wait_queue
+    - futex_wake
+    - futex_wake_op
+      - __get_task_comm
+        - strscpy_pad
+          - strscpy
+  - get_timespec64
+    - _copy_from_user

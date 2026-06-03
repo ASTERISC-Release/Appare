@@ -1,0 +1,5 @@
+107:geteuid
+    cp-0.txt: total funcs: 5; not profiled: 4/5 (80.0%) [__audit_syscall_entry, __audit_syscall_exit, __do_sys_geteuid, syscall_exit_work]
+    ls-0.txt: total funcs: N/A; 
+    tar-0.txt: total funcs: N/A; 
+    unqlite-0.txt: total funcs: N/A; 

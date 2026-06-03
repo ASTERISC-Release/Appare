@@ -1,0 +1,5 @@
+__rcu_read_lock
+__rcu_read_unlock
+__x64_sys_getsid
+find_task_by_vpid
+pid_vnr

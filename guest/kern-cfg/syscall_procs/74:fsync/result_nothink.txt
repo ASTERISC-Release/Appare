@@ -1,0 +1,1384 @@
+Subgraph has 865 nodes and 1003 edges.
+Markdown tree representation:
+- mb_set_bits <profiled>
+- __cond_resched <profiled>
+- ext4_mb_use_preallocated <profiled>
+  - ext4_get_group_no_and_offset <profiled>
+  - ext4_mb_use_inode_pa <profiled>
+- put_ucounts <profiled>
+- bio_alloc_clone <profiled>
+  - bio_alloc_bioset <profiled>
+    - bio_associate_blkg <profiled>
+      - bio_associate_blkg_from_css <profiled>
+        - blkg_release
+      - kthread_blkcg <profiled>
+    - kmem_cache_alloc <profiled>
+      - should_failslab <profiled>
+    - mempool_alloc <profiled>
+      - finish_wait <profiled>
+      - io_schedule_timeout <profiled>
+      - prepare_to_wait <profiled>
+    - mempool_free <profiled>
+    - punt_bios_to_rescuer
+  - bio_clone_blkg_association <profiled>
+- rwsem_spin_on_owner <profiled>
+- ext4_mb_mark_diskspace_used <profiled>
+  - __brelse <profiled>
+  - __ext4_handle_dirty_metadata <profiled>
+    - jbd2_journal_dirty_metadata <profiled>
+      - __jbd2_journal_file_buffer <profiled>
+        - __jbd2_journal_temp_unlink_buffer <profiled>
+          - mark_buffer_dirty <profiled>
+            - __folio_mark_dirty <profiled>
+              - __mod_node_page_state <profiled>
+              - __mod_zone_page_state <profiled>
+              - inode_to_bdi <profiled>
+                - I_BDEV <profiled>
+              - __xa_set_mark
+                - xas_load
+              - percpu_counter_add_batch
+            - page_mapping <profiled>
+              - folio_mapping <profiled>
+        - jbd2_journal_grab_journal_head <profiled>
+    - sync_dirty_buffer <profiled>
+      - __sync_dirty_buffer <profiled>
+        - out_of_line_wait_on_bit <profiled>
+          - __wait_on_bit <profiled>
+            - bit_wait_io <profiled>
+              - io_schedule <profiled>
+            - bit_wait
+        - wake_up_bit <profiled>
+    - inode_needs_sync
+    - mark_buffer_dirty_inode
+  - __ext4_journal_get_write_access <profiled>
+    - jbd2_journal_get_write_access <profiled>
+      - do_get_write_access <profiled>
+        - jbd2_journal_cancel_revoke <profiled>
+      - jbd2_journal_add_journal_head <profiled>
+        - kmem_cache_alloc <profiled>
+          - should_failslab <profiled>
+      - jbd2_journal_put_journal_head <profiled>
+        - free_pages <profiled>
+    - jbd2_journal_set_triggers
+  - ext4_free_group_clusters <profiled>
+  - ext4_free_group_clusters_set <profiled>
+  - ext4_get_group_desc <profiled>
+  - ext4_group_desc_csum_set <profiled>
+    - ext4_group_desc_csum <profiled>
+      - crypto_shash_update <profiled>
+        - chksum_update <profiled>
+        - crypto_cmac_digest_update
+          - __crypto_xor
+          - crypto_cipher_encrypt_one
+        - crypto_sha256_update
+          - sha256_update
+        - crypto_sha512_update
+        - ghash_update
+          - gf128mul_4k_lle
+        - hmac_update
+        - md5_update
+          - md5_transform
+        - null_update
+      - crc16
+- ext4_mb_pa_callback <profiled>
+- __common_interrupt <profiled>
+- alloc_page_buffers <profiled>
+  - alloc_buffer_head <profiled>
+    - kmem_cache_alloc <profiled>
+      - should_failslab <profiled>
+    - recalc_bh_state <profiled>
+- pick_next_task_fair <profiled>
+  - pick_next_entity <profiled>
+  - put_prev_entity <profiled>
+    - update_load_avg
+  - put_prev_task_fair <profiled>
+  - set_next_entity <profiled>
+  - update_misfit_status
+- dput <profiled>
+  - __dentry_kill
+    - __d_drop
+    - autofs_dentry_release
+    - debugfs_release_dentry
+    - dentry_unlink_inode
+    - nfs_d_release
+    - ns_prune_dentry
+    - v9fs_dentry_release
+  - retain_dentry
+    - nfs_dentry_delete
+    - pid_delete_dentry
+    - proc_misc_d_delete
+    - proc_sys_delete
+    - v9fs_cached_dentry_delete
+- deactivate_task <profiled>
+  - dequeue_task_fair <profiled>
+    - dequeue_entity
+- detach_entity_load_avg <profiled>
+- wb_update_bandwidth <profiled>
+- key_put <profiled>
+  - queue_work_on <profiled>
+- virtqueue_poll <profiled>
+- blkcg_iolatency_throttle <profiled>
+  - __wake_up <profiled>
+    - autoremove_wake_function <profiled>
+      - default_wake_function <profiled>
+    - blk_mq_dispatch_wake
+    - child_wait_callback
+    - cwt_wakefn
+    - ep_autoremove_wake_function
+    - ep_poll_callback
+    - io_wake_function
+    - io_wqe_hash_wake
+      - io_wqe_activate_free_worker
+    - iocg_wake_fn
+    - kyber_domain_wake
+      - sbitmap_del_wait_queue
+    - pollwake
+    - receiver_wake_function
+    - rq_qos_wake_function
+      - iolat_acquire_inflight
+    - wake_page_function
+      - wake_up_state
+    - woken_wake_function
+- ext4_es_insert_extent <profiled>
+  - __es_insert_extent <profiled>
+    - ext4_es_free_extent <profiled>
+    - kmem_cache_alloc <profiled>
+      - should_failslab <profiled>
+  - __es_remove_extent <profiled>
+    - __es_shrink
+      - es_reclaim_extents
+    - count_rsvd
+- alloc_pages <profiled>
+  - __alloc_pages <profiled>
+    - get_page_from_freelist <profiled>
+      - __next_zones_zonelist
+      - rmqueue
+        - rmqueue_pcplist
+        - wakeup_kswapd
+      - zone_watermark_ok
+    - __alloc_pages_slowpath
+      - compaction_zonelist_suitable
+      - cpuset_nodemask_valid_mems_allowed
+      - out_of_memory
+      - try_to_free_pages
+      - wake_all_kswapds
+      - warn_alloc
+      - zone_reclaimable_pages
+  - alloc_page_interleave
+- submit_bio <profiled>
+  - submit_bio_noacct <profiled>
+    - blk_cgroup_bio_start <profiled>
+    - submit_bio_noacct_nocheck <profiled>
+      - blk_mq_submit_bio <profiled>
+        - __bio_split_to_limits <profiled>
+          - bio_chain <profiled>
+          - bio_split <profiled>
+            - bio_alloc_bioset <profiled>
+              - bio_associate_blkg <profiled>
+                - bio_associate_blkg_from_css <profiled>
+                  - blkg_release
+                - kthread_blkcg <profiled>
+              - kmem_cache_alloc <profiled>
+                - should_failslab <profiled>
+              - mempool_alloc <profiled>
+                - finish_wait <profiled>
+                - io_schedule_timeout <profiled>
+                - prepare_to_wait <profiled>
+              - mempool_free <profiled>
+              - punt_bios_to_rescuer
+            - bio_clone_blkg_association <profiled>
+        - __blk_mq_alloc_requests <profiled>
+          - blk_mq_get_tag <profiled>
+            - __blk_mq_get_tag <profiled>
+              - __sbitmap_queue_get
+                - sbitmap_get
+              - sbitmap_queue_get_shallow
+                - sbitmap_get_shallow
+            - io_schedule <profiled>
+            - sbitmap_finish_wait
+            - sbitmap_prepare_to_wait
+          - blk_mq_rq_ctx_init
+            - kyber_prepare_request
+          - dd_limit_depth
+          - kyber_limit_depth
+          - msleep
+        - __blk_mq_try_issue_directly <profiled>
+          - blk_mq_put_tag <profiled>
+            - sbitmap_queue_clear
+              - sbitmap_queue_wake_up
+          - loop_queue_rq <profiled>
+            - bio_blkcg_css <profiled>
+            - blk_mq_start_request <profiled>
+              - __rq_qos_issue
+            - queue_work_on <profiled>
+          - scsi_mq_get_budget <profiled>
+          - scsi_mq_set_rq_budget_token <profiled>
+          - scsi_queue_rq <profiled>
+            - blk_mq_complete_request <profiled>
+              - blk_mq_complete_request_remote <profiled>
+                - cpus_share_cache <profiled>
+                - smp_call_function_single_async <profiled>
+              - lo_complete_rq <profiled>
+                - errno_to_blk_status
+                - zero_fill_bio
+              - scsi_complete <profiled>
+                - scsi_decide_disposition <profiled>
+                  - scsi_handle_queue_ramp_up <profiled>
+                    - scsi_change_queue_depth
+                      - blk_set_queue_depth
+                      - sbitmap_resize
+                  - scsi_check_sense
+                    - scsi_normalize_sense
+                  - scsi_track_queue_full
+                  - sdev_prefix_printk
+                - scsi_finish_command <profiled>
+                  - scsi_device_unbusy <profiled>
+                    - scsi_dec_host_busy <profiled>
+                      - scsi_eh_wakeup
+                        - scsi_host_busy
+                  - scsi_io_completion <profiled>
+                    - scsi_end_request <profiled>
+                      - add_disk_randomness <profiled>
+                    - blk_mq_requeue_request
+                      - __rq_qos_requeue
+                    - scmd_printk
+                      - kmalloc_trace
+                      - scnprintf
+                      - vscnprintf
+                    - scsi_noretry_cmd
+                    - scsi_print_command
+                      - hex_dump_to_buffer
+                      - scsi_format_opcode_name
+                - scsi_queue_insert
+            - scsi_alloc_sgtables <profiled>
+              - __blk_rq_map_sg <profiled>
+              - ata_scsi_dma_need_drain
+                - atapi_cmd_type
+              - sg_alloc_table_chained
+                - __sg_alloc_table
+                - __sg_free_table
+                - sg_init_table
+            - virtscsi_queuecommand <profiled>
+              - blk_mq_unique_tag <profiled>
+              - virtscsi_add_cmd <profiled>
+                - virtqueue_add_sgs <profiled>
+                  - sg_next
+                  - virtqueue_add
+                - virtqueue_kick_prepare <profiled>
+                - virtqueue_notify <profiled>
+                  - virtqueue_enable_cb <profiled>
+                  - virtqueue_is_broken <profiled>
+                  - vp_notify <profiled>
+                    - iowrite16
+              - virtscsi_complete_cmd <profiled>
+                - scsi_done <profiled>
+          - __blk_mq_get_driver_tag
+          - blk_mq_sched_insert_request
+            - __blk_mq_insert_request
+            - dd_insert_requests
+            - kyber_insert_requests
+          - scsi_mq_put_budget
+          - virtio_queue_rq
+            - blk_mq_stop_hw_queue
+            - virtblk_prep_rq
+        - __get_task_ioprio <profiled>
+        - __rq_qos_throttle <profiled>
+        - __rq_qos_track <profiled>
+        - blk_attempt_plug_merge <profiled>
+        - blk_insert_flush <profiled>
+          - blk_flush_complete_seq <profiled>
+            - blk_mq_add_to_requeue_list <profiled>
+            - blk_rq_init <profiled>
+          - blk_mq_request_bypass_insert
+        - blk_mq_sched_bio_merge <profiled>
+          - blk_bio_list_merge
+            - blk_attempt_bio_merge
+          - dd_bio_merge
+            - blk_mq_sched_try_merge
+          - kyber_bio_merge
+        - blkcg_set_ioprio <profiled>
+      - dm_submit_bio
+        - __map_bio
+        - bio_split_to_limits
+        - dm_table_find_target
+        - init_clone_info
+      - md_submit_bio
+        - md_handle_request
+  - __blkcg_punt_bio_submit
+- workingset_update_node <profiled>
+  - __mod_node_page_state <profiled>
+  - list_lru_del
+- filemap_fdatawrite_wbc <profiled>
+  - inode_to_bdi <profiled>
+    - I_BDEV <profiled>
+- ext4_get_inode_loc <profiled>
+  - __ext4_get_inode_loc <profiled>
+    - __brelse <profiled>
+    - __getblk_gfp <profiled>
+    - blk_finish_plug <profiled>
+    - blk_start_plug <profiled>
+    - ext4_fill_raw_inode <profiled>
+      - ext4_inode_csum
+    - ext4_get_group_desc <profiled>
+    - ext4_inode_table <profiled>
+    - ext4_read_bh_nowait <profiled>
+    - ext4_inode_bitmap
+    - ext4_itable_unused_count
+    - ext4_sb_breadahead_unmovable
+- select_task_rq_fair <profiled>
+  - wake_affine
+- ext4_mb_initialize_context <profiled>
+  - ext4_get_group_no_and_offset <profiled>
+- housekeeping_cpumask <profiled>
+- mempolicy_slab_node <profiled>
+- ext4_ext_insert_extent <profiled>
+  - __brelse <profiled>
+  - __ext4_handle_dirty_metadata <profiled>
+    - jbd2_journal_dirty_metadata <profiled>
+      - __jbd2_journal_file_buffer <profiled>
+        - __jbd2_journal_temp_unlink_buffer <profiled>
+          - mark_buffer_dirty <profiled>
+            - __folio_mark_dirty <profiled>
+              - __mod_node_page_state <profiled>
+              - __mod_zone_page_state <profiled>
+              - inode_to_bdi <profiled>
+                - I_BDEV <profiled>
+              - __xa_set_mark
+                - xas_load
+              - percpu_counter_add_batch
+            - page_mapping <profiled>
+              - folio_mapping <profiled>
+        - jbd2_journal_grab_journal_head <profiled>
+    - sync_dirty_buffer <profiled>
+      - __sync_dirty_buffer <profiled>
+        - out_of_line_wait_on_bit <profiled>
+          - __wait_on_bit <profiled>
+            - bit_wait_io <profiled>
+              - io_schedule <profiled>
+            - bit_wait
+        - wake_up_bit <profiled>
+    - inode_needs_sync
+    - mark_buffer_dirty_inode
+  - __ext4_journal_get_create_access <profiled>
+    - jbd2_journal_get_create_access <profiled>
+      - jbd2_journal_add_journal_head <profiled>
+        - kmem_cache_alloc <profiled>
+          - should_failslab <profiled>
+      - jbd2_journal_cancel_revoke <profiled>
+      - jbd2_journal_put_journal_head <profiled>
+        - free_pages <profiled>
+  - __ext4_journal_get_write_access <profiled>
+    - jbd2_journal_get_write_access <profiled>
+      - do_get_write_access <profiled>
+    - jbd2_journal_set_triggers
+  - __getblk_gfp <profiled>
+  - __kmalloc <profiled>
+    - __kmem_cache_alloc_node <profiled>
+    - __kmalloc_large_node
+  - ext4_ext_correct_indexes <profiled>
+  - ext4_find_extent <profiled>
+    - ext4_es_cache_extent <profiled>
+      - __es_insert_extent <profiled>
+        - ext4_es_free_extent <profiled>
+  - ext4_ext_try_to_merge
+    - ext4_ext_try_to_merge_right
+- sd_uninit_command <profiled>
+  - mempool_free <profiled>
+- free_uid <profiled>
+- kmalloc_slab <profiled>
+- ext4_inode_csum_set <profiled>
+- ext4_mb_regular_allocator <profiled>
+  - ext4_get_group_desc <profiled>
+  - ext4_mb_complex_scan_group <profiled>
+    - ext4_mb_use_best_found <profiled>
+      - ext4_mb_new_group_pa <profiled>
+        - ext4_get_group_no_and_offset <profiled>
+      - ext4_mb_new_inode_pa <profiled>
+        - ext4_mb_use_inode_pa <profiled>
+      - mb_mark_used <profiled>
+        - mb_set_largest_free_order <profiled>
+        - mb_update_avg_fragment_size <profiled>
+    - mb_find_extent <profiled>
+  - ext4_mb_find_by_goal <profiled>
+    - ext4_mb_load_buddy_gfp <profiled>
+      - ext4_mb_init_cache <profiled>
+        - __brelse <profiled>
+        - __kmalloc <profiled>
+          - __kmem_cache_alloc_node <profiled>
+            - should_failslab <profiled>
+          - __kmalloc_large_node
+        - ext4_mb_generate_buddy <profiled>
+          - _find_next_bit
+          - _find_next_zero_bit
+          - ext4_mark_group_bitmap_corrupted
+        - ext4_mb_generate_from_pa <profiled>
+      - ext4_mb_init_group <profiled>
+        - pagecache_get_page <profiled>
+          - PageHeadHuge <profiled>
+          - __filemap_get_folio <profiled>
+            - __filemap_add_folio <profiled>
+              - __mod_node_page_state <profiled>
+              - xa_get_order
+              - xas_find_conflict
+              - xas_nomem
+              - xas_split
+            - filemap_alloc_folio <profiled>
+              - folio_alloc <profiled>
+              - __folio_alloc
+            - folio_add_lru <profiled>
+              - folio_batch_move_lru <profiled>
+                - folio_activate_fn <profiled>
+                  - __mod_zone_page_state <profiled>
+                - lru_add_fn <profiled>
+                  - folio_mapping <profiled>
+                - release_pages <profiled>
+                  - __page_cache_release <profiled>
+                    - mod_zone_page_state <profiled>
+                  - free_unref_page_list <profiled>
+                - lru_deactivate_file_fn
+                - lru_deactivate_fn
+                - lru_lazyfree_fn
+                - lru_move_tail_fn
+            - folio_mark_accessed <profiled>
+              - folio_activate <profiled>
+              - workingset_activation <profiled>
+            - inode_to_bdi <profiled>
+              - I_BDEV <profiled>
+    - ext4_mb_unload_buddy
+  - ext4_mb_good_group <profiled>
+  - ext4_mb_prefetch <profiled>
+    - blk_finish_plug <profiled>
+    - blk_start_plug <profiled>
+    - ext4_free_group_clusters <profiled>
+  - ext4_mb_prefetch_fini <profiled>
+  - ext4_mb_simple_scan_group <profiled>
+  - ext4_mb_scan_aligned
+  - ext4_mb_try_best_found
+- mempool_alloc_slab <profiled>
+  - kmem_cache_alloc <profiled>
+    - should_failslab <profiled>
+- schedule_timeout <profiled>
+- blk_rq_merge_ok <profiled>
+- schedule <profiled>
+  - __blk_flush_plug <profiled>
+    - blk_mq_flush_plug_list <profiled>
+      - blk_mq_sched_insert_requests <profiled>
+        - blk_mq_insert_requests <profiled>
+        - blk_mq_run_hw_queue <profiled>
+          - __blk_mq_delay_run_hw_queue <profiled>
+            - __msecs_to_jiffies <profiled>
+            - __blk_mq_run_hw_queue
+              - blk_mq_sched_dispatch_requests
+        - blk_mq_try_issue_list_directly
+          - __blk_mq_end_request
+          - scsi_commit_rqs
+          - virtio_commit_rqs
+      - blk_mq_plug_issue_direct
+      - virtio_queue_rqs
+    - blk_mq_free_plug_rqs
+  - __schedule
+    - __delayacct_blkio_start
+    - dequeue_task_dl
+    - put_prev_task_dl
+    - set_next_task_dl
+    - set_next_task_rt
+- mark_page_accessed <profiled>
+  - folio_mark_accessed <profiled>
+    - folio_activate <profiled>
+      - folio_batch_move_lru <profiled>
+        - folio_activate_fn <profiled>
+          - __mod_node_page_state <profiled>
+          - __mod_zone_page_state <profiled>
+        - lru_add_fn <profiled>
+          - folio_mapping <profiled>
+        - release_pages <profiled>
+          - PageHeadHuge <profiled>
+          - __page_cache_release <profiled>
+            - mod_zone_page_state <profiled>
+          - free_unref_page_list <profiled>
+        - lru_deactivate_file_fn
+        - lru_deactivate_fn
+        - lru_lazyfree_fn
+        - lru_move_tail_fn
+    - workingset_activation <profiled>
+- generic_exec_single <profiled>
+  - __blk_mq_complete_request_remote <profiled>
+- __bio_add_page <profiled>
+- calc_wheel_index <profiled>
+- fixup_red_left <profiled>
+- __d_free <profiled>
+- vfs_fsync_range <profiled>
+  - blkdev_fsync <profiled>
+    - blkdev_issue_flush <profiled>
+      - bio_init <profiled>
+        - bio_associate_blkg <profiled>
+          - bio_associate_blkg_from_css <profiled>
+            - blkg_release
+          - kthread_blkcg <profiled>
+      - submit_bio_wait <profiled>
+        - blk_status_to_errno <profiled>
+        - wait_for_completion_io <profiled>
+          - wait_for_common_io
+    - file_write_and_wait_range <profiled>
+      - __filemap_fdatawait_range <profiled>
+        - __pagevec_release <profiled>
+          - lru_add_drain <profiled>
+            - lru_add_drain_cpu <profiled>
+              - folio_batch_move_lru <profiled>
+                - folio_activate_fn <profiled>
+                  - __mod_node_page_state <profiled>
+                  - __mod_zone_page_state <profiled>
+                - lru_add_fn <profiled>
+                  - folio_mapping <profiled>
+                - release_pages <profiled>
+                  - PageHeadHuge <profiled>
+                  - __page_cache_release <profiled>
+                    - mod_zone_page_state <profiled>
+                  - free_unref_page_list <profiled>
+                - lru_deactivate_file_fn
+                - lru_deactivate_fn
+                - lru_lazyfree_fn
+                - lru_move_tail_fn
+        - pagevec_lookup_range_tag <profiled>
+          - find_get_pages_range_tag <profiled>
+            - xas_find
+            - xas_find_marked
+        - wait_on_page_writeback <profiled>
+          - folio_wait_writeback <profiled>
+            - folio_wait_bit <profiled>
+              - folio_wait_bit_common
+                - __delayacct_thrashing_end
+                - __delayacct_thrashing_start
+      - inode_to_bdi <profiled>
+        - I_BDEV <profiled>
+  - ext4_sync_file <profiled>
+    - d_find_any_alias <profiled>
+    - dget_parent <profiled>
+    - ext4_fc_commit <profiled>
+      - blk_finish_plug <profiled>
+      - blk_start_plug <profiled>
+      - crypto_shash_update <profiled>
+        - chksum_update <profiled>
+        - crypto_cmac_digest_update
+          - __crypto_xor
+          - crypto_cipher_encrypt_one
+        - crypto_sha256_update
+          - sha256_update
+        - crypto_sha512_update
+        - ghash_update
+          - gf128mul_4k_lle
+        - hmac_update
+        - md5_update
+          - md5_transform
+        - null_update
+      - finish_wait <profiled>
+      - jbd2_complete_transaction <profiled>
+        - jbd2_log_start_commit <profiled>
+        - jbd2_log_wait_commit <profiled>
+          - init_wait_entry <profiled>
+          - prepare_to_wait_event <profiled>
+      - prepare_to_wait <profiled>
+      - jbd2_fc_begin_commit
+      - jbd2_fc_end_commit
+        - ext4_fc_cleanup
+      - jbd2_fc_end_commit_fallback
+      - jbd2_fc_wait_bufs
+        - __wait_on_buffer
+    - ext4_inode_journal_mode <profiled>
+    - file_check_and_advance_wb_err <profiled>
+    - jbd2_trans_will_send_data_barrier <profiled>
+    - sync_inode_metadata <profiled>
+      - writeback_single_inode <profiled>
+        - __wait_on_bit <profiled>
+          - bit_wait_io <profiled>
+            - io_schedule <profiled>
+          - bit_wait
+        - __writeback_single_inode <profiled>
+          - ext4_write_inode <profiled>
+            - __brelse <profiled>
+            - __ext4_get_inode_loc <profiled>
+              - __getblk_gfp <profiled>
+              - ext4_fill_raw_inode <profiled>
+                - ext4_inode_csum
+              - ext4_get_group_desc <profiled>
+              - ext4_inode_table <profiled>
+              - ext4_read_bh_nowait <profiled>
+              - ext4_inode_bitmap
+              - ext4_itable_unused_count
+              - ext4_sb_breadahead_unmovable
+            - sync_dirty_buffer <profiled>
+              - __sync_dirty_buffer <profiled>
+                - out_of_line_wait_on_bit <profiled>
+                - wake_up_bit <profiled>
+            - __ext4_error_inode
+          - fat_write_inode <profiled>
+            - __fat_write_inode <profiled>
+              - __bread_gfp <profiled>
+              - fat_time_unix2fat <profiled>
+                - time64_to_tm <profiled>
+              - mark_buffer_dirty <profiled>
+                - __folio_mark_dirty <profiled>
+                  - __xa_set_mark
+                    - xas_load
+                  - percpu_counter_add_batch
+                - page_mapping <profiled>
+              - _fat_msg
+            - fat_clusters_flush
+          - filemap_fdatawait_range <profiled>
+          - is_bad_inode <profiled>
+          - nfs4_write_inode
+          - nfs_write_inode
+            - __nfs_commit_inode
+        - inode_add_lru <profiled>
+          - list_lru_add
+    - sync_mapping_buffers <profiled>
+      - write_dirty_buffer <profiled>
+    - ext4_force_commit
+      - jbd2_journal_force_commit
+  - fat_file_fsync <profiled>
+    - __generic_file_fsync <profiled>
+      - down_write <profiled>
+        - __down_write_common
+      - up_write <profiled>
+        - rwsem_mark_wake
+          - wake_q_add
+          - wake_q_add_safe
+  - noop_fsync <profiled>
+- policy_nodemask <profiled>
+- mix_interrupt_randomness <profiled>
+  - blake2s_update <profiled>
+  - _credit_init_bits
+    - crng_reseed
+    - execute_in_process_context
+    - extract_entropy
+- blk_try_merge <profiled>
+- scsi_init_command <profiled>
+- is_vmalloc_addr <profiled>
+- free_page_and_swap_cache <profiled>
+  - free_swap_cache <profiled>
+    - folio_mapped <profiled>
+      - PageHeadHuge <profiled>
+    - folio_free_swap
+      - delete_from_swap_cache
+      - pm_suspended_storage
+- sd_init_command <profiled>
+  - mempool_alloc <profiled>
+    - finish_wait <profiled>
+    - io_schedule_timeout <profiled>
+    - prepare_to_wait <profiled>
+  - scsi_alloc_sgtables <profiled>
+    - __blk_rq_map_sg <profiled>
+    - ata_scsi_dma_need_drain
+      - atapi_cmd_type
+    - sg_alloc_table_chained
+      - __sg_alloc_table
+      - __sg_free_table
+      - sg_init_table
+  - scsi_free_sgtables <profiled>
+  - sd_setup_write_same10_cmnd
+  - sd_setup_write_same16_cmnd
+- mix_pool_bytes <profiled>
+  - blake2s_update <profiled>
+- run_rebalance_domains <profiled>
+  - rebalance_domains <profiled>
+    - __msecs_to_jiffies <profiled>
+    - load_balance <profiled>
+      - group_balance_cpu <profiled>
+      - need_active_balance <profiled>
+        - arch_asym_cpu_priority
+      - update_group_capacity <profiled>
+      - __bitmap_and
+      - __bitmap_subset
+      - detach_tasks
+        - can_migrate_task
+      - stop_one_cpu_nowait
+        - cpu_stop_queue_work
+- kmem_cache_alloc_lru <profiled>
+  - ___slab_alloc <profiled>
+    - alloc_debug_processing
+    - allocate_slab
+    - deactivate_slab
+    - get_partial_node
+    - gfp_pfmemalloc_allowed
+    - slab_out_of_memory
+  - should_failslab <profiled>
+- __dquot_alloc_space <profiled>
+  - __inode_add_bytes <profiled>
+  - ext4_get_reserved_space <profiled>
+  - inode_add_bytes <profiled>
+  - dquot_add_space
+- finish_task_switch <profiled>
+  - ___perf_sw_event
+    - perf_swevent_event
+  - __mmdrop
+    - __mmu_notifier_subscriptions_destroy
+    - pgd_free
+  - __perf_event_task_sched_in
+    - perf_pmu_nop_void
+    - x86_pmu_sched_task
+  - put_task_stack
+  - task_dead_fair
+- bvec_free <profiled>
+  - kmem_cache_free <profiled>
+    - __slab_free <profiled>
+      - __unfreeze_partials <profiled>
+        - __cmpxchg_double_slab
+        - __free_slab
+          - check_object
+      - cmpxchg_double_slab
+      - free_debug_processing
+  - mempool_free <profiled>
+- kthread_is_per_cpu <profiled>
+- ext4_fc_track_range <profiled>
+- mempool_free_slab <profiled>
+- kfree <profiled>
+  - __free_pages <profiled>
+    - free_unref_page <profiled>
+      - free_pcp_prepare <profiled>
+      - free_unref_page_commit <profiled>
+      - __free_one_page
+  - __kmem_cache_free <profiled>
+    - __slab_free <profiled>
+      - __unfreeze_partials <profiled>
+        - __cmpxchg_double_slab
+        - __free_slab
+          - check_object
+      - cmpxchg_double_slab
+      - free_debug_processing
+  - mod_node_page_state <profiled>
+- submit_bh <profiled>
+  - submit_bh_wbc
+- update_dl_rq_load_avg <profiled>
+- __zone_watermark_ok <profiled>
+- activate_task <profiled>
+  - enqueue_task_fair <profiled>
+    - enqueue_entity
+      - __update_stats_enqueue_sleeper
+    - reweight_entity
+  - enqueue_task_dl
+    - enqueue_dl_entity
+    - enqueue_pushable_dl_task
+    - task_contending
+  - enqueue_task_rt
+    - enqueue_rt_entity
+    - plist_add
+- filemap_check_errors <profiled>
+- process_timeout <profiled>
+- io_schedule_prepare <profiled>
+- ext4_da_update_reserve_space <profiled>
+  - dquot_claim_space_nodirty <profiled>
+    - __inode_add_bytes <profiled>
+    - ext4_get_reserved_space <profiled>
+    - dquot_mark_dquot_dirty
+    - ext4_get_dquots
+  - __dquot_free_space
+    - __inode_sub_bytes
+    - inode_sub_bytes
+  - ext4_discard_preallocations
+    - ext4_get_group_number
+    - ext4_mb_release_inode_pa
+- __folio_put <profiled>
+  - PageHeadHuge <profiled>
+  - __page_cache_release <profiled>
+    - __mod_node_page_state <profiled>
+    - __mod_zone_page_state <profiled>
+    - mod_zone_page_state <profiled>
+  - free_unref_page <profiled>
+    - free_pcp_prepare <profiled>
+    - free_unref_page_commit <profiled>
+    - __free_one_page
+- virtqueue_enable_cb_prepare <profiled>
+- second_overflow <profiled>
+- __x64_sys_fsync <profiled>
+  - __fdget <profiled>
+    - __fget_files
+      - fput
+  - __mark_inode_dirty <profiled>
+    - ext4_dirty_inode <profiled>
+      - __ext4_journal_start_sb <profiled>
+        - jbd2__journal_start <profiled>
+          - kmem_cache_alloc <profiled>
+            - should_failslab <profiled>
+          - start_this_handle <profiled>
+            - finish_wait <profiled>
+            - init_wait_entry <profiled>
+            - prepare_to_wait_event <profiled>
+            - prepare_to_wait_exclusive <profiled>
+            - __jbd2_log_wait_for_space
+              - __jbd2_update_log_tail
+              - jbd2_journal_abort
+              - jbd2_journal_get_log_tail
+              - jbd2_log_do_checkpoint
+      - __ext4_journal_stop <profiled>
+        - jbd2_journal_stop <profiled>
+          - jbd2_log_start_commit <profiled>
+          - jbd2_log_wait_commit <profiled>
+          - stop_this_handle <profiled>
+          - schedule_hrtimeout
+      - __ext4_mark_inode_dirty <profiled>
+        - ext4_mark_iloc_dirty <profiled>
+          - __brelse <profiled>
+          - __ext4_handle_dirty_metadata <profiled>
+            - jbd2_journal_dirty_metadata <profiled>
+              - __jbd2_journal_file_buffer <profiled>
+                - __jbd2_journal_temp_unlink_buffer <profiled>
+                  - mark_buffer_dirty <profiled>
+                    - __folio_mark_dirty <profiled>
+                      - __mod_node_page_state <profiled>
+                      - __mod_zone_page_state <profiled>
+                      - inode_to_bdi <profiled>
+                        - I_BDEV <profiled>
+                      - __xa_set_mark
+                        - xas_load
+                      - percpu_counter_add_batch
+                    - page_mapping <profiled>
+                      - folio_mapping <profiled>
+                - jbd2_journal_grab_journal_head <profiled>
+            - sync_dirty_buffer <profiled>
+              - __sync_dirty_buffer <profiled>
+                - out_of_line_wait_on_bit <profiled>
+                  - __wait_on_bit <profiled>
+                    - bit_wait_io <profiled>
+                      - io_schedule <profiled>
+                    - bit_wait
+                - wake_up_bit <profiled>
+            - inode_needs_sync
+            - mark_buffer_dirty_inode
+          - __ext4_journal_get_write_access <profiled>
+            - jbd2_journal_get_write_access <profiled>
+              - do_get_write_access <profiled>
+                - jbd2_journal_cancel_revoke <profiled>
+              - jbd2_journal_add_journal_head <profiled>
+              - jbd2_journal_put_journal_head <profiled>
+                - free_pages <profiled>
+            - jbd2_journal_set_triggers
+          - ext4_fc_track_inode <profiled>
+            - ext4_inode_journal_mode <profiled>
+            - ext4_fc_mark_ineligible
+          - ext4_fill_raw_inode <profiled>
+            - ext4_inode_csum
+        - ext4_reserve_inode_write <profiled>
+          - __ext4_get_inode_loc <profiled>
+            - __getblk_gfp <profiled>
+            - blk_finish_plug <profiled>
+            - blk_start_plug <profiled>
+            - ext4_get_group_desc <profiled>
+            - ext4_inode_table <profiled>
+            - ext4_read_bh_nowait <profiled>
+            - ext4_inode_bitmap
+            - ext4_itable_unused_count
+            - ext4_sb_breadahead_unmovable
+          - __ext4_std_error
+        - up_write <profiled>
+          - rwsem_mark_wake
+            - wake_q_add
+            - wake_q_add_safe
+        - __ext4_expand_extra_isize
+          - dquot_initialize_needed
+          - ext4_expand_extra_isize_ea
+        - jbd2_journal_extend
+  - blkdev_fsync <profiled>
+    - blkdev_issue_flush <profiled>
+      - bio_init <profiled>
+        - bio_associate_blkg <profiled>
+          - bio_associate_blkg_from_css <profiled>
+            - blkg_release
+          - kthread_blkcg <profiled>
+      - submit_bio_wait <profiled>
+        - blk_status_to_errno <profiled>
+        - wait_for_completion_io <profiled>
+          - wait_for_common_io
+    - file_write_and_wait_range <profiled>
+      - __filemap_fdatawait_range <profiled>
+        - __pagevec_release <profiled>
+          - lru_add_drain <profiled>
+            - lru_add_drain_cpu <profiled>
+              - folio_batch_move_lru <profiled>
+                - folio_activate_fn <profiled>
+                - lru_add_fn <profiled>
+                - release_pages <profiled>
+                  - PageHeadHuge <profiled>
+                  - __page_cache_release <profiled>
+                    - mod_zone_page_state <profiled>
+                  - free_unref_page_list <profiled>
+                - lru_deactivate_file_fn
+                - lru_deactivate_fn
+                - lru_lazyfree_fn
+                - lru_move_tail_fn
+        - pagevec_lookup_range_tag <profiled>
+          - find_get_pages_range_tag <profiled>
+            - xas_find
+            - xas_find_marked
+        - wait_on_page_writeback <profiled>
+          - folio_wait_writeback <profiled>
+            - folio_wait_bit <profiled>
+              - folio_wait_bit_common
+                - __delayacct_thrashing_end
+                - __delayacct_thrashing_start
+  - ext4_sync_file <profiled>
+    - d_find_any_alias <profiled>
+    - dget_parent <profiled>
+    - ext4_fc_commit <profiled>
+      - crypto_shash_update <profiled>
+        - chksum_update <profiled>
+        - crypto_cmac_digest_update
+          - __crypto_xor
+          - crypto_cipher_encrypt_one
+        - crypto_sha256_update
+          - sha256_update
+        - crypto_sha512_update
+        - ghash_update
+          - gf128mul_4k_lle
+        - hmac_update
+        - md5_update
+          - md5_transform
+        - null_update
+      - jbd2_complete_transaction <profiled>
+      - prepare_to_wait <profiled>
+      - jbd2_fc_begin_commit
+      - jbd2_fc_end_commit
+        - ext4_fc_cleanup
+      - jbd2_fc_end_commit_fallback
+      - jbd2_fc_wait_bufs
+        - __wait_on_buffer
+    - file_check_and_advance_wb_err <profiled>
+    - jbd2_trans_will_send_data_barrier <profiled>
+    - sync_inode_metadata <profiled>
+      - writeback_single_inode <profiled>
+        - __writeback_single_inode <profiled>
+          - ext4_write_inode <profiled>
+            - __ext4_error_inode
+          - fat_write_inode <profiled>
+            - __fat_write_inode <profiled>
+              - __bread_gfp <profiled>
+              - fat_time_unix2fat <profiled>
+                - time64_to_tm <profiled>
+              - _fat_msg
+            - fat_clusters_flush
+          - filemap_fdatawait_range <profiled>
+          - is_bad_inode <profiled>
+          - nfs4_write_inode
+          - nfs_write_inode
+            - __nfs_commit_inode
+        - inode_add_lru <profiled>
+          - list_lru_add
+    - sync_mapping_buffers <profiled>
+      - write_dirty_buffer <profiled>
+    - ext4_force_commit
+      - jbd2_journal_force_commit
+  - fat_file_fsync <profiled>
+    - __generic_file_fsync <profiled>
+      - down_write <profiled>
+        - __down_write_common
+  - noop_fsync <profiled>
+  - nfs_file_fsync
+    - nfs_commit_inode
+  - nfs_fsync_dir
+  - shm_fsync
+  - v9fs_file_fsync
+    - p9_client_wstat
+    - v9fs_blank_wstat
+  - v9fs_file_fsync_dotl
+    - p9_client_fsync
+- dma_map_page_attrs <profiled>
+  - iommu_dma_map_page
+    - __iommu_dma_map
+    - _dev_warn
+    - swiotlb_tbl_map_single
+- mod_delayed_work_on <profiled>
+  - __queue_delayed_work <profiled>
+  - try_to_grab_pending <profiled>
+    - pwq_dec_nr_in_flight
+      - complete
+- resched_curr <profiled>
+  - add_interrupt_randomness <profiled>
+  - native_smp_send_reschedule
+- note_interrupt <profiled>
+- should_fail_alloc_page <profiled>
+- blk_mq_end_request <profiled>
+  - blk_update_request <profiled>
+    - bio_endio <profiled>
+      - __rq_qos_done_bio <profiled>
+        - blkcg_iolatency_done_bio <profiled>
+        - ioc_rqos_done_bio
+      - bio_put <profiled>
+        - mempool_free <profiled>
+      - end_bio_bh_io_sync <profiled>
+        - end_buffer_async_write <profiled>
+          - end_page_writeback <profiled>
+            - folio_end_writeback <profiled>
+              - __folio_end_writeback <profiled>
+                - folio_mapping <profiled>
+                - inode_to_bdi <profiled>
+                  - I_BDEV <profiled>
+                - mod_node_page_state <profiled>
+                - mod_zone_page_state <profiled>
+                - queue_delayed_work_on <profiled>
+                  - __queue_delayed_work <profiled>
+                - sb_clear_inode_writeback <profiled>
+                - __xa_clear_mark
+              - __acct_reclaim_writeback
+                - node_page_state
+              - folio_wake_bit
+          - wake_up_bit <profiled>
+          - mark_buffer_write_io_error
+        - write_dirty_buffer <profiled>
+        - end_bitmap_write
+        - end_buffer_async_read_io
+          - end_buffer_async_read
+        - end_buffer_read_sync
+        - end_buffer_write_sync
+        - ext4_end_bitmap_read
+        - ext4_end_buffer_io_sync
+        - journal_end_buffer_io_sync
+      - ext4_end_bio <profiled>
+        - blk_status_to_errno <profiled>
+        - ext4_put_io_end_defer <profiled>
+          - ext4_release_io_end <profiled>
+            - ext4_finish_bio
+              - __filemap_set_wb_err
+              - errseq_set
+          - queue_work_on <profiled>
+        - __ext4_warning
+      - bio_chain_endio
+      - clone_endio
+        - __dm_io_complete
+        - mirror_end_io
+        - stripe_end_io
+        - up
+      - end_clone_bio
+      - endio
+      - hib_end_io
+      - iomap_read_end_io
+        - iomap_set_range_uptodate
+      - iomap_writepage_end_bio
+        - iomap_finish_ioend
+    - blk_account_io_completion <profiled>
+    - blk_recalc_rq_segments
+- __sysvec_call_function_single <profiled>
+  - generic_smp_call_function_single_interrupt <profiled>
+    - __flush_smp_call_function_queue <profiled>
+      - __blk_mq_complete_request_remote <profiled>
+      - sched_ttwu_pending <profiled>
+        - set_task_cpu <profiled>
+          - migrate_task_rq_fair <profiled>
+          - set_task_rq_fair <profiled>
+        - ttwu_do_activate
+          - task_woken_rt
+      - __wrmsr_on_cpu
+      - __wrmsr_safe_on_cpu
+      - bts_buffer_free_aux
+      - do_kernel_range_flush
+      - intel_pmu_arch_lbr_xrstors
+        - xrstors
+      - intel_pmu_arch_lbr_xsaves
+        - xsaves
+      - ipi_sync_rq_state
+      - kvm_disable_host_haltpoll
+      - kvm_pv_guest_cpu_reboot
+        - kvm_guest_cpu_offline
+      - llist_reverse_order
+      - mtrr_save_fixed_ranges
+        - get_fixed_ranges
+      - net_drop_ns
+      - nfs3_nlm_alloc_call
+        - get_nfs_open_context
+      - nfs3_nlm_release_call
+        - put_nfs_open_context
+      - nfs4_open_release
+        - nfs4_close_state
+        - nfs4_opendata_put
+        - nfs4_opendata_to_nfs4_state
+      - nfs4_renew_release
+        - nfs4_schedule_state_renewal
+      - nfs_async_unlink_release
+        - __d_lookup_unhash_wake
+      - nfs_commit_release
+        - nfs_direct_commit_complete
+      - nfs_pgio_release
+        - nfs_direct_read_completion
+        - nfs_direct_write_completion
+        - nfs_read_completion
+      - nlmsvc_grant_release
+      - nohz_csd_func
+      - ping
+      - rpcb_map_release
+        - xprt_put
+      - update_stibp_msr
+      - v1_tlb_flush_all
+      - wakeup_mirrord
+- blk_mq_free_request <profiled>
+  - __blk_mq_free_request <profiled>
+    - blk_mq_put_tag <profiled>
+      - sbitmap_queue_clear
+        - sbitmap_queue_wake_up
+    - blk_queue_exit <profiled>
+    - __blk_mq_sched_restart
+  - __rq_qos_done <profiled>
+    - ioc_rqos_done
+  - dd_finish_request
+  - laptop_io_completion
+- __note_gp_changes <profiled>
+- update_rt_rq_load_avg <profiled>
+- swake_up_one <profiled>
+- wake_up_process <profiled>
+- filemap_add_folio <profiled>
+  - __filemap_add_folio <profiled>
+    - PageHeadHuge <profiled>
+    - __mod_node_page_state <profiled>
+    - xa_get_order
+    - xas_find_conflict
+    - xas_nomem
+    - xas_split
+  - folio_add_lru <profiled>
+    - folio_batch_move_lru <profiled>
+      - folio_activate_fn <profiled>
+        - __mod_zone_page_state <profiled>
+      - lru_add_fn <profiled>
+        - folio_mapping <profiled>
+      - release_pages <profiled>
+        - __page_cache_release <profiled>
+          - mod_zone_page_state <profiled>
+        - free_unref_page_list <profiled>
+      - lru_deactivate_file_fn
+      - lru_deactivate_fn
+      - lru_lazyfree_fn
+      - lru_move_tail_fn
+- bvec_alloc <profiled>
+  - kmem_cache_alloc <profiled>
+    - should_failslab <profiled>
+  - mempool_alloc <profiled>
+    - finish_wait <profiled>
+    - io_schedule_timeout <profiled>
+    - prepare_to_wait <profiled>
+- sd_done <profiled>
+  - sd_config_write_same
+    - blk_queue_max_write_zeroes_sectors
+- ext4_ext_search_right <profiled>
+- attach_entity_load_avg <profiled>
+- do_writepages <profiled>
+  - blk_finish_plug <profiled>
+  - blk_start_plug <profiled>
+  - blkdev_writepages <profiled>
+    - generic_writepages <profiled>
+      - write_cache_pages <profiled>
+        - __mpage_writepage <profiled>
+          - bdev_write_page <profiled>
+            - end_page_writeback <profiled>
+              - folio_end_writeback <profiled>
+                - __folio_end_writeback <profiled>
+                  - folio_mapping <profiled>
+                  - inode_to_bdi <profiled>
+                    - I_BDEV <profiled>
+                  - mod_node_page_state <profiled>
+                  - mod_zone_page_state <profiled>
+                  - queue_delayed_work_on <profiled>
+                    - __queue_delayed_work <profiled>
+                  - sb_clear_inode_writeback <profiled>
+                  - __xa_clear_mark
+                - __acct_reclaim_writeback
+                  - node_page_state
+                - folio_wake_bit
+            - set_page_writeback <profiled>
+              - __folio_start_writeback <profiled>
+                - sb_mark_inode_writeback <profiled>
+                - xas_clear_mark
+                - xas_set_mark
+            - blk_queue_enter
+            - clean_page_buffers
+          - bio_add_page <profiled>
+          - bio_alloc_bioset <profiled>
+            - bio_associate_blkg <profiled>
+              - bio_associate_blkg_from_css <profiled>
+                - blkg_release
+              - kthread_blkcg <profiled>
+            - kmem_cache_alloc <profiled>
+              - should_failslab <profiled>
+            - mempool_alloc <profiled>
+              - finish_wait <profiled>
+              - io_schedule_timeout <profiled>
+              - prepare_to_wait <profiled>
+            - mempool_free <profiled>
+            - punt_bios_to_rescuer
+          - clean_buffers <profiled>
+            - try_to_free_buffers
+              - __folio_cancel_dirty
+              - free_buffer_head
+          - guard_bio_eod <profiled>
+        - __pagevec_release <profiled>
+          - lru_add_drain <profiled>
+            - lru_add_drain_cpu <profiled>
+              - folio_batch_move_lru <profiled>
+                - folio_activate_fn <profiled>
+                  - __mod_node_page_state <profiled>
+                  - __mod_zone_page_state <profiled>
+                - lru_add_fn <profiled>
+                - release_pages <profiled>
+                  - PageHeadHuge <profiled>
+                  - __page_cache_release <profiled>
+                  - free_unref_page_list <profiled>
+                - lru_deactivate_file_fn
+                - lru_deactivate_fn
+                - lru_lazyfree_fn
+                - lru_move_tail_fn
+        - __writepage <profiled>
+          - blkdev_writepage <profiled>
+          - ext4_writepage
+            - __ext4_warning_inode
+            - redirty_page_for_writepage
+          - fat_writepage
+          - shmem_writepage
+            - add_to_swap_cache
+            - folio_alloc_swap
+            - put_swap_folio
+            - swap_shmem_alloc
+          - v9fs_vfs_writepage
+            - folio_redirty_for_writepage
+        - clear_page_dirty_for_io <profiled>
+          - folio_clear_dirty_for_io <profiled>
+            - folio_mkclean <profiled>
+              - folio_mapped <profiled>
+              - rmap_walk_file
+                - down_read
+                - folio_referenced_one
+                - invalid_folio_referenced_vma
+                - invalid_migration_vma
+                - invalid_mkclean_vma
+                - page_mkclean_one
+                - try_to_migrate_one
+                - up_read
+                - vma_interval_tree_iter_first
+                - vma_interval_tree_iter_next
+        - pagevec_lookup_range_tag <profiled>
+          - find_get_pages_range_tag <profiled>
+            - xas_find
+            - xas_find_marked
+        - tag_pages_for_writeback <profiled>
+          - xas_pause
+        - wait_on_page_writeback <profiled>
+          - folio_wait_writeback <profiled>
+            - folio_wait_bit <profiled>
+              - folio_wait_bit_common
+                - __delayacct_thrashing_end
+                - __delayacct_thrashing_start
+  - ext4_writepages <profiled>
+    - __ext4_journal_stop <profiled>
+      - jbd2_journal_stop <profiled>
+        - jbd2_log_start_commit <profiled>
+        - jbd2_log_wait_commit <profiled>
+          - init_wait_entry <profiled>
+          - prepare_to_wait_event <profiled>
+        - stop_this_handle <profiled>
+        - schedule_hrtimeout
+    - down_write <profiled>
+      - __down_write_common
+    - ext4_alloc_io_end_vec <profiled>
+    - ext4_bio_write_page <profiled>
+    - ext4_init_io_end <profiled>
+    - ext4_inode_journal_mode <profiled>
+    - ext4_io_submit <profiled>
+    - ext4_io_submit_init <profiled>
+    - ext4_last_io_end_vec <profiled>
+    - ext4_put_io_end <profiled>
+      - ext4_release_io_end <profiled>
+        - bio_put <profiled>
+        - ext4_finish_bio
+          - __filemap_set_wb_err
+          - errseq_set
+      - ext4_convert_unwritten_io_end_vec
+        - __ext4_journal_start_reserved
+        - ext4_convert_unwritten_extents
+    - ext4_put_io_end_defer <profiled>
+      - queue_work_on <profiled>
+    - filemap_get_folios <profiled>
+    - mpage_prepare_extent_to_map <profiled>
+      - mpage_process_page_bufs <profiled>
+    - mpage_release_unused_pages <profiled>
+      - up_write <profiled>
+        - rwsem_mark_wake
+          - wake_q_add
+          - wake_q_add_safe
+      - ext4_es_remove_extent
+        - ext4_da_release_space
+    - __ext4_msg
+    - __percpu_down_read
+      - percpu_rwsem_wait
+    - ext4_destroy_inline_data
+    - jbd2_journal_force_commit_nested
+      - __jbd2_journal_force_commit
+  - fat_writepages <profiled>
+    - mpage_writepages <profiled>
+  - __wb_update_bandwidth
+  - nfs_writepages
+    - nfs_pageio_complete
+    - nfs_pageio_init
+  - reclaim_throttle
+    - jiffies_to_usecs
+- security_cred_free <profiled>
+- vring_interrupt <profiled>
+  - virtqueue_disable_cb <profiled>
+  - virtscsi_req_done <profiled>
+    - virtscsi_vq_done <profiled>
+      - virtqueue_enable_cb <profiled>
+      - virtqueue_get_buf <profiled>
+        - virtqueue_get_buf_ctx <profiled>
+          - detach_buf_split <profiled>
+            - dma_unmap_page_attrs <profiled>
+              - iommu_dma_unmap_page
+                - __iommu_dma_unmap
+                - iommu_get_dma_domain
+                - iommu_iova_to_phys
+      - virtqueue_is_broken <profiled>
+      - virtscsi_complete_cmd <profiled>
+        - scsi_done <profiled>
+  - virtblk_done
+    - blk_mq_start_stopped_hw_queues
+  - virtinput_recv_events
+    - virtqueue_add_inbuf
+  - virtio_gpu_ctrl_ack
+  - virtio_gpu_cursor_ack
+  - virtscsi_ctrl_done
+  - virtscsi_event_done
+- __wake_up_bit <profiled>
+  - __wake_up <profiled>
+    - autoremove_wake_function <profiled>
+      - default_wake_function <profiled>
+    - blk_mq_dispatch_wake
+    - child_wait_callback
+    - cwt_wakefn
+    - ep_autoremove_wake_function
+    - ep_poll_callback
+    - io_wake_function
+    - io_wqe_hash_wake
+      - io_wqe_activate_free_worker
+    - iocg_wake_fn
+    - kyber_domain_wake
+      - sbitmap_del_wait_queue
+    - pollwake
+    - receiver_wake_function
+    - rq_qos_wake_function
+      - iolat_acquire_inflight
+    - wake_page_function
+      - wake_up_state
+    - woken_wake_function
+- ext4_es_lookup_extent <profiled>
+- sched_slice <profiled>
+- init_page_buffers <profiled>
+- __ext4_ext_check <profiled>
+  - crypto_shash_update <profiled>
+    - chksum_update <profiled>
+    - crypto_cmac_digest_update
+      - __crypto_xor
+      - crypto_cipher_encrypt_one
+    - crypto_sha256_update
+      - sha256_update
+    - crypto_sha512_update
+    - ghash_update
+      - gf128mul_4k_lle
+    - hmac_update
+    - md5_update
+      - md5_transform
+    - null_update
+- create_page_buffers <profiled>
+  - create_empty_buffers
+- blk_add_rq_to_plug <profiled>

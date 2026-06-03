@@ -1,0 +1,5 @@
+306:syncfs
+    cp-0.txt: total funcs: N/A; 
+    ls-0.txt: total funcs: N/A; 
+    tar-0.txt: total funcs: N/A; 
+    unqlite-0.txt: total funcs: N/A; 

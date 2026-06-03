@@ -1,0 +1,21 @@
+Subgraph has 19 nodes and 20 edges.
+Markdown tree representation:
+- __x64_sys_dup
+  - __fget_files
+    - fput
+      - llist_add_batch
+      - queue_delayed_work_on
+        - __queue_delayed_work
+  - alloc_fd
+    - _find_next_zero_bit
+    - expand_files
+      - alloc_fdtable
+        - kmalloc_trace
+          - __kmem_cache_alloc_node
+            - should_failslab
+        - kvfree
+          - is_vmalloc_addr
+      - finish_wait
+      - init_wait_entry
+      - prepare_to_wait_event
+  - fd_install

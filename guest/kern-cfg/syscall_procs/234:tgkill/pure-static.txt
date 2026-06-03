@@ -1,0 +1,14 @@
+Subgraph has 12 nodes and 12 edges.
+Markdown tree representation:
+- __x64_sys_tgkill
+  - __task_pid_nr_ns
+  - do_send_specific
+    - check_kill_permission
+      - ns_capable
+      - security_task_kill
+        - selinux_task_kill
+          - avc_has_perm
+    - do_send_sig_info
+    - find_task_by_vpid
+      - idr_find
+        - radix_tree_lookup

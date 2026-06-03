@@ -1,0 +1,12 @@
+__x64_sys_dup3
+_raw_spin_lock
+_raw_spin_unlock
+dnotify_flush
+do_dup2
+expand_files
+filp_close
+fput
+ksys_dup3
+locks_remove_posix
+preempt_count_add
+preempt_count_sub

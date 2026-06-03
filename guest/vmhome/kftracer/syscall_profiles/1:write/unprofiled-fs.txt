@@ -1,0 +1,5 @@
+1:write
+    cp-0.txt: total funcs: 184; not profiled: 0/184 (0.0%) []
+    ls-0.txt: total funcs: 165; not profiled: 1/165 (0.6%) [file_tty_write.isra.0]
+    tar-0.txt: total funcs: 97; not profiled: 3/97 (3.1%) [__mnt_drop_write, __mnt_want_write, file_tty_write.isra.0]
+    unqlite-0.txt: total funcs: 136; not profiled: 1/136 (0.7%) [file_tty_write.isra.0]

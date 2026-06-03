@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d2" for="edge" attr.name="inferred" attr.type="boolean" />
+  <key id="d1" for="edge" attr.name="indirect" attr.type="boolean" />
+  <key id="d0" for="node" attr.name="profiled" attr.type="boolean" />
+  <graph edgedefault="directed">
+    <node id="ns_to_timespec64">
+      <data key="d0">True</data>
+    </node>
+    <node id="get_avenrun">
+      <data key="d0">True</data>
+    </node>
+    <node id="__x64_sys_sysinfo">
+      <data key="d0">True</data>
+    </node>
+    <node id="set_normalized_timespec64">
+      <data key="d0">True</data>
+    </node>
+    <node id="si_meminfo">
+      <data key="d0">True</data>
+    </node>
+    <node id="si_swapinfo">
+      <data key="d0">True</data>
+    </node>
+    <node id="_copy_to_user" />
+    <edge source="__x64_sys_sysinfo" target="get_avenrun">
+      <data key="d1">False</data>
+    </edge>
+    <edge source="__x64_sys_sysinfo" target="ns_to_timespec64">
+      <data key="d1">False</data>
+    </edge>
+    <edge source="__x64_sys_sysinfo" target="set_normalized_timespec64">
+      <data key="d1">False</data>
+    </edge>
+    <edge source="__x64_sys_sysinfo" target="si_meminfo">
+      <data key="d1">False</data>
+    </edge>
+    <edge source="__x64_sys_sysinfo" target="si_swapinfo">
+      <data key="d1">False</data>
+    </edge>
+    <edge source="__x64_sys_sysinfo" target="_copy_to_user">
+      <data key="d2">True</data>
+    </edge>
+  </graph>
+</graphml>

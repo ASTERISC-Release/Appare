@@ -1,0 +1,452 @@
+Subgraph has 441 nodes and 427 edges.
+Markdown tree representation:
+- flush_tlb_mm_range <profiled>
+  - flush_tlb_func <profiled>
+- sd_uninit_command <profiled>
+  - mempool_free <profiled>
+- bvec_free <profiled>
+  - kmem_cache_free <profiled>
+    - __slab_free <profiled>
+      - __free_slab
+        - check_object
+      - cmpxchg_double_slab
+  - mempool_free <profiled>
+- mempool_free_slab <profiled>
+- virtqueue_poll <profiled>
+- __x64_sys_mprotect <profiled>
+  - do_mprotect_pkey <profiled>
+    - __arch_override_mprotect_pkey <profiled>
+      - __execute_only_pkey <profiled>
+        - arch_set_user_pkey_access <profiled>
+    - down_write_killable <profiled>
+    - find_vma <profiled>
+    - mprotect_fixup <profiled>
+      - may_expand_vm <profiled>
+      - perf_event_mmap <profiled>
+      - split_vma <profiled>
+        - __split_vma <profiled>
+          - __vma_adjust <profiled>
+            - anon_vma_clone <profiled>
+              - anon_vma_interval_tree_insert <profiled>
+                - __rb_insert_augmented
+                  - __anon_vma_interval_tree_augment_rotate
+                  - interval_tree_augment_rotate
+              - down_write <profiled>
+                - __down_write_common
+              - kmem_cache_alloc <profiled>
+                - should_failslab <profiled>
+              - up_write <profiled>
+              - unlink_anon_vmas
+                - __put_anon_vma
+            - anon_vma_interval_tree_remove <profiled>
+            - fput <profiled>
+              - queue_delayed_work_on
+                - __queue_delayed_work
+            - vm_area_free <profiled>
+            - vma_interval_tree_insert <profiled>
+            - vma_interval_tree_remove <profiled>
+              - __rb_erase_color
+            - __mpol_put
+            - mas_destroy
+            - mas_preallocate
+            - mas_store_prealloc
+              - mas_wr_store_entry
+            - mt_find
+              - mas_next_entry
+          - vm_area_dup <profiled>
+          - vma_dup_policy <profiled>
+            - __mpol_dup
+              - cpuset_mems_allowed
+              - current_cpuset_is_being_rebound
+              - mpol_rebind_nodemask
+              - mpol_rebind_preferred
+          - drm_gem_shmem_vm_open
+          - drm_gem_vm_close
+            - i915_gem_free_object
+            - refcount_warn_saturate
+          - drm_gem_vm_open
+          - hugetlb_vm_op_close
+            - hugetlb_acct_memory
+            - hugetlb_cgroup_uncharge_counter
+            - region_del
+          - hugetlb_vm_op_open
+            - kmalloc_trace
+          - hugetlb_vm_op_split
+            - hugetlb_unshare_pmds
+          - kernfs_vma_open
+            - kernfs_get_active
+            - kernfs_put_active
+          - mon_bin_vma_close
+          - mon_bin_vma_open
+          - packet_mm_close
+          - packet_mm_open
+          - perf_mmap_open
+            - x86_pmu_event_mapped
+          - shm_close
+            - __shm_close
+          - shm_may_split
+          - shm_open
+            - __shm_open
+          - snd_pcm_mmap_data_close
+          - snd_pcm_mmap_data_open
+          - special_mapping_split
+          - ttm_bo_vm_close
+            - ttm_bo_put
+          - ttm_vm_close
+            - drm_gem_object_free
+          - ttm_vm_open
+          - usbdev_vm_close
+            - dec_usb_memory_use_count
+          - usbdev_vm_open
+          - v9fs_mmap_vm_close
+            - filemap_fdatawrite_wbc
+          - vm_close
+          - vm_open
+      - vm_stat_account <profiled>
+      - vma_merge <profiled>
+        - __mpol_equal
+      - vma_set_page_prot <profiled>
+      - vma_wants_writenotify <profiled>
+      - change_protection_range
+        - change_p4d_range
+        - pgd_clear_bad
+      - walk_page_range
+        - __walk_page_range
+    - security_file_mprotect <profiled>
+      - selinux_file_mprotect <profiled>
+        - avc_has_perm <profiled>
+        - file_map_prot_check <profiled>
+        - vma_is_stack_for_current <profiled>
+          - KSTK_ESP <profiled>
+    - tlb_finish_mmu <profiled>
+      - tlb_flush_mmu <profiled>
+    - tlb_gather_mmu <profiled>
+    - mas_find
+      - mas_walk
+    - mas_prev
+      - mas_prev_entry
+- virtqueue_enable_cb_prepare <profiled>
+- change_protection <profiled>
+- kfree <profiled>
+  - __kmem_cache_free <profiled>
+    - __slab_free <profiled>
+      - __free_slab
+        - check_object
+      - cmpxchg_double_slab
+  - __free_pages
+    - free_unref_page
+- sd_done <profiled>
+  - sd_config_write_same
+    - blk_queue_max_write_zeroes_sectors
+- native_flush_tlb_one_user <profiled>
+- blk_mq_complete_request <profiled>
+  - blk_mq_complete_request_remote <profiled>
+    - cpus_share_cache <profiled>
+    - smp_call_function_single_async <profiled>
+  - scsi_complete <profiled>
+    - scsi_decide_disposition <profiled>
+      - scsi_handle_queue_ramp_up <profiled>
+        - __scsi_iterate_devices
+          - module_put
+          - put_device
+          - try_module_get
+        - scsi_change_queue_depth
+          - blk_set_queue_depth
+          - sbitmap_resize
+      - scsi_check_sense
+        - scsi_normalize_sense
+      - scsi_track_queue_full
+    - scsi_finish_command <profiled>
+      - scsi_device_unbusy <profiled>
+        - scsi_dec_host_busy <profiled>
+          - scsi_eh_wakeup
+            - scsi_host_busy
+      - scsi_io_completion <profiled>
+        - scsi_end_request <profiled>
+          - add_disk_randomness <profiled>
+          - blk_mq_run_hw_queues
+        - __warn_printk
+        - blk_mq_requeue_request
+        - scsi_noretry_cmd
+        - scsi_print_command
+          - hex_dump_to_buffer
+          - scsi_format_opcode_name
+    - scsi_eh_scmd_add
+      - scsi_host_set_state
+    - scsi_queue_insert
+  - lo_complete_rq
+    - errno_to_blk_status
+  - virtblk_request_done
+- __cond_resched <profiled>
+  - __schedule
+    - __delayacct_blkio_start
+    - __schedule_bug
+    - dequeue_task_dl
+    - dequeue_task_fair
+    - enter_lazy_tlb
+    - perf_event_task_sched_out
+- kmem_cache_alloc_bulk <profiled>
+  - kmem_cache_free_bulk <profiled>
+  - should_failslab <profiled>
+- mix_pool_bytes <profiled>
+  - blake2s_update <profiled>
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - child_wait_callback
+  - do_rps_boost
+    - drm_crtc_vblank_put
+    - intel_rps_boost
+  - ep_autoremove_wake_function
+  - io_async_buf_func
+    - io_req_task_queue
+  - io_poll_wake
+    - io_pollfree_wake
+  - io_wqe_hash_wake
+    - io_wqe_activate_free_worker
+  - iocg_wake_fn
+  - p9_pollwake
+  - wake_page_function
+    - wake_up_state
+- __note_gp_changes <profiled>
+- select_task_rq_fair <profiled>
+  - __bitmap_intersects
+  - __bitmap_weight
+  - _find_first_bit
+  - _find_next_and_bit
+- __common_interrupt <profiled>
+- vma_interval_tree_augment_rotate <profiled>
+- vma_mas_store <profiled>
+- note_interrupt <profiled>
+- enqueue_task_fair <profiled>
+  - enqueue_entity
+    - __update_stats_enqueue_sleeper
+  - reweight_entity
+- scsi_free_sgtables <profiled>
+- finish_task_switch <profiled>
+  - ___perf_sw_event
+    - perf_swevent_event
+  - __mmdrop
+    - __mmu_notifier_subscriptions_destroy
+    - pgd_free
+  - __perf_event_task_sched_in
+    - ctx_sched_in
+    - ctx_sched_out
+    - uncore_pmu_enable
+    - x86_pmu_disable
+    - x86_pmu_sched_task
+  - put_task_stack
+  - task_dead_fair
+- ___slab_alloc <profiled>
+  - allocate_slab
+  - deactivate_slab
+  - get_partial_node
+  - slab_out_of_memory
+- generic_exec_single <profiled>
+  - flush_tlb_func <profiled>
+  - __blk_mq_complete_request_remote
+  - __cpa_flush_all
+    - __flush_tlb_all
+  - __mce_disable_bank
+    - cmci_disable_bank
+  - __perf_event_read
+    - _x86_pmu_read
+    - amd_uncore_read
+    - hw_breakpoint_pmu_read
+    - i915_pmu_event_read
+    - intel_pmu_read_event
+    - msr_event_update
+    - perf_iommu_read
+    - perf_pmu_commit_txn
+    - perf_pmu_nop_int
+    - perf_pmu_start_txn
+    - perf_swevent_read
+    - pt_event_read
+    - rapl_pmu_event_read
+    - uncore_pmu_event_read
+    - x86_pmu_commit_txn
+    - x86_pmu_read
+    - x86_pmu_start_txn
+  - __profile_flip_buffers
+  - __rdmsr_on_cpu
+  - __rdmsr_safe_on_cpu
+  - __wbinvd
+  - __wrmsr_on_cpu
+  - __wrmsr_safe_on_cpu
+  - __wrmsr_safe_regs_on_cpu
+  - acpi_ev_asynch_enable_gpe
+    - acpi_ev_finish_gpe
+  - apply_microcode_local
+    - apply_microcode_amd
+    - apply_microcode_intel
+  - cpuid_smp_cpuid
+  - do_drv_read
+    - cpu_freq_read_amd
+    - cpu_freq_read_intel
+  - do_drv_write
+    - cpu_freq_write_amd
+    - cpu_freq_write_intel
+  - do_flush_tlb_all
+  - do_kernel_range_flush
+  - do_nothing
+  - do_sync_core
+  - drm_bridge_remove_void
+  - flush_ldt
+    - load_mm_ldt
+  - intel_pmu_arch_lbr_restore
+  - intel_pmu_arch_lbr_xrstors
+    - xrstors
+  - intel_pmu_arch_lbr_xsaves
+    - xsaves
+  - invalidate_bh_lru
+  - ipi_mb
+  - ipi_rseq
+  - ipi_sync_core
+  - ipi_sync_rq_state
+  - kvm_enable_host_haltpoll
+  - kvm_pv_guest_cpu_reboot
+    - kvm_guest_cpu_offline
+  - mtrr_save_fixed_ranges
+    - get_fixed_ranges
+  - net_drop_ns
+  - nfs3_nlm_release_call
+    - put_nfs_open_context
+  - nfs4_delegreturn_release
+    - nfs_refresh_inode
+  - nfs4_free_closedata
+    - nfs4_put_open_state
+    - nfs4_put_state_owner
+    - nfs_free_seqid
+  - nfs4_open_release
+    - nfs4_close_state
+    - nfs4_opendata_put
+    - nfs4_opendata_to_nfs4_state
+  - nfs4_renew_release
+    - nfs4_schedule_state_renewal
+  - nfs_async_unlink_release
+    - __d_lookup_unhash_wake
+    - up_read
+  - nfs_commit_release
+    - nfs_direct_commit_complete
+  - nfs_pgio_release
+    - nfs_direct_read_completion
+    - nfs_direct_write_completion
+    - nfs_read_completion
+  - nlmsvc_callback_release
+  - nohz_csd_func
+  - page_put_link
+  - threshold_restart_bank
+  - update_stibp_msr
+  - update_tfa_sched
+    - perf_pmu_resched
+    - x86_get_pmu
+  - v2_tlb_flush_all
+  - wakeup_mirrord
+  - xhci_intel_unregister_pdev
+    - platform_device_unregister
+- resched_curr <profiled>
+  - add_interrupt_randomness <profiled>
+  - native_smp_send_reschedule
+- flush_tlb_batched_pending <profiled>
+- mix_interrupt_randomness <profiled>
+  - blake2s_update <profiled>
+  - _credit_init_bits
+    - crng_reseed
+    - extract_entropy
+    - kill_fasync
+- blk_update_request <profiled>
+  - bio_endio <profiled>
+    - __rq_qos_done_bio <profiled>
+      - blkcg_iolatency_done_bio <profiled>
+      - ioc_rqos_done_bio
+    - bio_put <profiled>
+      - mempool_free <profiled>
+    - mpage_end_io <profiled>
+      - __read_end_io <profiled>
+    - bio_chain_endio
+    - blkdev_bio_end_io_async
+      - __bio_release_pages
+      - aio_complete_rw
+      - bio_check_pages_dirty
+      - lo_rw_aio_complete
+      - sio_read_complete
+      - sio_write_complete
+    - end_bio_bh_io_sync
+      - end_bitmap_write
+      - end_buffer_async_read_io
+      - end_buffer_read_sync
+      - end_buffer_write_sync
+      - ext4_end_bitmap_read
+      - ext4_end_buffer_io_sync
+      - journal_end_buffer_io_sync
+    - end_clone_bio
+    - endio
+      - zero_fill_bio
+    - hib_end_io
+    - iomap_dio_bio_end_io
+      - iomap_dio_complete
+    - iomap_read_end_io
+      - iomap_set_range_uptodate
+    - iomap_writepage_end_bio
+      - iomap_finish_ioend
+    - md_end_io_acct
+      - bio_end_io_acct_remapped
+    - submit_bio_wait_endio
+      - complete
+  - blk_account_io_completion <profiled>
+  - __bio_advance
+  - blk_dump_rq_flags
+  - blk_recalc_rq_segments
+- blk_mq_free_request <profiled>
+  - __blk_mq_free_request <profiled>
+    - blk_mq_put_tag <profiled>
+      - sbitmap_queue_clear
+        - sbitmap_queue_wake_up
+    - blk_queue_exit <profiled>
+  - __rq_qos_done <profiled>
+    - ioc_rqos_done
+  - dd_finish_request
+- vring_interrupt <profiled>
+  - virtqueue_disable_cb <profiled>
+  - virtscsi_req_done <profiled>
+    - virtscsi_vq_done <profiled>
+      - virtqueue_enable_cb <profiled>
+      - virtqueue_get_buf <profiled>
+        - virtqueue_get_buf_ctx <profiled>
+          - detach_buf_split <profiled>
+            - dma_unmap_page_attrs <profiled>
+              - iommu_dma_unmap_page
+                - __iommu_dma_unmap
+                - iommu_get_dma_domain
+                - iommu_iova_to_phys
+              - swiotlb_tbl_unmap_single
+                - swiotlb_bounce
+          - detach_buf_packed
+      - virtqueue_is_broken <profiled>
+      - virtscsi_complete_cmd <profiled>
+        - scsi_done <profiled>
+        - scmd_printk
+          - vscnprintf
+  - skb_xmit_done
+    - __napi_schedule
+    - napi_schedule_prep
+    - netif_tx_wake_queue
+  - virtblk_done
+    - blk_mq_start_stopped_hw_queues
+  - virtinput_recv_events
+    - virtqueue_kick
+  - virtio_gpu_ctrl_ack
+  - virtio_gpu_cursor_ack
+  - virtscsi_event_done
+- housekeeping_cpumask <profiled>
+- pick_next_task_fair <profiled>
+  - pick_next_entity <profiled>
+  - put_prev_entity <profiled>
+    - __update_stats_wait_start
+    - rb_insert_color
+  - set_next_entity <profiled>
+    - rb_erase
+    - update_load_avg
+      - attach_entity_load_avg
+      - detach_entity_load_avg
+  - put_prev_task_fair

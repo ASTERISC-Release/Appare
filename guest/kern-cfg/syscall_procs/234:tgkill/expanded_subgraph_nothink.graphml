@@ -1,0 +1,488 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d3" for="edge" attr.name="inferred" attr.type="boolean" />
+  <key id="d2" for="edge" attr.name="indirect" attr.type="boolean" />
+  <key id="d1" for="node" attr.name="profiled" attr.type="boolean" />
+  <key id="d0" for="node" attr.name="has_indirect" attr.type="boolean" />
+  <graph edgedefault="directed">
+    <node id="serial8250_modem_status">
+      <data key="d0">True</data>
+      <data key="d1">True</data>
+    </node>
+    <node id="prepare_signal">
+      <data key="d1">True</data>
+    </node>
+    <node id="__common_interrupt">
+      <data key="d0">True</data>
+      <data key="d1">True</data>
+    </node>
+    <node id="io_serial_out">
+      <data key="d1">True</data>
+    </node>
+    <node id="signal_wake_up_state">
+      <data key="d1">True</data>
+    </node>
+    <node id="tty_kref_put">
+      <data key="d1">True</data>
+    </node>
+    <node id="avc_has_perm">
+      <data key="d1">True</data>
+    </node>
+    <node id="pollwake">
+      <data key="d1">True</data>
+    </node>
+    <node id="serial8250_tx_chars">
+      <data key="d0">True</data>
+      <data key="d1">True</data>
+    </node>
+    <node id="wake_up_process">
+      <data key="d1">True</data>
+    </node>
+    <node id="tty_port_tty_get">
+      <data key="d1">True</data>
+    </node>
+    <node id="should_failslab">
+      <data key="d1">True</data>
+    </node>
+    <node id="kthread_is_per_cpu">
+      <data key="d1">True</data>
+    </node>
+    <node id="__task_pid_nr_ns">
+      <data key="d1">True</data>
+    </node>
+    <node id="default_wake_function">
+      <data key="d1">True</data>
+    </node>
+    <node id="put_ucounts">
+      <data key="d1">True</data>
+    </node>
+    <node id="uart_write_wakeup">
+      <data key="d1">True</data>
+    </node>
+    <node id="find_task_by_vpid">
+      <data key="d1">True</data>
+    </node>
+    <node id="dec_rlimit_put_ucounts">
+      <data key="d1">True</data>
+    </node>
+    <node id="do_send_specific">
+      <data key="d1">True</data>
+    </node>
+    <node id="tty_wakeup">
+      <data key="d0">True</data>
+      <data key="d1">True</data>
+    </node>
+    <node id="tty_port_tty_wakeup">
+      <data key="d0">True</data>
+      <data key="d1">True</data>
+    </node>
+    <node id="serial8250_interrupt">
+      <data key="d0">True</data>
+      <data key="d1">True</data>
+    </node>
+    <node id="add_interrupt_randomness">
+      <data key="d1">True</data>
+    </node>
+    <node id="__x64_sys_tgkill">
+      <data key="d1">True</data>
+    </node>
+    <node id="do_send_sig_info">
+      <data key="d1">True</data>
+    </node>
+    <node id="serial8250_rpm_put_tx">
+      <data key="d1">True</data>
+    </node>
+    <node id="wake_up_state">
+      <data key="d1">True</data>
+    </node>
+    <node id="inc_rlimit_get_ucounts">
+      <data key="d1">True</data>
+    </node>
+    <node id="__wake_up">
+      <data key="d0">True</data>
+      <data key="d1">True</data>
+    </node>
+    <node id="autoremove_wake_function">
+      <data key="d1">True</data>
+    </node>
+    <node id="resched_curr">
+      <data key="d0">True</data>
+      <data key="d1">True</data>
+    </node>
+    <node id="enqueue_task_fair">
+      <data key="d0">True</data>
+      <data key="d1">True</data>
+    </node>
+    <node id="__sigqueue_alloc">
+      <data key="d1">True</data>
+    </node>
+    <node id="siginfo_layout">
+      <data key="d1">True</data>
+    </node>
+    <node id="check_kill_permission">
+      <data key="d1">True</data>
+    </node>
+    <node id="security_task_kill">
+      <data key="d0">True</data>
+      <data key="d1">True</data>
+    </node>
+    <node id="selinux_task_kill">
+      <data key="d1">True</data>
+    </node>
+    <node id="io_serial_in">
+      <data key="d1">True</data>
+    </node>
+    <node id="queue_work_on">
+      <data key="d1">True</data>
+    </node>
+    <node id="select_task_rq_fair">
+      <data key="d1">True</data>
+    </node>
+    <node id="task_active_pid_ns">
+      <data key="d1">True</data>
+    </node>
+    <node id="complete_signal">
+      <data key="d1">True</data>
+    </node>
+    <node id="tty_port_default_wakeup">
+      <data key="d1">True</data>
+    </node>
+    <node id="get_ucounts">
+      <data key="d1">True</data>
+    </node>
+    <node id="note_interrupt">
+      <data key="d1">True</data>
+    </node>
+    <node id="kmem_cache_alloc">
+      <data key="d1">True</data>
+    </node>
+    <node id="n_tty_write_wakeup" />
+    <node id="tty_ldisc_deref" />
+    <node id="tty_ldisc_ref" />
+    <node id="kill_fasync" />
+    <node id="ldsem_up_read" />
+    <node id="wake_up_bit" />
+    <node id="__bitmap_weight" />
+    <node id="_find_first_bit" />
+    <node id="_find_next_and_bit" />
+    <node id="_find_next_bit" />
+    <node id="enqueue_entity" />
+    <node id="update_load_avg" />
+    <node id="rb_insert_color" />
+    <node id="attach_entity_load_avg" />
+    <node id="detach_entity_load_avg" />
+    <node id="native_smp_send_reschedule" />
+    <node id="__warn_printk" />
+    <node id="aio_poll_wake" />
+    <node id="blk_mq_dispatch_wake" />
+    <node id="child_wait_callback" />
+    <node id="cwt_wakefn" />
+    <node id="ep_poll_callback" />
+    <node id="i915_sw_fence_wake" />
+    <node id="io_async_buf_func" />
+    <node id="io_poll_wake" />
+    <node id="io_wqe_hash_wake" />
+    <node id="iocg_wake_fn" />
+    <node id="kyber_domain_wake" />
+    <node id="wake_page_function" />
+    <node id="iocb_put" />
+    <node id="blk_mq_run_hw_queue" />
+    <node id="__pm_stay_awake" />
+    <node id="io_req_task_queue" />
+    <node id="__io_req_task_work_add" />
+    <node id="io_pollfree_wake" />
+    <node id="io_wqe_activate_free_worker" />
+    <node id="sbitmap_del_wait_queue" />
+    <node id="__pm_runtime_suspend" />
+    <node id="f815xxa_mem_serial_out" />
+    <node id="hub6_serial_in" />
+    <node id="hub6_serial_out" />
+    <node id="kt_serial_in" />
+    <node id="mem16_serial_in" />
+    <node id="mem16_serial_out" />
+    <node id="mem32_serial_in" />
+    <node id="mem32_serial_out" />
+    <node id="mem32be_serial_in" />
+    <node id="mem32be_serial_out" />
+    <node id="mem_serial_in" />
+    <node id="mem_serial_out" />
+    <node id="uart_xchar_out" />
+    <node id="ioread32be" />
+    <node id="iowrite32be" />
+    <node id="ptrace_trap_notify" />
+    <node id="uart_handle_cts_change" />
+    <node id="uart_handle_dcd_change" />
+    <node id="serial8250_start_tx" />
+    <node id="tty_hangup" />
+    <edge source="serial8250_modem_status" target="io_serial_in">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="serial8250_modem_status" target="uart_handle_cts_change">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_modem_status" target="uart_handle_dcd_change">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="prepare_signal" target="dec_rlimit_put_ucounts">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="prepare_signal" target="wake_up_state">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="prepare_signal" target="ptrace_trap_notify">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="signal_wake_up_state" target="wake_up_state">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="tty_kref_put" target="queue_work_on">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="pollwake" target="default_wake_function">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="io_serial_in">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="io_serial_out">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="uart_write_wakeup">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="f815xxa_mem_serial_out">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="hub6_serial_in">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="hub6_serial_out">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="kt_serial_in">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="mem16_serial_in">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="mem16_serial_out">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="mem32_serial_in">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="mem32_serial_out">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="mem32be_serial_in">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="mem32be_serial_out">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="mem_serial_in">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="mem_serial_out">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="serial8250_tx_chars" target="uart_xchar_out">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="uart_write_wakeup" target="tty_port_tty_wakeup">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="do_send_specific" target="__task_pid_nr_ns">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="do_send_specific" target="check_kill_permission">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="do_send_specific" target="do_send_sig_info">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="do_send_specific" target="find_task_by_vpid">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="tty_wakeup" target="n_tty_write_wakeup">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tty_wakeup" target="tty_ldisc_deref">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tty_wakeup" target="tty_ldisc_ref">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tty_port_tty_wakeup" target="tty_port_default_wakeup">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__x64_sys_tgkill" target="__task_pid_nr_ns">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__x64_sys_tgkill" target="do_send_specific">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="serial8250_rpm_put_tx" target="__pm_runtime_suspend">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="autoremove_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="default_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="pollwake">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="aio_poll_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="blk_mq_dispatch_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="child_wait_callback">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="cwt_wakefn">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="ep_poll_callback">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="i915_sw_fence_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_async_buf_func">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_poll_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_wqe_hash_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="iocg_wake_fn">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="kyber_domain_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="wake_page_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="autoremove_wake_function" target="default_wake_function">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="resched_curr" target="add_interrupt_randomness">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="resched_curr" target="native_smp_send_reschedule">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="enqueue_task_fair" target="enqueue_entity">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="enqueue_task_fair" target="update_load_avg">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__sigqueue_alloc" target="dec_rlimit_put_ucounts">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sigqueue_alloc" target="inc_rlimit_get_ucounts">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sigqueue_alloc" target="kmem_cache_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="check_kill_permission" target="security_task_kill">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="security_task_kill" target="selinux_task_kill">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="selinux_task_kill" target="avc_has_perm">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="__bitmap_weight">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_first_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_next_and_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_next_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="complete_signal" target="wake_up_state">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="complete_signal" target="wake_up_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tty_port_default_wakeup" target="tty_kref_put">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="tty_port_default_wakeup" target="tty_wakeup">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kmem_cache_alloc" target="should_failslab">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="n_tty_write_wakeup" target="kill_fasync">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tty_ldisc_deref" target="ldsem_up_read">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="enqueue_entity" target="rb_insert_color">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="update_load_avg" target="attach_entity_load_avg">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="update_load_avg" target="detach_entity_load_avg">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="native_smp_send_reschedule" target="__warn_printk">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="iocb_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="blk_mq_dispatch_wake" target="blk_mq_run_hw_queue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ep_poll_callback" target="__pm_stay_awake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_async_buf_func" target="io_req_task_queue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_poll_wake" target="__io_req_task_work_add">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_poll_wake" target="io_pollfree_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_wqe_hash_wake" target="io_wqe_activate_free_worker">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kyber_domain_wake" target="sbitmap_del_wait_queue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="mem32be_serial_in" target="ioread32be">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="mem32be_serial_out" target="iowrite32be">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="uart_handle_cts_change" target="serial8250_start_tx">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="uart_handle_dcd_change" target="tty_hangup">
+      <data key="d3">True</data>
+    </edge>
+  </graph>
+</graphml>

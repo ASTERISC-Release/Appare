@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d1" for="edge" attr.name="indirect" attr.type="boolean" />
+  <key id="d0" for="node" attr.name="profiled" attr.type="boolean" />
+  <graph edgedefault="directed">
+    <node id="__x64_sys_set_tid_address">
+      <data key="d0">True</data>
+    </node>
+    <node id="__task_pid_nr_ns">
+      <data key="d0">True</data>
+    </node>
+    <edge source="__x64_sys_set_tid_address" target="__task_pid_nr_ns">
+      <data key="d1">False</data>
+    </edge>
+  </graph>
+</graphml>

@@ -1,0 +1,18 @@
+Profiled functions: 16 nodes and 10 edges.
+Profiled (filtered) functions:
+__bad_area_nosemaphore
+__cond_resched
+kernelmode_fixup_or_oops
+crng_make_state
+__x64_sys_getrandom
+find_vma
+autoremove_wake_function
+chacha_permute
+fixup_exception
+select_task_rq_fair
+up_read
+get_random_bytes_user
+default_wake_function
+bad_area
+search_exception_tables
+__wake_up

@@ -1,0 +1,45 @@
+diff -ur qemu-8.1.0/target/i386/cpu.c qemu-8.1.0/target/i386/cpu.c
+--- qemu-8.1.0/target/i386/cpu.c	2023-08-22 08:34:02.000000000 -0700
++++ qemu-8.1.0/target/i386/cpu.c	2023-09-19 20:27:09.375018168 -0700
+@@ -7133,6 +7133,7 @@
+     CPUX86State *env = &cpu->env;
+     FeatureWord w;
+     const char *prefix = NULL;
++    uint64_t host_feat;
+ 
+     if (verbose) {
+         prefix = accel_uses_host_cpuid()
+@@ -7141,15 +7142,16 @@
+     }
+ 
+     for (w = 0; w < FEATURE_WORDS; w++) {
+-        uint64_t host_feat =
+-            x86_cpu_get_supported_feature_word(w, false);
++        host_feat = x86_cpu_get_supported_feature_word(w, false);
+         uint64_t requested_features = env->features[w];
+         uint64_t unavailable_features = requested_features & ~host_feat;
+         mark_unavailable_features(cpu, w, unavailable_features, prefix);
+     }
+ 
+     if ((env->features[FEAT_7_0_EBX] & CPUID_7_0_EBX_INTEL_PT) &&
+-        kvm_enabled()) {
++	    	    kvm_enabled())
++    {
++#if 0
+         KVMState *s = CPU(cpu)->kvm_state;
+         uint32_t eax_0 = kvm_arch_get_supported_cpuid(s, 0x14, 0, R_EAX);
+         uint32_t ebx_0 = kvm_arch_get_supported_cpuid(s, 0x14, 0, R_EBX);
+@@ -7172,8 +7174,12 @@
+              * host can't emulate the capabilities we report on
+              * cpu_x86_cpuid(), intel-pt can't be enabled on the current host.
+              */
+-            mark_unavailable_features(cpu, FEAT_7_0_EBX, CPUID_7_0_EBX_INTEL_PT, prefix);
+-        }
++#endif
++		host_feat = x86_cpu_get_supported_feature_word(FEAT_14_0_ECX, false);
++		if ((env->features[FEAT_14_0_ECX] ^ host_feat) & CPUID_14_0_ECX_LIP) {
++	            warn_report("Cannot configure different Intel PT IP payload format than hardware");
++    		    mark_unavailable_features(cpu, FEAT_7_0_EBX, CPUID_7_0_EBX_INTEL_PT, prefix);
++        	}
+     }
+ }

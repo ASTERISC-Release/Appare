@@ -1,0 +1,106 @@
+Subgraph has 104 nodes and 96 edges.
+Markdown tree representation:
+- __local_bh_enable_ip <profiled>
+- find_vma <profiled>
+  - mt_find
+    - mas_next_entry
+- unix_peer_get <profiled>
+- __cond_resched <profiled>
+  - __schedule
+    - __delayacct_blkio_start
+    - dequeue_task_dl
+    - dequeue_task_fair
+    - dequeue_task_rt
+    - enter_lazy_tlb
+    - finish_task_switch
+    - perf_event_task_sched_out
+    - pick_next_task_fair
+    - set_next_task_dl
+    - set_next_task_fair
+    - set_next_task_rt
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - aio_poll_wake
+    - iocb_put
+    - queue_work_on
+  - io_poll_wake
+    - __io_req_task_work_add
+    - io_pollfree_wake
+  - io_wake_function
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - p9_pollwake
+  - percpu_rwsem_wake_function
+  - pollwake
+  - receiver_wake_function
+  - wake_page_function
+    - wake_up_state
+  - woken_wake_function
+- release_sock <profiled>
+  - tcp_release_cb <profiled>
+    - tcp_tsq_write
+      - tcp_current_mss
+      - tcp_write_xmit
+      - tcp_xmit_retransmit_queue
+    - tcp_v4_mtu_reduced
+      - dst_blackhole_mtu
+      - inet_csk_update_pmtu
+      - ipv4_mtu
+      - tcp_simple_retransmit
+      - tcp_sync_mss
+      - xfrm_mtu
+    - tcp_v6_mtu_reduced
+      - inet6_csk_update_pmtu
+      - tcp_mtu_to_mss
+  - ip4_datagram_release_cb
+    - dst_release
+    - ip_route_output_flow
+    - ipv4_dst_check
+    - security_sk_classify_flow
+    - xfrm_dst_check
+  - ip6_datagram_release_cb
+    - ip6_datagram_dst_update
+- __x64_sys_getpeername <profiled>
+  - __sys_getpeername <profiled>
+    - __fdget <profiled>
+      - __fget_files
+        - fput
+    - inet_getname <profiled>
+    - move_addr_to_user <profiled>
+      - _copy_to_user
+    - security_socket_getpeername <profiled>
+      - selinux_socket_getpeername <profiled>
+      - selinux_socket_getsockname <profiled>
+        - avc_has_perm
+    - unix_getname <profiled>
+    - inet6_getname
+      - __ipv6_addr_type
+    - netlink_getname
+    - packet_getname
+    - packet_getname_spkt
+      - strscpy
+- select_task_rq_fair <profiled>
+  - __bitmap_weight
+  - _find_first_bit
+  - _find_next_and_bit
+  - _find_next_bit
+- bad_area <profiled>
+  - __bad_area_nosemaphore <profiled>
+    - kernelmode_fixup_or_oops <profiled>
+      - fixup_exception <profiled>
+        - search_exception_tables <profiled>
+          - search_module_extables
+            - mod_find
+        - fpu_reset_from_exception_fixup
+          - restore_fpregs_from_fpstate
+      - is_prefetch
+      - page_fault_oops
+        - __die
+        - dump_pagetable
+        - get_stack_info_noinstr
+        - lookup_address_in_pgd
+        - oops_begin
+        - oops_end
+    - unhandled_signal
+  - up_read <profiled>

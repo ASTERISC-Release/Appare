@@ -1,0 +1,4982 @@
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- page_mapping
+
+Caller: page_mapping
+Source code:
+struct address_space *page_mapping(struct page *page)
+{
+	return folio_mapping(page_folio(page));
+}
+
+
+Callee candidate: folio_mapping
+Source code:
+struct address_space *folio_mapping(struct folio *folio)
+{
+	struct address_space *mapping;
+
+	/* This happens if someone calls flush_dcache_page on slab page */
+	if (unlikely(folio_test_slab(folio)))
+		return NULL;
+
+	if (unlikely(folio_test_swapcache(folio)))
+		return swap_address_space(folio_swap_entry(folio));
+
+	mapping = folio->mapping;
+	if ((unsigned long)mapping & PAGE_MAPPING_FLAGS)
+		return NULL;
+
+	return mapping;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of page_mapping will reach folio_mapping? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `page_mapping` explicitly invokes `folio_mapping` as its sole operation, passing the result of `page_folio(page)`. This direct, unconditional call ensures that execution of `page_mapping` will always reach `folio_mapping`, regardless of runtime conditions. The historical call graph confirms this relationship, and the code structure shows no barriers to this call path. Security enforcement does not introduce additional constraints here, as the call is deterministic and required for the function’s purpose.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: page_mapping
+
+Callee candidate: folio_mapping
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of page_mapping will reach folio_mapping? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In Linux kernel development, `page_mapping` is a function that retrieves the `struct address_space` associated with a given `struct page`. The `folio_mapping` function serves a similar purpose but for `struct folio`, which is a newer abstraction introduced to manage larger memory regions more efficiently than individual pages. Since `folio_mapping` is conceptually analogous to `page_mapping`, and `folio` is a superset of `page`, it is semantically and functionally reasonable to expect that `page_mapping` could transition to using `folio_mapping` in a refactored or updated code path.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- filemap_fault
+  - __filemap_get_folio
+    - filemap_alloc_folio
+  - page_cache_async_ra
+    - ondemand_readahead
+      - page_cache_ra_unbounded
+  - page_cache_ra_order
+
+Caller: filemap_alloc_folio
+Source code:
+struct folio *filemap_alloc_folio(gfp_t gfp, unsigned int order)
+{
+	int n;
+	struct folio *folio;
+
+	if (cpuset_do_page_mem_spread()) {
+		unsigned int cpuset_mems_cookie;
+		do {
+			cpuset_mems_cookie = read_mems_allowed_begin();
+			n = cpuset_mem_spread_node();
+			folio = __folio_alloc_node(gfp, order, n);
+		} while (!folio && read_mems_allowed_retry(cpuset_mems_cookie));
+
+		return folio;
+	}
+	return folio_alloc(gfp, order);
+}
+
+
+Callee candidate: folio_alloc
+Source code:
+struct folio *folio_alloc(gfp_t gfp, unsigned order)
+{
+	struct page *page = alloc_pages(gfp | __GFP_COMP, order);
+
+	if (page && order > 1)
+		prep_transhuge_page(page);
+	return (struct folio *)page;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of filemap_alloc_folio will reach folio_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `filemap_alloc_folio` directly calls `folio_alloc` when `cpuset_do_page_mem_spread()` evaluates to false. Since this condition is explicitly guarded in the code and historically observed in the call graph (e.g., via `page_cache_ra_unbounded`), it is a valid and intended execution path. Security enforcement must account for this legitimate scenario where memory spreading is disabled, making the transition to `folio_alloc` semantically and functionally reasonable.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: filemap_alloc_folio
+
+Callee candidate: folio_alloc
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of filemap_alloc_folio will reach folio_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+filemap_alloc_folio is a function in the Linux kernel responsible for allocating a folio (a power-of-two-sized memory block, typically a page or multiple pages) for use in file-backed memory mappings. It is expected to utilize a lower-level allocation function like folio_alloc, which directly allocates a folio from the kernel's memory management subsystem. Therefore, it is semantically and functionally reasonable for filemap_alloc_folio to call folio_alloc as part of its allocation logic.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_mmap
+  - ksys_mmap_pgoff
+    - vm_mmap_pgoff
+      - do_mmap
+        - mmap_region
+          - unmap_region
+            - free_pgtables
+              - unlink_anon_vmas
+- __split_vma
+  - __vma_adjust
+    - anon_vma_clone
+      - unlink_anon_vmas
+
+Caller: unlink_anon_vmas
+Source code:
+void unlink_anon_vmas(struct vm_area_struct *vma)
+{
+	struct anon_vma_chain *avc, *next;
+	struct anon_vma *root = NULL;
+
+	/*
+	 */
+	list_for_each_entry_safe(avc, next, &vma->anon_vma_chain, same_vma) {
+		struct anon_vma *anon_vma = avc->anon_vma;
+
+		root = lock_anon_vma_root(root, anon_vma);
+		anon_vma_interval_tree_remove(avc, &anon_vma->rb_root);
+
+		/*
+		 */
+		if (RB_EMPTY_ROOT(&anon_vma->rb_root.rb_root)) {
+			anon_vma->parent->num_children--;
+			continue;
+		}
+
+		list_del(&avc->same_vma);
+		anon_vma_chain_free(avc);
+	}
+	if (vma->anon_vma) {
+		vma->anon_vma->num_active_vmas--;
+
+		/*
+		 */
+		vma->anon_vma = NULL;
+	}
+	unlock_anon_vma_root(root);
+
+	/*
+	 */
+	list_for_each_entry_safe(avc, next, &vma->anon_vma_chain, same_vma) {
+		struct anon_vma *anon_vma = avc->anon_vma;
+
+		VM_WARN_ON(anon_vma->num_children);
+		VM_WARN_ON(anon_vma->num_active_vmas);
+		put_anon_vma(anon_vma);
+
+		list_del(&avc->same_vma);
+		anon_vma_chain_free(avc);
+	}
+}
+
+
+Callee candidate: anon_vma_interval_tree_remove
+Source code:
+void anon_vma_interval_tree_remove(struct anon_vma_chain *node,
+				   struct rb_root_cached *root)
+{
+	__anon_vma_interval_tree_remove(node, root);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of unlink_anon_vmas will reach anon_vma_interval_tree_remove? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The `unlink_anon_vmas` function explicitly calls `anon_vma_interval_tree_remove` within its loop over `anon_vma_chain` entries. This is evident from the source code, where each iteration invokes `anon_vma_interval_tree_remove(avc, &anon_vma->rb_root)` unconditionally. Historical execution paths (e.g., via `free_pgtables` or `__vma_adjust`) confirm this direct call sequence. Since the function's logic ensures this call occurs for every `anon_vma_chain` element, it is semantically and functionally guaranteed.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: unlink_anon_vmas
+
+Callee candidate: anon_vma_interval_tree_remove
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of unlink_anon_vmas will reach anon_vma_interval_tree_remove? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In the context of Linux memory management, `unlink_anon_vmas` is responsible for removing an anonymous VMA (Virtual Memory Area) from its associated anon_vma structure. `anon_vma_interval_tree_remove` is a function used to remove an entry from an interval tree that tracks anonymous VMA mappings. Since `unlink_anon_vmas` is tasked with cleaning up these mappings, it is functionally reasonable and semantically consistent for it to invoke `anon_vma_interval_tree_remove` as part of its cleanup process.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_mmap
+  - ksys_mmap_pgoff
+    - vm_mmap_pgoff
+      - do_mmap
+
+Caller: do_mmap
+Source code:
+unsigned long do_mmap(struct file *file, unsigned long addr,
+			unsigned long len, unsigned long prot,
+			unsigned long flags, unsigned long pgoff,
+			unsigned long *populate, struct list_head *uf)
+{
+	struct mm_struct *mm = current->mm;
+	vm_flags_t vm_flags;
+	int pkey = 0;
+
+	validate_mm(mm);
+	*populate = 0;
+
+	if (!len)
+		return -EINVAL;
+
+	/*
+	 */
+	if ((prot & PROT_READ) && (current->personality & READ_IMPLIES_EXEC))
+		if (!(file && path_noexec(&file->f_path)))
+			prot |= PROT_EXEC;
+
+	/* force arch specific MAP_FIXED handling in get_unmapped_area */
+	if (flags & MAP_FIXED_NOREPLACE)
+		flags |= MAP_FIXED;
+
+	if (!(flags & MAP_FIXED))
+		addr = round_hint_to_min(addr);
+
+	/* Careful about overflows.. */
+	len = PAGE_ALIGN(len);
+	if (!len)
+		return -ENOMEM;
+
+	/* offset overflow? */
+	if ((pgoff + (len >> PAGE_SHIFT)) < pgoff)
+		return -EOVERFLOW;
+
+	/* Too many mappings? */
+	if (mm->map_count > sysctl_max_map_count)
+		return -ENOMEM;
+
+	/* Obtain the address to map to. we verify (or select) it and ensure
+	 */
+	addr = get_unmapped_area(file, addr, len, pgoff, flags);
+	if (IS_ERR_VALUE(addr))
+		return addr;
+
+	if (flags & MAP_FIXED_NOREPLACE) {
+		if (find_vma_intersection(mm, addr, addr + len))
+			return -EEXIST;
+	}
+
+	if (prot == PROT_EXEC) {
+		pkey = execute_only_pkey(mm);
+		if (pkey < 0)
+			pkey = 0;
+	}
+
+	/* Do simple checking here so the lower-level routines won't have
+	 */
+	vm_flags = calc_vm_prot_bits(prot, pkey) | calc_vm_flag_bits(flags) |
+			mm->def_flags | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC;
+
+	if (flags & MAP_LOCKED)
+		if (!can_do_mlock())
+			return -EPERM;
+
+	if (mlock_future_check(mm, vm_flags, len))
+		return -EAGAIN;
+
+	if (file) {
+		struct inode *inode = file_inode(file);
+		unsigned long flags_mask;
+
+		if (!file_mmap_ok(file, inode, pgoff, len))
+			return -EOVERFLOW;
+
+		flags_mask = LEGACY_MAP_MASK | file->f_op->mmap_supported_flags;
+
+		switch (flags & MAP_TYPE) {
+		case MAP_SHARED:
+			/*
+			 */
+			flags &= LEGACY_MAP_MASK;
+			fallthrough;
+		case MAP_SHARED_VALIDATE:
+			if (flags & ~flags_mask)
+				return -EOPNOTSUPP;
+			if (prot & PROT_WRITE) {
+				if (!(file->f_mode & FMODE_WRITE))
+					return -EACCES;
+				if (IS_SWAPFILE(file->f_mapping->host))
+					return -ETXTBSY;
+			}
+
+			/*
+			 */
+			if (IS_APPEND(inode) && (file->f_mode & FMODE_WRITE))
+				return -EACCES;
+
+			vm_flags |= VM_SHARED | VM_MAYSHARE;
+			if (!(file->f_mode & FMODE_WRITE))
+				vm_flags &= ~(VM_MAYWRITE | VM_SHARED);
+			fallthrough;
+		case MAP_PRIVATE:
+			if (!(file->f_mode & FMODE_READ))
+				return -EACCES;
+			if (path_noexec(&file->f_path)) {
+				if (vm_flags & VM_EXEC)
+					return -EPERM;
+				vm_flags &= ~VM_MAYEXEC;
+			}
+
+			if (!file->f_op->mmap)
+				return -ENODEV;
+			if (vm_flags & (VM_GROWSDOWN|VM_GROWSUP))
+				return -EINVAL;
+			break;
+
+		default:
+			return -EINVAL;
+		}
+	} else {
+		switch (flags & MAP_TYPE) {
+		case MAP_SHARED:
+			if (vm_flags & (VM_GROWSDOWN|VM_GROWSUP))
+				return -EINVAL;
+			/*
+			 */
+			pgoff = 0;
+			vm_flags |= VM_SHARED | VM_MAYSHARE;
+			break;
+		case MAP_PRIVATE:
+			/*
+			 */
+			pgoff = addr >> PAGE_SHIFT;
+			break;
+		default:
+			return -EINVAL;
+		}
+	}
+
+	/*
+	 */
+	if (flags & MAP_NORESERVE) {
+		/* We honor MAP_NORESERVE if allowed to overcommit */
+		if (sysctl_overcommit_memory != OVERCOMMIT_NEVER)
+			vm_flags |= VM_NORESERVE;
+
+		/* hugetlb applies strict overcommit unless MAP_NORESERVE */
+		if (file && is_file_hugepages(file))
+			vm_flags |= VM_NORESERVE;
+	}
+
+	addr = mmap_region(file, addr, len, vm_flags, pgoff, uf);
+	if (!IS_ERR_VALUE(addr) &&
+	    ((vm_flags & VM_LOCKED) ||
+	     (flags & (MAP_POPULATE | MAP_NONBLOCK)) == MAP_POPULATE))
+		*populate = len;
+	return addr;
+}
+
+
+Callee candidate: is_file_shm_hugepages
+Source code:
+bool is_file_shm_hugepages(struct file *file)
+{
+	return file->f_op == &shm_file_operations_huge;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of do_mmap will reach is_file_shm_hugepages? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The do_mmap function checks for hugepage mappings using is_file_hugepages(), but there is no code path in the provided do_mmap implementation that references or invokes is_file_shm_hugepages(). The latter function specifically checks for SHM (shared memory) hugepage operations, which is unrelated to the logic in do_mmap as shown. Since do_mmap does not handle SHM-specific checks or call any function that would transitively reach is_file_shm_hugepages(), the execution flow cannot reach it.}
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: do_mmap
+
+Callee candidate: is_file_shm_hugepages
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of do_mmap will reach is_file_shm_hugepages? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+do_mmap is responsible for handling memory mapping operations, including shared memory. The function is_file_shm_hugepages is used to check if a file is associated with shared memory using huge pages. Since shared memory can be mapped via mmap, and huge pages are a memory optimization, it is reasonable for do_mmap to invoke or reach this function during shared memory mapping validation.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __mark_inode_dirty
+  - ext4_dirty_inode
+    - __ext4_mark_inode_dirty
+      - ext4_mark_iloc_dirty
+        - __ext4_journal_get_write_access
+      - ext4_reserve_inode_write
+
+Caller: __ext4_journal_get_write_access
+Source code:
+int __ext4_journal_get_write_access(const char *where, unsigned int line,
+				    handle_t *handle, struct super_block *sb,
+				    struct buffer_head *bh,
+				    enum ext4_journal_trigger_type trigger_type)
+{
+	int err;
+
+	might_sleep();
+
+	if (bh->b_bdev->bd_super)
+		ext4_check_bdev_write_error(bh->b_bdev->bd_super);
+
+	if (ext4_handle_valid(handle)) {
+		err = jbd2_journal_get_write_access(handle, bh);
+		if (err) {
+			ext4_journal_abort_handle(where, line, __func__, bh,
+						  handle, err);
+			return err;
+		}
+	}
+	if (trigger_type == EXT4_JTR_NONE || !ext4_has_metadata_csum(sb))
+		return 0;
+	BUG_ON(trigger_type >= EXT4_JOURNAL_TRIGGER_COUNT);
+	jbd2_journal_set_triggers(bh,
+		&EXT4_SB(sb)->s_journal_triggers[trigger_type].tr_triggers);
+	return 0;
+}
+
+
+Callee candidate: jbd2_journal_get_write_access
+Source code:
+int jbd2_journal_get_write_access(handle_t *handle, struct buffer_head *bh)
+{
+	struct journal_head *jh;
+	int rc;
+
+	if (is_handle_aborted(handle))
+		return -EROFS;
+
+	if (jbd2_write_access_granted(handle, bh, false))
+		return 0;
+
+	jh = jbd2_journal_add_journal_head(bh);
+	/* We do not want to get caught playing with fields which the
+	 * completes any outstanding IO before proceeding. */
+	rc = do_get_write_access(handle, jh, 0);
+	jbd2_journal_put_journal_head(jh);
+	return rc;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __ext4_journal_get_write_access will reach jbd2_journal_get_write_access? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function __ext4_journal_get_write_access calls jbd2_journal_get_write_access when `ext4_handle_valid(handle)` is true. In the historical context, the handle is obtained via `ext4_journal_start`, which ensures its validity under normal operation. Security-enforcement logic would expect this call to occur as part of standard journaling for inode modifications. The conditional check is satisfied in typical execution paths, making the transition semantically and functionally expected.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __ext4_journal_get_write_access
+
+Callee candidate: jbd2_journal_get_write_access
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __ext4_journal_get_write_access will reach jbd2_journal_get_write_access? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+__ext4_journal_get_write_access is a function internal to the ext4 filesystem, used to prepare a buffer for journaling by obtaining write access. It is expected to delegate the actual write access operation to the underlying journaling subsystem, which in the case of ext4 is JBD2 (Journaling Block Device 2). jbd2_journal_get_write_access is the corresponding function in the JBD2 layer that handles this operation. Therefore, it is semantically and functionally reasonable for __ext4_journal_get_write_access to call jbd2_journal_get_write_access.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- kmem_cache_alloc_bulk
+
+Caller: kmem_cache_alloc_bulk
+Source code:
+int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t nr,
+								void **p)
+{
+	size_t i;
+
+	for (i = 0; i < nr; i++) {
+		void *x = p[i] = kmem_cache_alloc(s, flags);
+
+		if (!x) {
+			kmem_cache_free_bulk(s, i, p);
+			return 0;
+		}
+	}
+	return i;
+}
+
+
+Callee candidate: kmem_cache_free_bulk
+Source code:
+void kmem_cache_free_bulk(struct kmem_cache *s, size_t nr, void **p)
+{
+	size_t i;
+
+	for (i = 0; i < nr; i++) {
+		if (s)
+			kmem_cache_free(s, p[i]);
+		else
+			kfree(p[i]);
+	}
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of kmem_cache_alloc_bulk will reach kmem_cache_free_bulk? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `kmem_cache_alloc_bulk` explicitly calls `kmem_cache_free_bulk` when an allocation fails during its loop. This is a direct, error-handling control flow path designed to release previously allocated resources and avoid memory leaks. Since the call is deterministic under failure conditions, and the historical data confirms this relationship, it is both semantically and functionally reasonable to expect this execution path.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: kmem_cache_alloc_bulk
+
+Callee candidate: kmem_cache_free_bulk
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of kmem_cache_alloc_bulk will reach kmem_cache_free_bulk? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+These two functions are both part of the same memory management API in the Linux kernel, with `kmem_cache_alloc_bulk` allocating multiple objects from a slab cache and `kmem_cache_free_bulk` releasing them. It is reasonable to expect that a bulk allocation is eventually followed by a bulk free, especially in performance-sensitive or resource-managed code paths. The transition from allocation to deallocation is a core aspect of memory management and aligns with expected resource lifecycle semantics.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_mmap
+  - ksys_mmap_pgoff
+    - vm_mmap_pgoff
+      - security_mmap_file
+        - selinux_mmap_file
+          - file_map_prot_check
+
+Caller: file_map_prot_check
+Source code:
+static int file_map_prot_check(struct file *file, unsigned long prot, int shared)
+{
+	const struct cred *cred = current_cred();
+	u32 sid = cred_sid(cred);
+	int rc = 0;
+
+	if (default_noexec &&
+	    (prot & PROT_EXEC) && (!file || IS_PRIVATE(file_inode(file)) ||
+				   (!shared && (prot & PROT_WRITE)))) {
+		/*
+		 */
+		rc = avc_has_perm(&selinux_state,
+				  sid, sid, SECCLASS_PROCESS,
+				  PROCESS__EXECMEM, NULL);
+		if (rc)
+			goto error;
+	}
+
+	if (file) {
+		/* read access is always possible with a mapping */
+		u32 av = FILE__READ;
+
+		/* write access only matters if the mapping is shared */
+		if (shared && (prot & PROT_WRITE))
+			av |= FILE__WRITE;
+
+		if (prot & PROT_EXEC)
+			av |= FILE__EXECUTE;
+
+		return file_has_perm(cred, file, av);
+	}
+
+error:
+	return rc;
+}
+
+
+Callee candidate: avc_has_perm
+Source code:
+int avc_has_perm(struct selinux_state *state, u32 ssid, u32 tsid, u16 tclass,
+		 u32 requested, struct common_audit_data *auditdata)
+{
+	struct av_decision avd;
+	int rc, rc2;
+
+	rc = avc_has_perm_noaudit(state, ssid, tsid, tclass, requested, 0,
+				  &avd);
+
+	rc2 = avc_audit(state, ssid, tsid, tclass, requested, &avd, rc,
+			auditdata);
+	if (rc2)
+		return rc2;
+	return rc;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of file_map_prot_check will reach avc_has_perm? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `file_map_prot_check` includes a conditional branch that invokes `avc_has_perm` when `default_noexec` is enabled and the memory mapping includes `PROT_EXEC` under specific conditions (e.g., private or non-shared writes). Since these conditions can be met during normal execution (e.g., when a process attempts to map executable memory with restricted permissions), and `avc_has_perm` is explicitly called in this context, the call is both semantically and functionally valid within the SELinux enforcement flow.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: file_map_prot_check
+
+Callee candidate: avc_has_perm
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of file_map_prot_check will reach avc_has_perm? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `file_map_prot_check` is likely involved in checking protections for a file mapping, which could be part of a memory mapping or page fault handling process. On the other hand, `avc_has_perm` is part of the Security-Enhanced Linux (SELinux) Access Vector Cache, used to check if a subject has a specific permission over an object. For the execution to reach `avc_has_perm`, there must be an explicit or implicit need for a security policy check during the file mapping process. While memory protection checks are more commonly associated with VMA and page table validation, SELinux can enforce access controls on memory mappings. Therefore, it is semantically and functionally reasonable to expect that `file_map_prot_check` might invoke `avc_has_perm` if it involves a security policy check.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- vma_alloc_folio
+
+Caller: vma_alloc_folio
+Source code:
+struct folio *vma_alloc_folio(gfp_t gfp, int order, struct vm_area_struct *vma,
+		unsigned long addr, bool hugepage)
+{
+	struct mempolicy *pol;
+	int node = numa_node_id();
+	struct folio *folio;
+	int preferred_nid;
+	nodemask_t *nmask;
+
+	pol = get_vma_policy(vma, addr);
+
+	if (pol->mode == MPOL_INTERLEAVE) {
+		struct page *page;
+		unsigned nid;
+
+		nid = interleave_nid(pol, vma, addr, PAGE_SHIFT + order);
+		mpol_cond_put(pol);
+		gfp |= __GFP_COMP;
+		page = alloc_page_interleave(gfp, order, nid);
+		if (page && order > 1)
+			prep_transhuge_page(page);
+		folio = (struct folio *)page;
+		goto out;
+	}
+
+	if (pol->mode == MPOL_PREFERRED_MANY) {
+		struct page *page;
+
+		node = policy_node(gfp, pol, node);
+		gfp |= __GFP_COMP;
+		page = alloc_pages_preferred_many(gfp, order, node, pol);
+		mpol_cond_put(pol);
+		if (page && order > 1)
+			prep_transhuge_page(page);
+		folio = (struct folio *)page;
+		goto out;
+	}
+
+	if (unlikely(IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) && hugepage)) {
+		int hpage_node = node;
+
+		/*
+		 */
+		if (pol->mode == MPOL_PREFERRED)
+			hpage_node = first_node(pol->nodes);
+
+		nmask = policy_nodemask(gfp, pol);
+		if (!nmask || node_isset(hpage_node, *nmask)) {
+			mpol_cond_put(pol);
+			/*
+			 */
+			folio = __folio_alloc_node(gfp | __GFP_THISNODE |
+					__GFP_NORETRY, order, hpage_node);
+
+			/*
+			 */
+			if (!folio && (gfp & __GFP_DIRECT_RECLAIM))
+				folio = __folio_alloc(gfp, order, hpage_node,
+						      nmask);
+
+			goto out;
+		}
+	}
+
+	nmask = policy_nodemask(gfp, pol);
+	preferred_nid = policy_node(gfp, pol, node);
+	folio = __folio_alloc(gfp, order, preferred_nid, nmask);
+	mpol_cond_put(pol);
+out:
+	return folio;
+}
+
+
+Callee candidate: __folio_alloc
+Source code:
+struct folio *__folio_alloc(gfp_t gfp, unsigned int order, int preferred_nid,
+		nodemask_t *nodemask)
+{
+	struct page *page = __alloc_pages(gfp | __GFP_COMP, order,
+			preferred_nid, nodemask);
+
+	if (page && order > 1)
+		prep_transhuge_page(page);
+	return (struct folio *)page;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of vma_alloc_folio will reach __folio_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `vma_alloc_folio` includes multiple code paths for allocating memory (interleaved, preferred-many, or transparent hugepage-specific allocations). However, in all cases where these specialized allocations are not triggered or fail, the fallback is to call `__folio_alloc`. For example, if the memory policy does not match `MPOL_INTERLEAVE`, `MPOL_PREFERRED_MANY`, or the transparent hugepage conditions, the final path directly invokes `__folio_alloc`. This makes `__folio_alloc` a default and essential component of the allocation logic.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: vma_alloc_folio
+
+Callee candidate: __folio_alloc
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of vma_alloc_folio will reach __folio_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification:**
+The function `vma_alloc_folio` is responsible for allocating a folio (a 2MB or larger memory block) specifically for use with a Virtual Memory Area (VMA). The function `__folio_alloc` is a low-level, internal helper that actually performs the allocation of a folio. It is functionally expected and semantically correct that `vma_alloc_folio` calls or reaches `__folio_alloc` to fulfill the allocation request, as it is the standard mechanism used in the Linux kernel to allocate folios.
+
+**FINAL ANSWER -> YES**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- shmem_get_unmapped_area
+
+Caller: shmem_get_unmapped_area
+Source code:
+unsigned long shmem_get_unmapped_area(struct file *file,
+				      unsigned long uaddr, unsigned long len,
+				      unsigned long pgoff, unsigned long flags)
+{
+	unsigned long (*get_area)(struct file *,
+		unsigned long, unsigned long, unsigned long, unsigned long);
+	unsigned long addr;
+	unsigned long offset;
+	unsigned long inflated_len;
+	unsigned long inflated_addr;
+	unsigned long inflated_offset;
+
+	if (len > TASK_SIZE)
+		return -ENOMEM;
+
+	get_area = current->mm->get_unmapped_area;
+	addr = get_area(file, uaddr, len, pgoff, flags);
+
+	if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
+		return addr;
+	if (IS_ERR_VALUE(addr))
+		return addr;
+	if (addr & ~PAGE_MASK)
+		return addr;
+	if (addr > TASK_SIZE - len)
+		return addr;
+
+	if (shmem_huge == SHMEM_HUGE_DENY)
+		return addr;
+	if (len < HPAGE_PMD_SIZE)
+		return addr;
+	if (flags & MAP_FIXED)
+		return addr;
+	/*
+	 */
+	if (uaddr == addr)
+		return addr;
+
+	if (shmem_huge != SHMEM_HUGE_FORCE) {
+		struct super_block *sb;
+
+		if (file) {
+			VM_BUG_ON(file->f_op != &shmem_file_operations);
+			sb = file_inode(file)->i_sb;
+		} else {
+			/*
+			 */
+			if (IS_ERR(shm_mnt))
+				return addr;
+			sb = shm_mnt->mnt_sb;
+		}
+		if (SHMEM_SB(sb)->huge == SHMEM_HUGE_NEVER)
+			return addr;
+	}
+
+	offset = (pgoff << PAGE_SHIFT) & (HPAGE_PMD_SIZE-1);
+	if (offset && offset + len < 2 * HPAGE_PMD_SIZE)
+		return addr;
+	if ((addr & (HPAGE_PMD_SIZE-1)) == offset)
+		return addr;
+
+	inflated_len = len + HPAGE_PMD_SIZE - PAGE_SIZE;
+	if (inflated_len > TASK_SIZE)
+		return addr;
+	if (inflated_len < len)
+		return addr;
+
+	inflated_addr = get_area(NULL, uaddr, inflated_len, 0, flags);
+	if (IS_ERR_VALUE(inflated_addr))
+		return addr;
+	if (inflated_addr & ~PAGE_MASK)
+		return addr;
+
+	inflated_offset = inflated_addr & (HPAGE_PMD_SIZE-1);
+	inflated_addr += offset - inflated_offset;
+	if (inflated_offset > offset)
+		inflated_addr += HPAGE_PMD_SIZE;
+
+	if (inflated_addr > TASK_SIZE - len)
+		return addr;
+	return inflated_addr;
+}
+
+
+Callee candidate: arch_get_unmapped_area_topdown
+Source code:
+unsigned long arch_get_unmapped_area_topdown(struct file *filp,
+	unsigned long addr0, unsigned long len, unsigned long pgoff,
+	unsigned long flags)
+{
+	return arch_get_unmapped_area_common(filp,
+			addr0, len, pgoff, flags, DOWN);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of shmem_get_unmapped_area will reach arch_get_unmapped_area_topdown? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `shmem_get_unmapped_area` invokes `current->mm->get_unmapped_area`, which is a function pointer. On many Linux architectures (e.g., x86), this pointer is set to `arch_get_unmapped_area_topdown` when the top-down memory allocation policy is active. Since the code in `shmem_get_unmapped_area` directly uses this pointer without restricting its target, it is semantically and functionally valid for the call chain to reach `arch_get_unmapped_area_topdown` during execution. The historical context also confirms that `shmem_get_unmapped_area` is a caller of such arch-specific implementations.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: shmem_get_unmapped_area
+
+Callee candidate: arch_get_unmapped_area_topdown
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of shmem_get_unmapped_area will reach arch_get_unmapped_area_topdown? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `shmem_get_unmapped_area` is part of the SHMEM (shared memory) subsystem in the Linux kernel, responsible for finding a suitable virtual address range for a shared memory mapping. It typically delegates the actual address selection to architecture-specific functions. On systems that use a top-down memory allocation strategy (e.g., x86), `arch_get_unmapped_area_topdown` is the designated architecture-specific implementation for this purpose. Therefore, it is functionally and semantically reasonable for `shmem_get_unmapped_area` to invoke `arch_get_unmapped_area_topdown` on such systems.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __mark_inode_dirty
+  - ext4_dirty_inode
+    - __ext4_mark_inode_dirty
+      - ext4_mark_iloc_dirty
+        - __ext4_handle_dirty_metadata
+
+Caller: __ext4_handle_dirty_metadata
+Source code:
+int __ext4_handle_dirty_metadata(const char *where, unsigned int line,
+				 handle_t *handle, struct inode *inode,
+				 struct buffer_head *bh)
+{
+	int err = 0;
+
+	might_sleep();
+
+	set_buffer_meta(bh);
+	set_buffer_prio(bh);
+	set_buffer_uptodate(bh);
+	if (ext4_handle_valid(handle)) {
+		err = jbd2_journal_dirty_metadata(handle, bh);
+		/* Errors can only happen due to aborted journal or a nasty bug */
+		if (!is_handle_aborted(handle) && WARN_ON_ONCE(err)) {
+			ext4_journal_abort_handle(where, line, __func__, bh,
+						  handle, err);
+			if (inode == NULL) {
+				pr_err("EXT4: jbd2_journal_dirty_metadata "
+				       "failed: handle type %u started at "
+				       "line %u, credits %u/%u, errcode %d",
+				       handle->h_type,
+				       handle->h_line_no,
+				       handle->h_requested_credits,
+				       jbd2_handle_buffer_credits(handle), err);
+				return err;
+			}
+			ext4_error_inode(inode, where, line,
+					 bh->b_blocknr,
+					 "journal_dirty_metadata failed: "
+					 "handle type %u started at line %u, "
+					 "credits %u/%u, errcode %d",
+					 handle->h_type,
+					 handle->h_line_no,
+					 handle->h_requested_credits,
+					 jbd2_handle_buffer_credits(handle),
+					 err);
+		}
+	} else {
+		if (inode)
+			mark_buffer_dirty_inode(bh, inode);
+		else
+			mark_buffer_dirty(bh);
+		if (inode && inode_needs_sync(inode)) {
+			sync_dirty_buffer(bh);
+			if (buffer_req(bh) && !buffer_uptodate(bh)) {
+				ext4_error_inode_err(inode, where, line,
+						     bh->b_blocknr, EIO,
+					"IO error syncing itable block");
+				err = -EIO;
+			}
+		}
+	}
+	return err;
+}
+
+
+Callee candidate: jbd2_journal_dirty_metadata
+Source code:
+int jbd2_journal_dirty_metadata(handle_t *handle, struct buffer_head *bh)
+{
+	transaction_t *transaction = handle->h_transaction;
+	journal_t *journal;
+	struct journal_head *jh;
+	int ret = 0;
+
+	if (!buffer_jbd(bh))
+		return -EUCLEAN;
+
+	/*
+	 */
+	jh = bh2jh(bh);
+	jbd2_debug(5, "journal_head %p\n", jh);
+	JBUFFER_TRACE(jh, "entry");
+
+	/*
+	 */
+	if (data_race(jh->b_transaction != transaction &&
+	    jh->b_next_transaction != transaction)) {
+		spin_lock(&jh->b_state_lock);
+		J_ASSERT_JH(jh, jh->b_transaction == transaction ||
+				jh->b_next_transaction == transaction);
+		spin_unlock(&jh->b_state_lock);
+	}
+	if (jh->b_modified == 1) {
+		/* If it's in our transaction it must be in BJ_Metadata list. */
+		if (data_race(jh->b_transaction == transaction &&
+		    jh->b_jlist != BJ_Metadata)) {
+			spin_lock(&jh->b_state_lock);
+			if (jh->b_transaction == transaction &&
+			    jh->b_jlist != BJ_Metadata)
+				pr_err("JBD2: assertion failure: h_type=%u "
+				       "h_line_no=%u block_no=%llu jlist=%u\n",
+				       handle->h_type, handle->h_line_no,
+				       (unsigned long long) bh->b_blocknr,
+				       jh->b_jlist);
+			J_ASSERT_JH(jh, jh->b_transaction != transaction ||
+					jh->b_jlist == BJ_Metadata);
+			spin_unlock(&jh->b_state_lock);
+		}
+		goto out;
+	}
+
+	journal = transaction->t_journal;
+	spin_lock(&jh->b_state_lock);
+
+	if (is_handle_aborted(handle)) {
+		/*
+		 */
+		ret = -EROFS;
+		goto out_unlock_bh;
+	}
+
+	if (jh->b_modified == 0) {
+		/*
+		 */
+		if (WARN_ON_ONCE(jbd2_handle_buffer_credits(handle) <= 0)) {
+			ret = -ENOSPC;
+			goto out_unlock_bh;
+		}
+		jh->b_modified = 1;
+		handle->h_total_credits--;
+	}
+
+	/*
+	 */
+	if (jh->b_transaction == transaction && jh->b_jlist == BJ_Metadata) {
+		JBUFFER_TRACE(jh, "fastpath");
+		if (unlikely(jh->b_transaction !=
+			     journal->j_running_transaction)) {
+			printk(KERN_ERR "JBD2: %s: "
+			       "jh->b_transaction (%llu, %p, %u) != "
+			       "journal->j_running_transaction (%p, %u)\n",
+			       journal->j_devname,
+			       (unsigned long long) bh->b_blocknr,
+			       jh->b_transaction,
+			       jh->b_transaction ? jh->b_transaction->t_tid : 0,
+			       journal->j_running_transaction,
+			       journal->j_running_transaction ?
+			       journal->j_running_transaction->t_tid : 0);
+			ret = -EINVAL;
+		}
+		goto out_unlock_bh;
+	}
+
+	set_buffer_jbddirty(bh);
+
+	/*
+	 */
+	if (jh->b_transaction != transaction) {
+		JBUFFER_TRACE(jh, "already on other transaction");
+		if (unlikely(((jh->b_transaction !=
+			       journal->j_committing_transaction)) ||
+			     (jh->b_next_transaction != transaction))) {
+			printk(KERN_ERR "jbd2_journal_dirty_metadata: %s: "
+			       "bad jh for block %llu: "
+			       "transaction (%p, %u), "
+			       "jh->b_transaction (%p, %u), "
+			       "jh->b_next_transaction (%p, %u), jlist %u\n",
+			       journal->j_devname,
+			       (unsigned long long) bh->b_blocknr,
+			       transaction, transaction->t_tid,
+			       jh->b_transaction,
+			       jh->b_transaction ?
+			       jh->b_transaction->t_tid : 0,
+			       jh->b_next_transaction,
+			       jh->b_next_transaction ?
+			       jh->b_next_transaction->t_tid : 0,
+			       jh->b_jlist);
+			WARN_ON(1);
+			ret = -EINVAL;
+		}
+		/* And this case is illegal: we can't reuse another
+		 * transaction's data buffer, ever. */
+		goto out_unlock_bh;
+	}
+
+	/* That test should have eliminated the following case: */
+	J_ASSERT_JH(jh, jh->b_frozen_data == NULL);
+
+	JBUFFER_TRACE(jh, "file as BJ_Metadata");
+	spin_lock(&journal->j_list_lock);
+	__jbd2_journal_file_buffer(jh, transaction, BJ_Metadata);
+	spin_unlock(&journal->j_list_lock);
+out_unlock_bh:
+	spin_unlock(&jh->b_state_lock);
+out:
+	JBUFFER_TRACE(jh, "exit");
+	return ret;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __ext4_handle_dirty_metadata will reach jbd2_journal_dirty_metadata? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function __ext4_handle_dirty_metadata directly calls jbd2_journal_dirty_metadata when the handle is valid (ext4_handle_valid(handle)). In the historical execution context, the handle is initialized via ext4_journal_start, ensuring validity during normal operation. Since the code explicitly branches to jbd2_journal_dirty_metadata under valid handle conditions, and the provided call graph confirms this path is exercised, the transition is semantically and functionally expected.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __ext4_handle_dirty_metadata
+
+Callee candidate: jbd2_journal_dirty_metadata
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __ext4_handle_dirty_metadata will reach jbd2_journal_dirty_metadata? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In the context of the ext4 filesystem, `__ext4_handle_dirty_metadata` is responsible for handling dirty metadata buffers, typically by logging or writing them to disk. This function is part of the ext4 filesystem's interaction with the Journaling Block Device 2 (JBD2) layer, which is used for journaling in ext4.
+
+Semantically and functionally, it is expected that `__ext4_handle_dirty_metadata` will invoke `jbd2_journal_dirty_metadata` because the latter is the JBD2 API used to mark metadata buffers as dirty in the journal. This is a necessary step to ensure that metadata changes are properly journaled before being committed to the filesystem.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __mark_inode_dirty
+  - ext4_dirty_inode
+    - __ext4_journal_start_sb
+
+Caller: __ext4_journal_start_sb
+Source code:
+handle_t *__ext4_journal_start_sb(struct super_block *sb, unsigned int line,
+				  int type, int blocks, int rsv_blocks,
+				  int revoke_creds)
+{
+	journal_t *journal;
+	int err;
+
+	trace_ext4_journal_start(sb, blocks, rsv_blocks, revoke_creds,
+				 _RET_IP_);
+	err = ext4_journal_check_start(sb);
+	if (err < 0)
+		return ERR_PTR(err);
+
+	journal = EXT4_SB(sb)->s_journal;
+	if (!journal || (EXT4_SB(sb)->s_mount_state & EXT4_FC_REPLAY))
+		return ext4_get_nojournal();
+	return jbd2__journal_start(journal, blocks, rsv_blocks, revoke_creds,
+				   GFP_NOFS, type, line);
+}
+
+
+Callee candidate: jbd2__journal_start
+Source code:
+handle_t *jbd2__journal_start(journal_t *journal, int nblocks, int rsv_blocks,
+			      int revoke_records, gfp_t gfp_mask,
+			      unsigned int type, unsigned int line_no)
+{
+	handle_t *handle = journal_current_handle();
+	int err;
+
+	if (!journal)
+		return ERR_PTR(-EROFS);
+
+	if (handle) {
+		J_ASSERT(handle->h_transaction->t_journal == journal);
+		handle->h_ref++;
+		return handle;
+	}
+
+	nblocks += DIV_ROUND_UP(revoke_records,
+				journal->j_revoke_records_per_block);
+	handle = new_handle(nblocks);
+	if (!handle)
+		return ERR_PTR(-ENOMEM);
+	if (rsv_blocks) {
+		handle_t *rsv_handle;
+
+		rsv_handle = new_handle(rsv_blocks);
+		if (!rsv_handle) {
+			jbd2_free_handle(handle);
+			return ERR_PTR(-ENOMEM);
+		}
+		rsv_handle->h_reserved = 1;
+		rsv_handle->h_journal = journal;
+		handle->h_rsv_handle = rsv_handle;
+	}
+	handle->h_revoke_credits = revoke_records;
+
+	err = start_this_handle(journal, handle, gfp_mask);
+	if (err < 0) {
+		if (handle->h_rsv_handle)
+			jbd2_free_handle(handle->h_rsv_handle);
+		jbd2_free_handle(handle);
+		return ERR_PTR(err);
+	}
+	handle->h_type = type;
+	handle->h_line_no = line_no;
+	trace_jbd2_handle_start(journal->j_fs_dev->bd_dev,
+				handle->h_transaction->t_tid, type,
+				line_no, nblocks);
+
+	return handle;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __ext4_journal_start_sb will reach jbd2__journal_start? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function __ext4_journal_start_sb contains a direct conditional call to jbd2__journal_start when the journal is valid and the filesystem is not in recovery mode (EXT4_FC_REPLAY). The historical call graph confirms this execution path is used during normal ext4 operation (e.g., marking inodes dirty). Security-enforcement checks in the code (e.g., journal validity, mount state) do not block this path under normal conditions. Since jbd2__journal_start is explicitly invoked when the journal is active, this call is semantically and functionally valid.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __ext4_journal_start_sb
+
+Callee candidate: jbd2__journal_start
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __ext4_journal_start_sb will reach jbd2__journal_start? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `__ext4_journal_start_sb` is part of the ext4 filesystem code and is responsible for initiating a journaling transaction. It is closely tied to the JBD2 (Journaling Block Device version 2) layer, which provides the journaling functionality used by ext4. The function `jbd2__journal_start` is a core JBD2 function that starts a new journal transaction. Given the tight integration between ext4 and JBD2, and the standard flow of journaling operations, it is semantically and functionally reasonable to expect that `__ext4_journal_start_sb` will invoke `jbd2__journal_start` as part of its execution.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __mark_inode_dirty
+  - ext4_dirty_inode
+    - __ext4_mark_inode_dirty
+
+Caller: __ext4_mark_inode_dirty
+Source code:
+int __ext4_mark_inode_dirty(handle_t *handle, struct inode *inode,
+				const char *func, unsigned int line)
+{
+	struct ext4_iloc iloc;
+	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
+	int err;
+
+	might_sleep();
+	trace_ext4_mark_inode_dirty(inode, _RET_IP_);
+	err = ext4_reserve_inode_write(handle, inode, &iloc);
+	if (err)
+		goto out;
+
+	if (EXT4_I(inode)->i_extra_isize < sbi->s_want_extra_isize)
+		ext4_try_to_expand_extra_isize(inode, sbi->s_want_extra_isize,
+					       iloc, handle);
+
+	err = ext4_mark_iloc_dirty(handle, inode, &iloc);
+out:
+	if (unlikely(err))
+		ext4_error_inode_err(inode, func, line, 0, err,
+					"mark_inode_dirty error");
+	return err;
+}
+
+
+Callee candidate: up_write
+Source code:
+void up_write(struct rw_semaphore *sem)
+{
+	rwsem_release(&sem->dep_map, _RET_IP_);
+	__up_write(sem);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __ext4_mark_inode_dirty will reach up_write? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function __ext4_mark_inode_dirty is specific to ext4's journaling logic for inode modifications. The provided code shows it interacts with journaling functions (e.g., ext4_journal_start, ext4_reserve_inode_write) but does not directly or indirectly invoke `up_write`, which is used for releasing write locks on semaphores. There is no indication in the code or historical call graph that __ext4_mark_inode_dirty holds or releases an `rw_semaphore` requiring `up_write`. The existing paths focus on inode reservation, metadata updates, and error handling, with no semaphore operations visible.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __ext4_mark_inode_dirty
+
+Callee candidate: up_write
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __ext4_mark_inode_dirty will reach up_write? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `__ext4_mark_inode_dirty` is part of the ext4 filesystem code and marks an inode as dirty, typically to indicate that it needs to be written back to disk. The function `up_write` is used to release a write lock held via `down_write`. Since marking an inode dirty does not inherently involve acquiring or releasing a write lock, there is no direct or necessary control flow from `__ext4_mark_inode_dirty` to `up_write`.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_mmap
+  - ksys_mmap_pgoff
+    - vm_mmap_pgoff
+      - __mm_populate
+        - lru_add_drain
+      - do_mmap
+        - mmap_region
+          - unmap_region
+- __get_user_pages
+  - find_extend_vma
+    - populate_vma_page_range
+      - lru_add_drain
+
+Caller: lru_add_drain
+Source code:
+void lru_add_drain(void)
+{
+	local_lock(&cpu_fbatches.lock);
+	lru_add_drain_cpu(smp_processor_id());
+	local_unlock(&cpu_fbatches.lock);
+	mlock_page_drain_local();
+}
+
+
+Callee candidate: lru_add_drain_cpu
+Source code:
+void lru_add_drain_cpu(int cpu)
+{
+	struct cpu_fbatches *fbatches = &per_cpu(cpu_fbatches, cpu);
+	struct folio_batch *fbatch = &fbatches->lru_add;
+
+	if (folio_batch_count(fbatch))
+		folio_batch_move_lru(fbatch, lru_add_fn);
+
+	fbatch = &per_cpu(lru_rotate.fbatch, cpu);
+	/* Disabling interrupts below acts as a compiler barrier. */
+	if (data_race(folio_batch_count(fbatch))) {
+		unsigned long flags;
+
+		/* No harm done if a racing interrupt already did this */
+		local_lock_irqsave(&lru_rotate.lock, flags);
+		folio_batch_move_lru(fbatch, lru_move_tail_fn);
+		local_unlock_irqrestore(&lru_rotate.lock, flags);
+	}
+
+	fbatch = &fbatches->lru_deactivate_file;
+	if (folio_batch_count(fbatch))
+		folio_batch_move_lru(fbatch, lru_deactivate_file_fn);
+
+	fbatch = &fbatches->lru_deactivate;
+	if (folio_batch_count(fbatch))
+		folio_batch_move_lru(fbatch, lru_deactivate_fn);
+
+	fbatch = &fbatches->lru_lazyfree;
+	if (folio_batch_count(fbatch))
+		folio_batch_move_lru(fbatch, lru_lazyfree_fn);
+
+	folio_activate_drain(cpu);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of lru_add_drain will reach lru_add_drain_cpu? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `lru_add_drain` explicitly calls `lru_add_drain_cpu(smp_processor_id())` unconditionally as part of its execution flow. There are no conditional checks or error paths in `lru_add_drain` that would prevent this call from being made. The historical call graph also confirms that `lru_add_drain` reaches `lru_add_drain_cpu` in prior executions. Since the code directly invokes the callee without any intervening logic that could block the transition, the call is semantically and functionally guaranteed.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: lru_add_drain
+
+Callee candidate: lru_add_drain_cpu
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of lru_add_drain will reach lru_add_drain_cpu? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `lru_add_drain` is typically responsible for draining LRU (Least Recently Used) lists in the Linux memory management subsystem. Given the naming convention and common kernel design patterns, it is reasonable to expect that `lru_add_drain` might call `lru_add_drain_cpu`, as the latter likely handles CPU-specific draining operations. This call-edge supports modularity and separation of concerns, which is consistent with kernel design principles.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- pick_next_task_fair
+
+Caller: pick_next_task_fair
+Source code:
+None
+
+Callee candidate: set_next_entity
+Source code:
+None
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of pick_next_task_fair will reach set_next_entity? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The `pick_next_task_fair` function in the CFS scheduler selects the next task for execution. `set_next_entity` is typically used to prepare the selected task as the "next" entity in the scheduler's state (e.g., updating pointers for task transitions). Historically, these functions are part of the same scheduling workflow, where selecting a task is followed by setting it up for execution. This sequence aligns with the logical flow of task scheduling, ensuring correct state transitions. Security enforcement relies on valid call edges to prevent unauthorized or anomalous behavior in scheduling.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: pick_next_task_fair
+
+Callee candidate: set_next_entity
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of pick_next_task_fair will reach set_next_entity? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+pick_next_task_fair is part of the CFS (Completely Fair Scheduler) in the Linux kernel, responsible for selecting the next task to run. set_next_entity is an internal helper function used to prepare a sched_entity (scheduling entity) for execution, which is a core step in the scheduling process. Since the selection of a task inherently involves preparing it for execution, it is semantically and functionally reasonable for pick_next_task_fair to reach set_next_entity during its execution flow.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- finish_fault
+  - do_set_pte
+    - lru_cache_add_inactive_or_unevictable
+      - folio_add_lru_vma
+        - folio_add_lru
+- filemap_fault
+  - __filemap_get_folio
+    - folio_add_lru
+  - page_cache_async_ra
+    - ondemand_readahead
+      - page_cache_ra_unbounded
+        - filemap_add_folio
+  - page_cache_ra_order
+
+Caller: folio_add_lru
+Source code:
+void folio_add_lru(struct folio *folio)
+{
+	struct folio_batch *fbatch;
+
+	VM_BUG_ON_FOLIO(folio_test_active(folio) &&
+			folio_test_unevictable(folio), folio);
+	VM_BUG_ON_FOLIO(folio_test_lru(folio), folio);
+
+	/* see the comment in lru_gen_add_folio() */
+	if (lru_gen_enabled() && !folio_test_unevictable(folio) &&
+	    lru_gen_in_fault() && !(current->flags & PF_MEMALLOC))
+		folio_set_active(folio);
+
+	folio_get(folio);
+	local_lock(&cpu_fbatches.lock);
+	fbatch = this_cpu_ptr(&cpu_fbatches.lru_add);
+	folio_batch_add_and_move(fbatch, folio, lru_add_fn);
+	local_unlock(&cpu_fbatches.lock);
+}
+
+
+Callee candidate: folio_batch_move_lru
+Source code:
+static void folio_batch_move_lru(struct folio_batch *fbatch, move_fn_t move_fn)
+{
+	int i;
+	struct lruvec *lruvec = NULL;
+	unsigned long flags = 0;
+
+	for (i = 0; i < folio_batch_count(fbatch); i++) {
+		struct folio *folio = fbatch->folios[i];
+
+		/* block memcg migration while the folio moves between lru */
+		if (move_fn != lru_add_fn && !folio_test_clear_lru(folio))
+			continue;
+
+		lruvec = folio_lruvec_relock_irqsave(folio, lruvec, &flags);
+		move_fn(lruvec, folio);
+
+		folio_set_lru(folio);
+	}
+
+	if (lruvec)
+		unlock_page_lruvec_irqrestore(lruvec, flags);
+	folios_put(fbatch->folios, folio_batch_count(fbatch));
+	folio_batch_init(fbatch);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of folio_add_lru will reach folio_batch_move_lru? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `folio_add_lru` calls `folio_batch_add_and_move` with `lru_add_fn` as the move function. The `folio_batch_add_and_move` function is designed to batch process folios and invoke the provided `move_fn` (in this case, `lru_add_fn`) on them. The `folio_batch_move_lru` function is the implementation that iterates over the batch and applies the `move_fn` to each folio, which directly corresponds to the `lru_add_fn` passed here. Since the historical call graph and code flow explicitly link `folio_add_lru` to batch processing with a move function, it is semantically and functionally reasonable to expect this path.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: folio_add_lru
+
+Callee candidate: folio_batch_move_lru
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of folio_add_lru will reach folio_batch_move_lru? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification:**
+`folio_add_lru` is typically used to add a single folio to an LRU (Least Recently Used) list, whereas `folio_batch_move_lru` is designed to move a batch of folios to an LRU list. The two functions operate on different granularities—one is for individual folios, the other for batches. Therefore, `folio_add_lru` is not expected to directly call or reach `folio_batch_move_lru` during normal execution.
+
+**FINAL ANSWER -> NO**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __get_user_pages
+  - handle_mm_fault
+
+Caller: handle_mm_fault
+Source code:
+vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+			   unsigned int flags, struct pt_regs *regs)
+{
+	vm_fault_t ret;
+
+	__set_current_state(TASK_RUNNING);
+
+	count_vm_event(PGFAULT);
+	count_memcg_event_mm(vma->vm_mm, PGFAULT);
+
+	/* do counter updates before entering really critical section. */
+	check_sync_rss_stat(current);
+
+	if (!arch_vma_access_permitted(vma, flags & FAULT_FLAG_WRITE,
+					    flags & FAULT_FLAG_INSTRUCTION,
+					    flags & FAULT_FLAG_REMOTE))
+		return VM_FAULT_SIGSEGV;
+
+	/*
+	 */
+	if (flags & FAULT_FLAG_USER)
+		mem_cgroup_enter_user_fault();
+
+	lru_gen_enter_fault(vma);
+
+	if (unlikely(is_vm_hugetlb_page(vma)))
+		ret = hugetlb_fault(vma->vm_mm, vma, address, flags);
+	else
+		ret = __handle_mm_fault(vma, address, flags);
+
+	lru_gen_exit_fault();
+
+	if (flags & FAULT_FLAG_USER) {
+		mem_cgroup_exit_user_fault();
+		/*
+		 */
+		if (task_in_memcg_oom(current) && !(ret & VM_FAULT_OOM))
+			mem_cgroup_oom_synchronize(false);
+	}
+
+	mm_account_fault(regs, address, flags, ret);
+
+	return ret;
+}
+
+
+Callee candidate: __handle_mm_fault
+Source code:
+static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
+		unsigned long address, unsigned int flags)
+{
+	struct vm_fault vmf = {
+		.vma = vma,
+		.address = address & PAGE_MASK,
+		.real_address = address,
+		.flags = flags,
+		.pgoff = linear_page_index(vma, address),
+		.gfp_mask = __get_fault_gfp_mask(vma),
+	};
+	struct mm_struct *mm = vma->vm_mm;
+	unsigned long vm_flags = vma->vm_flags;
+	pgd_t *pgd;
+	p4d_t *p4d;
+	vm_fault_t ret;
+
+	pgd = pgd_offset(mm, address);
+	p4d = p4d_alloc(mm, pgd, address);
+	if (!p4d)
+		return VM_FAULT_OOM;
+
+	vmf.pud = pud_alloc(mm, p4d, address);
+	if (!vmf.pud)
+		return VM_FAULT_OOM;
+retry_pud:
+	if (pud_none(*vmf.pud) &&
+	    hugepage_vma_check(vma, vm_flags, false, true, true)) {
+		ret = create_huge_pud(&vmf);
+		if (!(ret & VM_FAULT_FALLBACK))
+			return ret;
+	} else {
+		pud_t orig_pud = *vmf.pud;
+
+		barrier();
+		if (pud_trans_huge(orig_pud) || pud_devmap(orig_pud)) {
+
+			/*
+			 */
+			if ((flags & FAULT_FLAG_WRITE) && !pud_write(orig_pud)) {
+				ret = wp_huge_pud(&vmf, orig_pud);
+				if (!(ret & VM_FAULT_FALLBACK))
+					return ret;
+			} else {
+				huge_pud_set_accessed(&vmf, orig_pud);
+				return 0;
+			}
+		}
+	}
+
+	vmf.pmd = pmd_alloc(mm, vmf.pud, address);
+	if (!vmf.pmd)
+		return VM_FAULT_OOM;
+
+	/* Huge pud page fault raced with pmd_alloc? */
+	if (pud_trans_unstable(vmf.pud))
+		goto retry_pud;
+
+	if (pmd_none(*vmf.pmd) &&
+	    hugepage_vma_check(vma, vm_flags, false, true, true)) {
+		ret = create_huge_pmd(&vmf);
+		if (!(ret & VM_FAULT_FALLBACK))
+			return ret;
+	} else {
+		vmf.orig_pmd = *vmf.pmd;
+
+		barrier();
+		if (unlikely(is_swap_pmd(vmf.orig_pmd))) {
+			VM_BUG_ON(thp_migration_supported() &&
+					  !is_pmd_migration_entry(vmf.orig_pmd));
+			if (is_pmd_migration_entry(vmf.orig_pmd))
+				pmd_migration_entry_wait(mm, vmf.pmd);
+			return 0;
+		}
+		if (pmd_trans_huge(vmf.orig_pmd) || pmd_devmap(vmf.orig_pmd)) {
+			if (pmd_protnone(vmf.orig_pmd) && vma_is_accessible(vma))
+				return do_huge_pmd_numa_page(&vmf);
+
+			if ((flags & (FAULT_FLAG_WRITE|FAULT_FLAG_UNSHARE)) &&
+			    !pmd_write(vmf.orig_pmd)) {
+				ret = wp_huge_pmd(&vmf);
+				if (!(ret & VM_FAULT_FALLBACK))
+					return ret;
+			} else {
+				huge_pmd_set_accessed(&vmf);
+				return 0;
+			}
+		}
+	}
+
+	return handle_pte_fault(&vmf);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of handle_mm_fault will reach __handle_mm_fault? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The code in `handle_mm_fault` explicitly checks if the VMA is a huge page using `is_vm_hugetlb_page(vma)`. If this condition is false (which is common for regular pages), it directly invokes `__handle_mm_fault(vma, address, flags)`. Since the historical call graph includes `handle_mm_fault` as a predecessor of `__get_user_pages`, and the code unconditionally branches to `__handle_mm_fault` for non-hugepage VMAs, it is semantically and functionally reasonable to expect this call path.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: handle_mm_fault
+
+Callee candidate: __handle_mm_fault
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of handle_mm_fault will reach __handle_mm_fault? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+handle_mm_fault is a higher-level function in the Linux kernel that deals with handling memory faults. It is common for such functions to call a more internal, low-level variant (like __handle_mm_fault) that performs the core logic, often with reduced checks or in a more optimized form. From a security-enforcement standpoint, expecting a direct call from handle_mm_fault to __handle_mm_fault is reasonable if the latter is a static inline or a closely related function used internally by the former. This is typical in kernel code to avoid code duplication and to separate general handling from core implementation.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- filemap_fault
+  - page_cache_async_ra
+    - ondemand_readahead
+
+Caller: ondemand_readahead
+Source code:
+static void ondemand_readahead(struct readahead_control *ractl,
+		struct folio *folio, unsigned long req_size)
+{
+	struct backing_dev_info *bdi = inode_to_bdi(ractl->mapping->host);
+	struct file_ra_state *ra = ractl->ra;
+	unsigned long max_pages = ra->ra_pages;
+	unsigned long add_pages;
+	pgoff_t index = readahead_index(ractl);
+	pgoff_t expected, prev_index;
+	unsigned int order = folio ? folio_order(folio) : 0;
+
+	/*
+	 */
+	if (req_size > max_pages && bdi->io_pages > max_pages)
+		max_pages = min(req_size, bdi->io_pages);
+
+	/*
+	 */
+	if (!index)
+		goto initial_readahead;
+
+	/*
+	 */
+	expected = round_up(ra->start + ra->size - ra->async_size,
+			1UL << order);
+	if (index == expected || index == (ra->start + ra->size)) {
+		ra->start += ra->size;
+		ra->size = get_next_ra_size(ra, max_pages);
+		ra->async_size = ra->size;
+		goto readit;
+	}
+
+	/*
+	 */
+	if (folio) {
+		pgoff_t start;
+
+		rcu_read_lock();
+		start = page_cache_next_miss(ractl->mapping, index + 1,
+				max_pages);
+		rcu_read_unlock();
+
+		if (!start || start - index > max_pages)
+			return;
+
+		ra->start = start;
+		ra->size = start - index;	/* old async_size */
+		ra->size += req_size;
+		ra->size = get_next_ra_size(ra, max_pages);
+		ra->async_size = ra->size;
+		goto readit;
+	}
+
+	/*
+	 */
+	if (req_size > max_pages)
+		goto initial_readahead;
+
+	/*
+	 */
+	prev_index = (unsigned long long)ra->prev_pos >> PAGE_SHIFT;
+	if (index - prev_index <= 1UL)
+		goto initial_readahead;
+
+	/*
+	 */
+	if (try_context_readahead(ractl->mapping, ra, index, req_size,
+			max_pages))
+		goto readit;
+
+	/*
+	 */
+	do_page_cache_ra(ractl, req_size, 0);
+	return;
+
+initial_readahead:
+	ra->start = index;
+	ra->size = get_init_ra_size(req_size, max_pages);
+	ra->async_size = ra->size > req_size ? ra->size - req_size : ra->size;
+
+readit:
+	/*
+	 */
+	if (index == ra->start && ra->size == ra->async_size) {
+		add_pages = get_next_ra_size(ra, max_pages);
+		if (ra->size + add_pages <= max_pages) {
+			ra->async_size = add_pages;
+			ra->size += add_pages;
+		} else {
+			ra->size = max_pages;
+			ra->async_size = max_pages >> 1;
+		}
+	}
+
+	ractl->_index = ra->start;
+	page_cache_ra_order(ractl, ra, order);
+}
+
+
+Callee candidate: page_cache_ra_unbounded
+Source code:
+void page_cache_ra_unbounded(struct readahead_control *ractl,
+		unsigned long nr_to_read, unsigned long lookahead_size)
+{
+	struct address_space *mapping = ractl->mapping;
+	unsigned long index = readahead_index(ractl);
+	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+	unsigned long i;
+
+	/*
+	 */
+	unsigned int nofs = memalloc_nofs_save();
+
+	filemap_invalidate_lock_shared(mapping);
+	/*
+	 */
+	for (i = 0; i < nr_to_read; i++) {
+		struct folio *folio = xa_load(&mapping->i_pages, index + i);
+
+		if (folio && !xa_is_value(folio)) {
+			/*
+			 */
+			read_pages(ractl);
+			ractl->_index++;
+			i = ractl->_index + ractl->_nr_pages - index - 1;
+			continue;
+		}
+
+		folio = filemap_alloc_folio(gfp_mask, 0);
+		if (!folio)
+			break;
+		if (filemap_add_folio(mapping, folio, index + i,
+					gfp_mask) < 0) {
+			folio_put(folio);
+			read_pages(ractl);
+			ractl->_index++;
+			i = ractl->_index + ractl->_nr_pages - index - 1;
+			continue;
+		}
+		if (i == nr_to_read - lookahead_size)
+			folio_set_readahead(folio);
+		ractl->_workingset |= folio_test_workingset(folio);
+		ractl->_nr_pages++;
+	}
+
+	/*
+	 */
+	read_pages(ractl);
+	filemap_invalidate_unlock_shared(mapping);
+	memalloc_nofs_restore(nofs);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of ondemand_readahead will reach page_cache_ra_unbounded? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The ondemand_readahead function does not directly invoke page_cache_ra_unbounded. Instead, it calls page_cache_ra_order and do_page_cache_ra. There is no explicit or implicit call to page_cache_ra_unbounded within the provided code. The function names and parameters suggest these are distinct implementations with different purposes (e.g., "order" vs. "unbounded"). Without evidence of an indirect call chain or aliasing between these functions, the semantic and functional reachability is not established.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: ondemand_readahead
+
+Callee candidate: page_cache_ra_unbounded
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of ondemand_readahead will reach page_cache_ra_unbounded? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification**:
+The `ondemand_readahead` function is part of the Linux kernel's memory management subsystem, responsible for initiating readahead operations to prefetch pages into the page cache. The `page_cache_ra_unbounded` function is a low-level helper used for performing readahead without bounds checking, typically invoked by higher-level readahead logic. Given their roles and the typical control flow in the kernel's readahead path, it is semantically and functionally reasonable for `ondemand_readahead` to invoke or reach `page_cache_ra_unbounded` as part of its execution flow.
+
+**FINAL ANSWER -> YES**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- mix_interrupt_randomness
+
+Caller: mix_interrupt_randomness
+Source code:
+static void mix_interrupt_randomness(struct timer_list *work)
+{
+	struct fast_pool *fast_pool = container_of(work, struct fast_pool, mix);
+	/*
+	 */
+	unsigned long pool[2];
+	unsigned int count;
+
+	/* Check to see if we're running on the wrong CPU due to hotplug. */
+	local_irq_disable();
+	if (fast_pool != this_cpu_ptr(&irq_randomness)) {
+		local_irq_enable();
+		return;
+	}
+
+	/*
+	 */
+	memcpy(pool, fast_pool->pool, sizeof(pool));
+	count = fast_pool->count;
+	fast_pool->count = 0;
+	fast_pool->last = jiffies;
+	local_irq_enable();
+
+	mix_pool_bytes(pool, sizeof(pool));
+	credit_init_bits(clamp_t(unsigned int, (count & U16_MAX) / 64, 1, sizeof(pool) * 8));
+
+	memzero_explicit(pool, sizeof(pool));
+}
+
+
+Callee candidate: blake2s_update
+Source code:
+void blake2s_update(struct blake2s_state *state, const u8 *in, size_t inlen)
+{
+	const size_t fill = BLAKE2S_BLOCK_SIZE - state->buflen;
+
+	if (unlikely(!inlen))
+		return;
+	if (inlen > fill) {
+		memcpy(state->buf + state->buflen, in, fill);
+		blake2s_compress(state, state->buf, 1, BLAKE2S_BLOCK_SIZE);
+		state->buflen = 0;
+		in += fill;
+		inlen -= fill;
+	}
+	if (inlen > BLAKE2S_BLOCK_SIZE) {
+		const size_t nblocks = DIV_ROUND_UP(inlen, BLAKE2S_BLOCK_SIZE);
+		blake2s_compress(state, in, nblocks - 1, BLAKE2S_BLOCK_SIZE);
+		in += BLAKE2S_BLOCK_SIZE * (nblocks - 1);
+		inlen -= BLAKE2S_BLOCK_SIZE * (nblocks - 1);
+	}
+	memcpy(state->buf + state->buflen, in, inlen);
+	state->buflen += inlen;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of mix_interrupt_randomness will reach blake2s_update? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `mix_interrupt_randomness` calls `mix_pool_bytes(pool, sizeof(pool))`, which is likely responsible for mixing entropy data into a cryptographic hash state. The `blake2s_update` function is designed to process input data for a BLAKE2s hash computation. If `mix_pool_bytes` internally uses BLAKE2s as its mixing mechanism (e.g., to hash the entropy pool), then `blake2s_update` could be invoked during this process. This is plausible in the context of entropy mixing, where cryptographic hash functions like BLAKE2s are commonly used to ensure robust randomness.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: mix_interrupt_randomness
+
+Callee candidate: blake2s_update
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of mix_interrupt_randomness will reach blake2s_update? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+mix_interrupt_randomness is a function in the Linux kernel responsible for mixing entropy into the random number generator (RNG) subsystem, typically in response to hardware interrupts. It adds entropy to the kernel's entropy pool. On the other hand, blake2s_update is part of the BLAKE2s hash function implementation, which may be used in various contexts, but is not directly involved in the entropy mixing or random number generation process in the kernel.
+
+For the call graph to have an edge from mix_interrupt_randomness to blake2s_update, there would need to be a direct or indirect functional dependency where entropy mixing leads to BLAKE2s being invoked, which is not a standard or expected flow in the Linux kernel's random number generation mechanism.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- try_grab_page
+
+Caller: try_grab_page
+Source code:
+bool __must_check try_grab_page(struct page *page, unsigned int flags)
+{
+	struct folio *folio = page_folio(page);
+
+	WARN_ON_ONCE((flags & (FOLL_GET | FOLL_PIN)) == (FOLL_GET | FOLL_PIN));
+	if (WARN_ON_ONCE(folio_ref_count(folio) <= 0))
+		return false;
+
+	if (flags & FOLL_GET)
+		folio_ref_inc(folio);
+	else if (flags & FOLL_PIN) {
+		/*
+		 */
+		if (folio_test_large(folio)) {
+			folio_ref_add(folio, 1);
+			atomic_add(1, folio_pincount_ptr(folio));
+		} else {
+			folio_ref_add(folio, GUP_PIN_COUNTING_BIAS);
+		}
+
+		node_stat_mod_folio(folio, NR_FOLL_PIN_ACQUIRED, 1);
+	}
+
+	return true;
+}
+
+
+Callee candidate: mod_node_page_state
+Source code:
+void mod_node_page_state(struct pglist_data *pgdat, enum node_stat_item item,
+					long delta)
+{
+	mod_node_state(pgdat, item, delta, 0);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of try_grab_page will reach mod_node_page_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{Your justification}
+The function `try_grab_page` calls `node_stat_mod_folio(folio, NR_FOLL_PIN_ACQUIRED, 1)` when the `FOLL_PIN` flag is set. The `node_stat_mod_folio` function is designed to update node-specific page state statistics, which internally uses `mod_node_page_state` (as shown in the provided source). Thus, execution of `try_grab_page` can reach `mod_node_page_state` via `node_stat_mod_folio` when handling the `FOLL_PIN` case.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: try_grab_page
+
+Callee candidate: mod_node_page_state
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of try_grab_page will reach mod_node_page_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+`try_grab_page` is a function involved in page reference counting and page grabbing semantics in memory management. `mod_node_page_state` is typically used to update per-node page state counters (e.g., for tracking NR_FILE_PAGES, etc.). While both are involved in page management, `try_grab_page` is focused on reference semantics and page pinning, whereas `mod_node_page_state` is used for accounting. There is no direct functional dependency from `try_grab_page` to `mod_node_page_state`, and it is not semantically expected for execution to reach the latter from the former under normal flow.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- finish_fault
+  - __pte_alloc
+    - pte_alloc_one
+
+Caller: pte_alloc_one
+Source code:
+pgtable_t pte_alloc_one(struct mm_struct *mm)
+{
+	return __pte_alloc_one(mm, __userpte_alloc_gfp);
+}
+
+
+Callee candidate: mod_node_page_state
+Source code:
+void mod_node_page_state(struct pglist_data *pgdat, enum node_stat_item item,
+					long delta)
+{
+	mod_node_state(pgdat, item, delta, 0);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of pte_alloc_one will reach mod_node_page_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `pte_alloc_one` allocates a page table entry via `__pte_alloc_one`, which inherently involves memory allocation. In the Linux kernel, memory allocation (e.g., via `alloc_pages`) typically updates per-node page state counters (e.g., tracking free pages) using `mod_node_page_state`. This is a standard part of memory accounting in the kernel. Since `pte_alloc_one` initiates such an allocation, it is reasonable to expect that `mod_node_page_state` is indirectly invoked during its execution.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: pte_alloc_one
+
+Callee candidate: mod_node_page_state
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of pte_alloc_one will reach mod_node_page_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+pte_alloc_one is responsible for allocating a page table entry (PTE) page. mod_node_page_state is used to update per-node memory state counters, typically for tracking memory usage statistics. While pte_alloc_one may indirectly influence memory state (e.g., by allocating memory), it does not directly or semantically need to invoke mod_node_page_state to fulfill its purpose. The update of memory state counters is more commonly associated with page allocation functions like alloc_pages or __free_pages, not low-level page table allocators like pte_alloc_one.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- finish_fault
+  - do_set_pte
+
+Caller: do_set_pte
+Source code:
+void do_set_pte(struct vm_fault *vmf, struct page *page, unsigned long addr)
+{
+	struct vm_area_struct *vma = vmf->vma;
+	bool uffd_wp = pte_marker_uffd_wp(vmf->orig_pte);
+	bool write = vmf->flags & FAULT_FLAG_WRITE;
+	bool prefault = vmf->address != addr;
+	pte_t entry;
+
+	flush_icache_page(vma, page);
+	entry = mk_pte(page, vma->vm_page_prot);
+
+	if (prefault && arch_wants_old_prefaulted_pte())
+		entry = pte_mkold(entry);
+	else
+		entry = pte_sw_mkyoung(entry);
+
+	if (write)
+		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+	if (unlikely(uffd_wp))
+		entry = pte_mkuffd_wp(pte_wrprotect(entry));
+	/* copy-on-write page */
+	if (write && !(vma->vm_flags & VM_SHARED)) {
+		inc_mm_counter_fast(vma->vm_mm, MM_ANONPAGES);
+		page_add_new_anon_rmap(page, vma, addr);
+		lru_cache_add_inactive_or_unevictable(page, vma);
+	} else {
+		inc_mm_counter_fast(vma->vm_mm, mm_counter_file(page));
+		page_add_file_rmap(page, vma, false);
+	}
+	set_pte_at(vma->vm_mm, addr, vmf->pte, entry);
+}
+
+
+Callee candidate: page_add_new_anon_rmap
+Source code:
+void page_add_new_anon_rmap(struct page *page,
+	struct vm_area_struct *vma, unsigned long address)
+{
+	const bool compound = PageCompound(page);
+	int nr = compound ? thp_nr_pages(page) : 1;
+
+	VM_BUG_ON_VMA(address < vma->vm_start || address >= vma->vm_end, vma);
+	__SetPageSwapBacked(page);
+	if (compound) {
+		VM_BUG_ON_PAGE(!PageTransHuge(page), page);
+		/* increment count (starts at -1) */
+		atomic_set(compound_mapcount_ptr(page), 0);
+		atomic_set(compound_pincount_ptr(page), 0);
+
+		__mod_lruvec_page_state(page, NR_ANON_THPS, nr);
+	} else {
+		/* increment count (starts at -1) */
+		atomic_set(&page->_mapcount, 0);
+	}
+	__mod_lruvec_page_state(page, NR_ANON_MAPPED, nr);
+	__page_set_anon_rmap(page, vma, address, 1);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of do_set_pte will reach page_add_new_anon_rmap? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The `do_set_pte` function includes a conditional branch that invokes `page_add_new_anon_rmap` when two criteria are met: (1) the `FAULT_FLAG_WRITE` is set (indicating a write operation), and (2) the VMA is private (`!(vma->vm_flags & VM_SHARED)`). This occurs during copy-on-write (COW) scenarios for private mappings, where a new anonymous page is created. Since these conditions are explicitly checked in the code and are achievable during normal execution (e.g., a write to a private anonymous mapping), the call to `page_add_new_anon_rmap` is both semantically and functionally valid under the given context.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: do_set_pte
+
+Callee candidate: page_add_new_anon_rmap
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of do_set_pte will reach page_add_new_anon_rmap? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+do_set_pte is involved in setting a page table entry (PTE), typically during page fault handling or memory mapping operations. page_add_new_anon_rmap is used to add a new reverse mapping for an anonymous page, which is crucial for tracking which page table entries refer to a given physical page. In the context of anonymous memory (like heap or stack pages), when a new PTE is created for an anonymous page, it is necessary to update the reverse mapping to ensure proper page reclaim and accounting. Therefore, it is functionally reasonable for do_set_pte to invoke or reach page_add_new_anon_rmap in the case of anonymous pages.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- ext4_es_insert_extent
+
+Caller: ext4_es_insert_extent
+Source code:
+int ext4_es_insert_extent(struct inode *inode, ext4_lblk_t lblk,
+			  ext4_lblk_t len, ext4_fsblk_t pblk,
+			  unsigned int status)
+{
+	struct extent_status newes;
+	ext4_lblk_t end = lblk + len - 1;
+	int err = 0;
+	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
+
+	if (EXT4_SB(inode->i_sb)->s_mount_state & EXT4_FC_REPLAY)
+		return 0;
+
+	es_debug("add [%u/%u) %llu %x to extent status tree of inode %lu\n",
+		 lblk, len, pblk, status, inode->i_ino);
+
+	if (!len)
+		return 0;
+
+	BUG_ON(end < lblk);
+
+	if ((status & EXTENT_STATUS_DELAYED) &&
+	    (status & EXTENT_STATUS_WRITTEN)) {
+		ext4_warning(inode->i_sb, "Inserting extent [%u/%u] as "
+				" delayed and written which can potentially "
+				" cause data loss.", lblk, len);
+		WARN_ON(1);
+	}
+
+	newes.es_lblk = lblk;
+	newes.es_len = len;
+	ext4_es_store_pblock_status(&newes, pblk, status);
+	trace_ext4_es_insert_extent(inode, &newes);
+
+	ext4_es_insert_extent_check(inode, &newes);
+
+	write_lock(&EXT4_I(inode)->i_es_lock);
+	err = __es_remove_extent(inode, lblk, end, NULL);
+	if (err != 0)
+		goto error;
+retry:
+	err = __es_insert_extent(inode, &newes);
+	if (err == -ENOMEM && __es_shrink(EXT4_SB(inode->i_sb),
+					  128, EXT4_I(inode)))
+		goto retry;
+	if (err == -ENOMEM && !ext4_es_is_delayed(&newes))
+		err = 0;
+
+	if (sbi->s_cluster_ratio > 1 && test_opt(inode->i_sb, DELALLOC) &&
+	    (status & EXTENT_STATUS_WRITTEN ||
+	     status & EXTENT_STATUS_UNWRITTEN))
+		__revise_pending(inode, lblk, len);
+
+error:
+	write_unlock(&EXT4_I(inode)->i_es_lock);
+
+	ext4_es_print_tree(inode);
+
+	return err;
+}
+
+
+Callee candidate: kmem_cache_alloc
+Source code:
+void *kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags)
+{
+	return slob_alloc_node(cachep, flags, NUMA_NO_NODE);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of ext4_es_insert_extent will reach kmem_cache_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `ext4_es_insert_extent` indirectly relies on memory allocation for managing the extent status tree. While the provided code does not explicitly call `kmem_cache_alloc`, functions like `__es_insert_extent` and `__es_remove_extent` (invoked within `ext4_es_insert_extent`) likely allocate memory for tree nodes or structures using slab caches. The `-ENOMEM` error handling and calls to `__es_shrink` further imply dynamic memory management. Since the Linux kernel typically uses `kmem_cache_alloc` for such allocations in slab-based contexts, it is semantically and functionally reasonable to expect that `ext4_es_insert_extent` could reach `kmem_cache_alloc` via its helper functions.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: ext4_es_insert_extent
+
+Callee candidate: kmem_cache_alloc
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of ext4_es_insert_extent will reach kmem_cache_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+ext4_es_insert_extent is a function in the EXT4 filesystem responsible for inserting an extent into the filesystem's extent status tree. As part of this process, memory allocation is likely required for data structures such as the extent tree nodes. The kmem_cache_alloc function is the standard Linux kernel API for allocating memory from a slab cache, which is commonly used for such allocations. Therefore, it is reasonable to expect that ext4_es_insert_extent could invoke kmem_cache_alloc during its execution.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_mmap
+  - ksys_mmap_pgoff
+    - vm_mmap_pgoff
+      - do_mmap
+        - mmap_region
+          - unmap_region
+            - unmap_vmas
+
+Caller: unmap_vmas
+Source code:
+void unmap_vmas(struct mmu_gather *tlb, struct maple_tree *mt,
+		struct vm_area_struct *vma, unsigned long start_addr,
+		unsigned long end_addr)
+{
+	struct mmu_notifier_range range;
+	struct zap_details details = {
+		.zap_flags = ZAP_FLAG_DROP_MARKER | ZAP_FLAG_UNMAP,
+		/* Careful - we need to zap private pages too! */
+		.even_cows = true,
+	};
+	MA_STATE(mas, mt, vma->vm_end, vma->vm_end);
+
+	mmu_notifier_range_init(&range, MMU_NOTIFY_UNMAP, 0, vma, vma->vm_mm,
+				start_addr, end_addr);
+	mmu_notifier_invalidate_range_start(&range);
+	do {
+		unmap_single_vma(tlb, vma, start_addr, end_addr, &details);
+	} while ((vma = mas_find(&mas, end_addr - 1)) != NULL);
+	mmu_notifier_invalidate_range_end(&range);
+}
+
+
+Callee candidate: unmap_page_range
+Source code:
+void unmap_page_range(struct mmu_gather *tlb,
+			     struct vm_area_struct *vma,
+			     unsigned long addr, unsigned long end,
+			     struct zap_details *details)
+{
+	pgd_t *pgd;
+	unsigned long next;
+
+	BUG_ON(addr >= end);
+	tlb_start_vma(tlb, vma);
+	pgd = pgd_offset(vma->vm_mm, addr);
+	do {
+		next = pgd_addr_end(addr, end);
+		if (pgd_none_or_clear_bad(pgd))
+			continue;
+		next = zap_p4d_range(tlb, vma, pgd, addr, next, details);
+	} while (pgd++, addr = next, addr != end);
+	tlb_end_vma(tlb, vma);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of unmap_vmas will reach unmap_page_range? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `unmap_vmas` invokes `unmap_single_vma` for each VMA in the range. While the `unmap_single_vma` implementation is not provided, its purpose is to unmap a single VMA's page tables. The `unmap_page_range` function is a standard kernel utility for unmapping page ranges by walking page tables. Given the context and common Linux kernel design patterns, `unmap_single_vma` is highly likely to internally call `unmap_page_range` to perform the actual page unmap. The parameters (e.g., `tlb`, `vma`, `start_addr`, `end_addr`, `details`) align with those expected by `unmap_page_range`.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: unmap_vmas
+
+Callee candidate: unmap_page_range
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of unmap_vmas will reach unmap_page_range? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+unmap_vmas is a function that is responsible for unmapping a set of virtual memory areas (VMA). It typically operates by iterating over a list of VMAs and calling a helper function to unmap each one. unmap_page_range, on the other hand, is a lower-level function that unmaps a specific range of pages within a single VMA. Given the typical Linux kernel memory management structure, it is reasonable to expect that unmap_vmas may invoke unmap_page_range as part of its operation to unmap individual page ranges within each VMA.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_mmap
+  - ksys_mmap_pgoff
+    - vm_mmap_pgoff
+      - do_mmap
+        - get_unmapped_area
+          - security_mmap_addr
+- shmem_get_unmapped_area
+  - get_unmapped_area
+    - security_mmap_addr
+
+Caller: security_mmap_addr
+Source code:
+int security_mmap_addr(unsigned long addr)
+{
+	return call_int_hook(mmap_addr, 0, addr);
+}
+
+
+Callee candidate: selinux_mmap_addr
+Source code:
+static int selinux_mmap_addr(unsigned long addr)
+{
+	int rc = 0;
+
+	if (addr < CONFIG_LSM_MMAP_MIN_ADDR) {
+		u32 sid = current_sid();
+		rc = avc_has_perm(&selinux_state,
+				  sid, sid, SECCLASS_MEMPROTECT,
+				  MEMPROTECT__MMAP_ZERO, NULL);
+	}
+
+	return rc;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of security_mmap_addr will reach selinux_mmap_addr? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The `security_mmap_addr` function invokes the `mmap_addr` LSM hook via `call_int_hook`. SELinux, as an LSM, must register `selinux_mmap_addr` as its implementation for the `mmap_addr` hook during initialization. Since the historical call graph shows `security_mmap_addr` being triggered in normal mmap execution paths, and SELinux implements `selinux_mmap_addr` to enforce address space policies (e.g., `CONFIG_LSM_MMAP_MIN_ADDR` checks), it is functionally reasonable to expect this hook to be registered when SELinux is active.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: security_mmap_addr
+
+Callee candidate: selinux_mmap_addr
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of security_mmap_addr will reach selinux_mmap_addr? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The `security_mmap_addr` function is part of the Linux Security Module (LSM) infrastructure and serves as a hook for security modules to enforce policies when a process is about to map an address using `mmap`. The `selinux_mmap_addr` function is the SELinux-specific implementation of this hook. Since SELinux is a widely used LSM, it is semantically and functionally reasonable for `security_mmap_addr` to invoke `selinux_mmap_addr` when SELinux is enabled, to enforce address-space layout randomization (ASLR) policies.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- alloc_pages
+
+Caller: alloc_pages
+Source code:
+struct page *alloc_pages(gfp_t gfp, unsigned order)
+{
+	struct mempolicy *pol = &default_policy;
+	struct page *page;
+
+	if (!in_interrupt() && !(gfp & __GFP_THISNODE))
+		pol = get_task_policy(current);
+
+	/*
+	 */
+	if (pol->mode == MPOL_INTERLEAVE)
+		page = alloc_page_interleave(gfp, order, interleave_nodes(pol));
+	else if (pol->mode == MPOL_PREFERRED_MANY)
+		page = alloc_pages_preferred_many(gfp, order,
+				  policy_node(gfp, pol, numa_node_id()), pol);
+	else
+		page = __alloc_pages(gfp, order,
+				policy_node(gfp, pol, numa_node_id()),
+				policy_nodemask(gfp, pol));
+
+	return page;
+}
+
+
+Callee candidate: __alloc_pages
+Source code:
+struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
+							nodemask_t *nodemask)
+{
+	struct page *page;
+	unsigned int alloc_flags = ALLOC_WMARK_LOW;
+	gfp_t alloc_gfp; /* The gfp_t that was actually used for allocation */
+	struct alloc_context ac = { };
+
+	/*
+	 */
+	if (WARN_ON_ONCE_GFP(order >= MAX_ORDER, gfp))
+		return NULL;
+
+	gfp &= gfp_allowed_mask;
+	/*
+	 */
+	gfp = current_gfp_context(gfp);
+	alloc_gfp = gfp;
+	if (!prepare_alloc_pages(gfp, order, preferred_nid, nodemask, &ac,
+			&alloc_gfp, &alloc_flags))
+		return NULL;
+
+	/*
+	 */
+	alloc_flags |= alloc_flags_nofragment(ac.preferred_zoneref->zone, gfp);
+
+	/* First allocation attempt */
+	page = get_page_from_freelist(alloc_gfp, order, alloc_flags, &ac);
+	if (likely(page))
+		goto out;
+
+	alloc_gfp = gfp;
+	ac.spread_dirty_pages = false;
+
+	/*
+	 */
+	ac.nodemask = nodemask;
+
+	page = __alloc_pages_slowpath(alloc_gfp, order, &ac);
+
+out:
+	if (memcg_kmem_enabled() && (gfp & __GFP_ACCOUNT) && page &&
+	    unlikely(__memcg_kmem_charge_page(page, gfp, order) != 0)) {
+		__free_pages(page, order);
+		page = NULL;
+	}
+
+	trace_mm_page_alloc(page, order, alloc_gfp, ac.migratetype);
+	kmsan_alloc_page(page, order, alloc_gfp);
+
+	return page;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of alloc_pages will reach __alloc_pages? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The `alloc_pages` function calls `__alloc_pages` in the default case when the memory policy mode is neither `MPOL_INTERLEAVE` nor `MPOL_PREFERRED_MANY`. Since these policies are optional and the default policy (e.g., `MPOL_DEFAULT` or `MPOL_PREFERRED`) typically applies, `__alloc_pages` is a semantically valid and functionally expected path.}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: alloc_pages
+
+Callee candidate: __alloc_pages
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of alloc_pages will reach __alloc_pages? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+alloc_pages is a standard memory allocation function in the Linux kernel, and __alloc_pages is a well-known internal implementation that it typically calls. From a security-enforcement standpoint, expecting alloc_pages to invoke __alloc_pages is semantically and functionally reasonable, as this is a documented and expected control-flow path in the kernel's memory management subsystem.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_mmap
+  - ksys_mmap_pgoff
+    - vm_mmap_pgoff
+      - security_mmap_file
+        - selinux_mmap_file
+
+Caller: selinux_mmap_file
+Source code:
+static int selinux_mmap_file(struct file *file, unsigned long reqprot,
+			     unsigned long prot, unsigned long flags)
+{
+	struct common_audit_data ad;
+	int rc;
+
+	if (file) {
+		ad.type = LSM_AUDIT_DATA_FILE;
+		ad.u.file = file;
+		rc = inode_has_perm(current_cred(), file_inode(file),
+				    FILE__MAP, &ad);
+		if (rc)
+			return rc;
+	}
+
+	if (checkreqprot_get(&selinux_state))
+		prot = reqprot;
+
+	return file_map_prot_check(file, prot,
+				   (flags & MAP_TYPE) == MAP_SHARED);
+}
+
+
+Callee candidate: file_map_prot_check
+Source code:
+static int file_map_prot_check(struct file *file, unsigned long prot, int shared)
+{
+	const struct cred *cred = current_cred();
+	u32 sid = cred_sid(cred);
+	int rc = 0;
+
+	if (default_noexec &&
+	    (prot & PROT_EXEC) && (!file || IS_PRIVATE(file_inode(file)) ||
+				   (!shared && (prot & PROT_WRITE)))) {
+		/*
+		 */
+		rc = avc_has_perm(&selinux_state,
+				  sid, sid, SECCLASS_PROCESS,
+				  PROCESS__EXECMEM, NULL);
+		if (rc)
+			goto error;
+	}
+
+	if (file) {
+		/* read access is always possible with a mapping */
+		u32 av = FILE__READ;
+
+		/* write access only matters if the mapping is shared */
+		if (shared && (prot & PROT_WRITE))
+			av |= FILE__WRITE;
+
+		if (prot & PROT_EXEC)
+			av |= FILE__EXECUTE;
+
+		return file_has_perm(cred, file, av);
+	}
+
+error:
+	return rc;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of selinux_mmap_file will reach file_map_prot_check? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The `selinux_mmap_file` function unconditionally calls `file_map_prot_check` in its return statement. Unless an earlier check (e.g., `inode_has_perm` or `checkreqprot_get`) triggers an explicit early return, execution will proceed to `file_map_prot_check`. The historical call graph confirms this path is valid.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: selinux_mmap_file
+
+Callee candidate: file_map_prot_check
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of selinux_mmap_file will reach file_map_prot_check? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+selinux_mmap_file is part of SELinux's enforcement mechanism for mmap() system calls, ensuring that the requested memory mapping complies with security policies. file_map_prot_check is a function that evaluates memory protection flags (e.g., PROT_EXEC) against security constraints, such as those enforced by the Yama LSM or other protections. For SELinux to enforce memory access policies, it is reasonable that its mmap hook would eventually reach or invoke a function like file_map_prot_check to assess and enforce protections on the mapping.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_mmap
+  - ksys_mmap_pgoff
+    - vm_mmap_pgoff
+      - do_mmap
+        - __execute_only_pkey
+
+Caller: __execute_only_pkey
+Source code:
+int __execute_only_pkey(struct mm_struct *mm)
+{
+	bool need_to_set_mm_pkey = false;
+	int execute_only_pkey = mm->context.execute_only_pkey;
+	int ret;
+
+	/* Do we need to assign a pkey for mm's execute-only maps? */
+	if (execute_only_pkey == -1) {
+		/* Go allocate one to use, which might fail */
+		execute_only_pkey = mm_pkey_alloc(mm);
+		if (execute_only_pkey < 0)
+			return -1;
+		need_to_set_mm_pkey = true;
+	}
+
+	/*
+	 */
+	if (!need_to_set_mm_pkey &&
+	    !__pkru_allows_read(read_pkru(), execute_only_pkey)) {
+		return execute_only_pkey;
+	}
+
+	/*
+	 */
+	ret = arch_set_user_pkey_access(current, execute_only_pkey,
+			PKEY_DISABLE_ACCESS);
+	/*
+	 */
+	if (ret) {
+		mm_set_pkey_free(mm, execute_only_pkey);
+		return -1;
+	}
+
+	/* We got one, store it and use it from here on out */
+	if (need_to_set_mm_pkey)
+		mm->context.execute_only_pkey = execute_only_pkey;
+	return execute_only_pkey;
+}
+
+
+Callee candidate: arch_set_user_pkey_access
+Source code:
+int arch_set_user_pkey_access(struct task_struct *tsk, int pkey,
+			      unsigned long init_val)
+{
+	u32 old_pkru, new_pkru_bits = 0;
+	int pkey_shift;
+
+	/*
+	 */
+	if (!cpu_feature_enabled(X86_FEATURE_OSPKE))
+		return -EINVAL;
+
+	/*
+	 */
+	if (WARN_ON_ONCE(pkey >= arch_max_pkey()))
+		return -EINVAL;
+
+	/* Set the bits we need in PKRU:  */
+	if (init_val & PKEY_DISABLE_ACCESS)
+		new_pkru_bits |= PKRU_AD_BIT;
+	if (init_val & PKEY_DISABLE_WRITE)
+		new_pkru_bits |= PKRU_WD_BIT;
+
+	/* Shift the bits in to the correct place in PKRU for pkey: */
+	pkey_shift = pkey * PKRU_BITS_PER_PKEY;
+	new_pkru_bits <<= pkey_shift;
+
+	/* Get old PKRU and mask off any old bits in place: */
+	old_pkru = read_pkru();
+	old_pkru &= ~((PKRU_AD_BIT|PKRU_WD_BIT) << pkey_shift);
+
+	/* Write old part along with new part: */
+	write_pkru(old_pkru | new_pkru_bits);
+
+	return 0;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __execute_only_pkey will reach arch_set_user_pkey_access? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `__execute_only_pkey` invokes `arch_set_user_pkey_access` when a new protection key (pkey) is allocated (e.g., when `execute_only_pkey == -1` and `mm_pkey_alloc` succeeds). In this case, the code bypasses the early return condition and explicitly calls `arch_set_user_pkey_access` to configure the pkey's access permissions. Additionally, historical execution traces confirm that this call path exists during `do_mmap` execution. Since the call is both conditionally enforced and observed in prior traces, it is semantically and functionally reasonable to expect this reachability.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __execute_only_pkey
+
+Callee candidate: arch_set_user_pkey_access
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __execute_only_pkey will reach arch_set_user_pkey_access? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `__execute_only_pkey` appears to be involved in validating or enforcing that a given protection key (pkey) corresponds to an "execute-only" memory setting. If this validation is successful, it is reasonable to expect that the kernel would proceed to apply this setting to a user-space memory region, which is likely the purpose of `arch_set_user_pkey_access`. Therefore, from a semantic and functional standpoint, it is plausible and reasonable for `__execute_only_pkey` to call `arch_set_user_pkey_access` as a subsequent step in enforcing the pkey access policy.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __folio_put
+
+Caller: __folio_put
+Source code:
+void __folio_put(struct folio *folio)
+{
+	if (unlikely(folio_is_zone_device(folio)))
+		free_zone_device_page(&folio->page);
+	else if (unlikely(folio_test_large(folio)))
+		__folio_put_large(folio);
+	else
+		__folio_put_small(folio);
+}
+
+
+Callee candidate: free_unref_page
+Source code:
+void free_unref_page(struct page *page, unsigned int order)
+{
+	unsigned long flags;
+	unsigned long __maybe_unused UP_flags;
+	struct per_cpu_pages *pcp;
+	struct zone *zone;
+	unsigned long pfn = page_to_pfn(page);
+	int migratetype;
+
+	if (!free_unref_page_prepare(page, pfn, order))
+		return;
+
+	/*
+	 */
+	migratetype = get_pcppage_migratetype(page);
+	if (unlikely(migratetype >= MIGRATE_PCPTYPES)) {
+		if (unlikely(is_migrate_isolate(migratetype))) {
+			free_one_page(page_zone(page), page, pfn, order, migratetype, FPI_NONE);
+			return;
+		}
+		migratetype = MIGRATE_MOVABLE;
+	}
+
+	zone = page_zone(page);
+	pcp_trylock_prepare(UP_flags);
+	pcp = pcp_spin_trylock_irqsave(zone->per_cpu_pageset, flags);
+	if (pcp) {
+		free_unref_page_commit(zone, pcp, page, migratetype, order);
+		pcp_spin_unlock_irqrestore(pcp, flags);
+	} else {
+		free_one_page(zone, page, pfn, order, migratetype, FPI_NONE);
+	}
+	pcp_trylock_finish(UP_flags);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __folio_put will reach free_unref_page? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The __folio_put function delegates to __folio_put_large or __folio_put_small for non-zone-device folios. These functions likely reduce the reference count of the folio's pages and eventually free them when the count reaches zero. Since free_unref_page is the standard kernel function for freeing unreference-counted pages, it is reasonable to expect that either __folio_put_large or __folio_put_small would invoke it during page release.}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __folio_put
+
+Callee candidate: free_unref_page
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __folio_put will reach free_unref_page? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+__folio_put is typically involved in the management of page references within the Linux kernel's memory subsystem. It decreases the reference count of a folio (a group of pages), and may trigger the release of the page if the reference count reaches zero. free_unref_page is a function that is used to free a page when it is no longer referenced. Given the context of reference counting and page release logic, it is semantically and functionally reasonable to expect that __folio_put can reach free_unref_page under the right conditions (e.g., when the reference count drops to zero).
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- kfree
+  - __free_pages
+
+Caller: __free_pages
+Source code:
+void __free_pages(struct page *page, unsigned int order)
+{
+	if (put_page_testzero(page))
+		free_the_page(page, order);
+	else if (!PageHead(page))
+		while (order-- > 0)
+			free_the_page(page + (1 << order), order);
+}
+
+
+Callee candidate: free_unref_page
+Source code:
+void free_unref_page(struct page *page, unsigned int order)
+{
+	unsigned long flags;
+	unsigned long __maybe_unused UP_flags;
+	struct per_cpu_pages *pcp;
+	struct zone *zone;
+	unsigned long pfn = page_to_pfn(page);
+	int migratetype;
+
+	if (!free_unref_page_prepare(page, pfn, order))
+		return;
+
+	/*
+	 */
+	migratetype = get_pcppage_migratetype(page);
+	if (unlikely(migratetype >= MIGRATE_PCPTYPES)) {
+		if (unlikely(is_migrate_isolate(migratetype))) {
+			free_one_page(page_zone(page), page, pfn, order, migratetype, FPI_NONE);
+			return;
+		}
+		migratetype = MIGRATE_MOVABLE;
+	}
+
+	zone = page_zone(page);
+	pcp_trylock_prepare(UP_flags);
+	pcp = pcp_spin_trylock_irqsave(zone->per_cpu_pageset, flags);
+	if (pcp) {
+		free_unref_page_commit(zone, pcp, page, migratetype, order);
+		pcp_spin_unlock_irqrestore(pcp, flags);
+	} else {
+		free_one_page(zone, page, pfn, order, migratetype, FPI_NONE);
+	}
+	pcp_trylock_finish(UP_flags);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __free_pages will reach free_unref_page? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `__free_pages` calls `free_the_page`, which is likely an inline or macro that may invoke `free_unref_page` under certain conditions (e.g., when adding pages to per-CPU lists). Since `free_unref_page` is part of the page-freeing pathway and `__free_pages` triggers it via `free_the_page`, the call graph edge is valid.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __free_pages
+
+Callee candidate: free_unref_page
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __free_pages will reach free_unref_page? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In the Linux kernel, `__free_pages` is a function responsible for releasing a set of pages back to the page allocator. It is typically used to decrement the page reference count and, when appropriate, pass the page to a lower-level function for actual deallocation. `free_unref_page` is a function that handles the final freeing of an unreferenced page, usually after it has been determined that no other references to the page exist.
+
+Given that `__free_pages` is part of the page deallocation path and may invoke `free_unref_page` as part of the finalization process when a page is no longer referenced, it is semantically and functionally reasonable to expect that an execution path from `__free_pages` to `free_unref_page` can occur.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __split_vma
+
+Caller: __split_vma
+Source code:
+int __split_vma(struct mm_struct *mm, struct vm_area_struct *vma,
+		unsigned long addr, int new_below)
+{
+	struct vm_area_struct *new;
+	int err;
+	validate_mm_mt(mm);
+
+	if (vma->vm_ops && vma->vm_ops->may_split) {
+		err = vma->vm_ops->may_split(vma, addr);
+		if (err)
+			return err;
+	}
+
+	new = vm_area_dup(vma);
+	if (!new)
+		return -ENOMEM;
+
+	if (new_below)
+		new->vm_end = addr;
+	else {
+		new->vm_start = addr;
+		new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
+	}
+
+	err = vma_dup_policy(vma, new);
+	if (err)
+		goto out_free_vma;
+
+	err = anon_vma_clone(new, vma);
+	if (err)
+		goto out_free_mpol;
+
+	if (new->vm_file)
+		get_file(new->vm_file);
+
+	if (new->vm_ops && new->vm_ops->open)
+		new->vm_ops->open(new);
+
+	if (new_below)
+		err = vma_adjust(vma, addr, vma->vm_end, vma->vm_pgoff +
+			((addr - new->vm_start) >> PAGE_SHIFT), new);
+	else
+		err = vma_adjust(vma, vma->vm_start, addr, vma->vm_pgoff, new);
+
+	/* Success. */
+	if (!err)
+		return 0;
+
+	/* Avoid vm accounting in close() operation */
+	new->vm_start = new->vm_end;
+	new->vm_pgoff = 0;
+	/* Clean everything up if vma_adjust failed. */
+	if (new->vm_ops && new->vm_ops->close)
+		new->vm_ops->close(new);
+	if (new->vm_file)
+		fput(new->vm_file);
+	unlink_anon_vmas(new);
+ out_free_mpol:
+	mpol_put(vma_policy(new));
+ out_free_vma:
+	vm_area_free(new);
+	validate_mm_mt(mm);
+	return err;
+}
+
+
+Callee candidate: vma_dup_policy
+Source code:
+int vma_dup_policy(struct vm_area_struct *src, struct vm_area_struct *dst)
+{
+	struct mempolicy *pol = mpol_dup(vma_policy(src));
+
+	if (IS_ERR(pol))
+		return PTR_ERR(pol);
+	dst->vm_policy = pol;
+	return 0;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __split_vma will reach vma_dup_policy? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function __split_vma explicitly calls vma_dup_policy as part of its normal execution path to duplicate memory policies for the new VMA. This call occurs after allocating the new VMA and before potential error handling. Unless the preceding steps (e.g., vm_area_dup) fail and trigger an early return, vma_dup_policy is guaranteed to execute. From a security perspective, ensuring this call enforces proper policy inheritance, which is critical for maintaining memory isolation and access control. Since the code directly invokes vma_dup_policy in the valid execution path, it is semantically and functionally reasonable to expect this call.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __split_vma
+
+Callee candidate: vma_dup_policy
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __split_vma will reach vma_dup_policy? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `__split_vma` is responsible for splitting a virtual memory area (VMA) into two parts, typically during operations like `mremap` or memory layout adjustments. For such operations, duplicating or transferring VMA policies (like memory protection or NUMA policies) may be required for the new VMA segments.
+
+The function `vma_dup_policy` is designed to duplicate a VMA's policy, which is necessary when a new VMA is created, such as during a split. Therefore, it is semantically and functionally reasonable for `__split_vma` to invoke `vma_dup_policy` to handle policy duplication for the new VMA segment.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_mmap
+  - ksys_mmap_pgoff
+    - vm_mmap_pgoff
+      - __mm_populate
+        - lru_add_drain
+          - lru_add_drain_cpu
+      - do_mmap
+        - mmap_region
+          - unmap_region
+- __get_user_pages
+  - find_extend_vma
+    - populate_vma_page_range
+      - lru_add_drain
+        - lru_add_drain_cpu
+
+Caller: lru_add_drain_cpu
+Source code:
+void lru_add_drain_cpu(int cpu)
+{
+	struct cpu_fbatches *fbatches = &per_cpu(cpu_fbatches, cpu);
+	struct folio_batch *fbatch = &fbatches->lru_add;
+
+	if (folio_batch_count(fbatch))
+		folio_batch_move_lru(fbatch, lru_add_fn);
+
+	fbatch = &per_cpu(lru_rotate.fbatch, cpu);
+	/* Disabling interrupts below acts as a compiler barrier. */
+	if (data_race(folio_batch_count(fbatch))) {
+		unsigned long flags;
+
+		/* No harm done if a racing interrupt already did this */
+		local_lock_irqsave(&lru_rotate.lock, flags);
+		folio_batch_move_lru(fbatch, lru_move_tail_fn);
+		local_unlock_irqrestore(&lru_rotate.lock, flags);
+	}
+
+	fbatch = &fbatches->lru_deactivate_file;
+	if (folio_batch_count(fbatch))
+		folio_batch_move_lru(fbatch, lru_deactivate_file_fn);
+
+	fbatch = &fbatches->lru_deactivate;
+	if (folio_batch_count(fbatch))
+		folio_batch_move_lru(fbatch, lru_deactivate_fn);
+
+	fbatch = &fbatches->lru_lazyfree;
+	if (folio_batch_count(fbatch))
+		folio_batch_move_lru(fbatch, lru_lazyfree_fn);
+
+	folio_activate_drain(cpu);
+}
+
+
+Callee candidate: folio_batch_move_lru
+Source code:
+static void folio_batch_move_lru(struct folio_batch *fbatch, move_fn_t move_fn)
+{
+	int i;
+	struct lruvec *lruvec = NULL;
+	unsigned long flags = 0;
+
+	for (i = 0; i < folio_batch_count(fbatch); i++) {
+		struct folio *folio = fbatch->folios[i];
+
+		/* block memcg migration while the folio moves between lru */
+		if (move_fn != lru_add_fn && !folio_test_clear_lru(folio))
+			continue;
+
+		lruvec = folio_lruvec_relock_irqsave(folio, lruvec, &flags);
+		move_fn(lruvec, folio);
+
+		folio_set_lru(folio);
+	}
+
+	if (lruvec)
+		unlock_page_lruvec_irqrestore(lruvec, flags);
+	folios_put(fbatch->folios, folio_batch_count(fbatch));
+	folio_batch_init(fbatch);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of lru_add_drain_cpu will reach folio_batch_move_lru? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `lru_add_drain_cpu` explicitly checks the count of each batch (e.g., `lru_add`, `lru_rotate`, etc.) and conditionally calls `folio_batch_move_lru` for non-empty batches. The first `if` statement directly triggers this call when `lru_add` is non-empty. Historical execution paths confirm this function is invoked in contexts requiring LRU list maintenance, making the transition semantically valid.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: lru_add_drain_cpu
+
+Callee candidate: folio_batch_move_lru
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of lru_add_drain_cpu will reach folio_batch_move_lru? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+lru_add_drain_cpu is part of the Linux memory management subsystem, responsible for draining per-CPU LRU lists into the global LRU. The function is expected to interact with mechanisms that move pages or folios between LRU lists. folio_batch_move_lru is a function that moves batches of folios to the appropriate LRU lists. Given their roles, it is semantically and functionally reasonable for lru_add_drain_cpu to invoke or reach folio_batch_move_lru as part of the page-moving process during LRU drain.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __mark_inode_dirty
+  - ext4_dirty_inode
+    - __ext4_journal_start_sb
+      - jbd2__journal_start
+        - start_this_handle
+
+Caller: start_this_handle
+Source code:
+static int start_this_handle(journal_t *journal, handle_t *handle,
+			     gfp_t gfp_mask)
+{
+	transaction_t	*transaction, *new_transaction = NULL;
+	int		blocks = handle->h_total_credits;
+	int		rsv_blocks = 0;
+	unsigned long ts = jiffies;
+
+	if (handle->h_rsv_handle)
+		rsv_blocks = handle->h_rsv_handle->h_total_credits;
+
+	/*
+	 */
+	if ((rsv_blocks > journal->j_max_transaction_buffers / 2) ||
+	    (rsv_blocks + blocks > journal->j_max_transaction_buffers)) {
+		printk(KERN_ERR "JBD2: %s wants too many credits "
+		       "credits:%d rsv_credits:%d max:%d\n",
+		       current->comm, blocks, rsv_blocks,
+		       journal->j_max_transaction_buffers);
+		WARN_ON(1);
+		return -ENOSPC;
+	}
+
+alloc_transaction:
+	/*
+	 */
+	if (!data_race(journal->j_running_transaction)) {
+		/*
+		 */
+		if ((gfp_mask & __GFP_FS) == 0)
+			gfp_mask |= __GFP_NOFAIL;
+		new_transaction = kmem_cache_zalloc(transaction_cache,
+						    gfp_mask);
+		if (!new_transaction)
+			return -ENOMEM;
+	}
+
+	jbd2_debug(3, "New handle %p going live.\n", handle);
+
+	/*
+	 */
+repeat:
+	read_lock(&journal->j_state_lock);
+	BUG_ON(journal->j_flags & JBD2_UNMOUNT);
+	if (is_journal_aborted(journal) ||
+	    (journal->j_errno != 0 && !(journal->j_flags & JBD2_ACK_ERR))) {
+		read_unlock(&journal->j_state_lock);
+		jbd2_journal_free_transaction(new_transaction);
+		return -EROFS;
+	}
+
+	/*
+	 */
+	if (!handle->h_reserved && journal->j_barrier_count) {
+		read_unlock(&journal->j_state_lock);
+		wait_event(journal->j_wait_transaction_locked,
+				journal->j_barrier_count == 0);
+		goto repeat;
+	}
+
+	if (!journal->j_running_transaction) {
+		read_unlock(&journal->j_state_lock);
+		if (!new_transaction)
+			goto alloc_transaction;
+		write_lock(&journal->j_state_lock);
+		if (!journal->j_running_transaction &&
+		    (handle->h_reserved || !journal->j_barrier_count)) {
+			jbd2_get_transaction(journal, new_transaction);
+			new_transaction = NULL;
+		}
+		write_unlock(&journal->j_state_lock);
+		goto repeat;
+	}
+
+	transaction = journal->j_running_transaction;
+
+	if (!handle->h_reserved) {
+		/* We may have dropped j_state_lock - restart in that case */
+		if (add_transaction_credits(journal, blocks, rsv_blocks)) {
+			/*
+			 */
+			__release(&journal->j_state_lock);
+			goto repeat;
+		}
+	} else {
+		/*
+		 */
+		if (transaction->t_state == T_SWITCH) {
+			wait_transaction_switching(journal);
+			goto repeat;
+		}
+		sub_reserved_credits(journal, blocks);
+		handle->h_reserved = 0;
+	}
+
+	/* OK, account for the buffers that this operation expects to
+	 */
+	update_t_max_wait(transaction, ts);
+	handle->h_transaction = transaction;
+	handle->h_requested_credits = blocks;
+	handle->h_revoke_credits_requested = handle->h_revoke_credits;
+	handle->h_start_jiffies = jiffies;
+	atomic_inc(&transaction->t_updates);
+	atomic_inc(&transaction->t_handle_count);
+	jbd2_debug(4, "Handle %p given %d credits (total %d, free %lu)\n",
+		  handle, blocks,
+		  atomic_read(&transaction->t_outstanding_credits),
+		  jbd2_log_space_left(journal));
+	read_unlock(&journal->j_state_lock);
+	current->journal_info = handle;
+
+	rwsem_acquire_read(&journal->j_trans_commit_map, 0, 0, _THIS_IP_);
+	jbd2_journal_free_transaction(new_transaction);
+	/*
+	 */
+	handle->saved_alloc_context = memalloc_nofs_save();
+	return 0;
+}
+
+
+Callee candidate: kmem_cache_alloc
+Source code:
+void *kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags)
+{
+	return slob_alloc_node(cachep, flags, NUMA_NO_NODE);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of start_this_handle will reach kmem_cache_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `start_this_handle` includes a code path where `kmem_cache_zalloc` is explicitly called to allocate a new transaction structure when no running transaction exists. While the provided `kmem_cache_alloc` is not directly invoked, both functions are part of the same slab allocation mechanism, and `kmem_cache_zalloc` is a variant of `kmem_cache_alloc` (with zeroing). Since the question allows for semantic and functional equivalence in allocation behavior, it is reasonable to expect the execution flow to reach a slab allocation function like `kmem_cache_alloc`.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: start_this_handle
+
+Callee candidate: kmem_cache_alloc
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of start_this_handle will reach kmem_cache_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+start_this_handle is not a standard or commonly known Linux kernel function, and there is no well-defined or documented call path from such a function to kmem_cache_alloc in typical kernel code. Without specific context or source code showing that start_this_handle is designed to invoke memory allocation routines, it is not semantically or functionally reasonable to expect a direct call from it to kmem_cache_alloc.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __mark_inode_dirty
+  - ext4_dirty_inode
+    - __ext4_mark_inode_dirty
+      - ext4_reserve_inode_write
+
+Caller: ext4_reserve_inode_write
+Source code:
+None
+
+Callee candidate: __ext4_journal_get_write_access
+Source code:
+int __ext4_journal_get_write_access(const char *where, unsigned int line,
+				    handle_t *handle, struct super_block *sb,
+				    struct buffer_head *bh,
+				    enum ext4_journal_trigger_type trigger_type)
+{
+	int err;
+
+	might_sleep();
+
+	if (bh->b_bdev->bd_super)
+		ext4_check_bdev_write_error(bh->b_bdev->bd_super);
+
+	if (ext4_handle_valid(handle)) {
+		err = jbd2_journal_get_write_access(handle, bh);
+		if (err) {
+			ext4_journal_abort_handle(where, line, __func__, bh,
+						  handle, err);
+			return err;
+		}
+	}
+	if (trigger_type == EXT4_JTR_NONE || !ext4_has_metadata_csum(sb))
+		return 0;
+	BUG_ON(trigger_type >= EXT4_JOURNAL_TRIGGER_COUNT);
+	jbd2_journal_set_triggers(bh,
+		&EXT4_SB(sb)->s_journal_triggers[trigger_type].tr_triggers);
+	return 0;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of ext4_reserve_inode_write will reach __ext4_journal_get_write_access? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `ext4_reserve_inode_write` is part of the ext4 filesystem's mechanism to prepare an inode for modification. This involves reserving journal space and ensuring the inode's buffer head is marked for write access in the journal. The `__ext4_journal_get_write_access` function explicitly handles marking buffer heads for write access in the journal. Since journaling is a core part of ext4's write operations, and `ext4_reserve_inode_write` must coordinate with the journal to allow inode modifications, it is semantically and functionally reasonable to expect that `ext4_reserve_inode_write` would invoke `__ext4_journal_get_write_access` to prepare the buffer head for writing. This is a necessary step to ensure atomicity and consistency in journaled filesystem operations.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: ext4_reserve_inode_write
+
+Callee candidate: __ext4_journal_get_write_access
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of ext4_reserve_inode_write will reach __ext4_journal_get_write_access? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In the context of the ext4 filesystem, `ext4_reserve_inode_write` is responsible for preparing an inode for modification. This typically involves acquiring write access to the journal, as modifications to inodes are journaled in ext4 for crash consistency. The function `__ext4_journal_get_write_access` is a low-level helper used to mark a buffer for write access in the journal. Since journaling is a core part of ext4's write mechanism, it is functionally expected that `ext4_reserve_inode_write` will invoke or reach `__ext4_journal_get_write_access` to ensure the inode's buffer is properly journaled.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- filemap_fault
+  - page_cache_async_ra
+    - blk_cgroup_congested
+
+Caller: blk_cgroup_congested
+Source code:
+bool blk_cgroup_congested(void)
+{
+	struct cgroup_subsys_state *css;
+	bool ret = false;
+
+	rcu_read_lock();
+	for (css = blkcg_css(); css; css = css->parent) {
+		if (atomic_read(&css->cgroup->congestion_count)) {
+			ret = true;
+			break;
+		}
+	}
+	rcu_read_unlock();
+	return ret;
+}
+
+
+Callee candidate: kthread_blkcg
+Source code:
+struct cgroup_subsys_state *kthread_blkcg(void)
+{
+	struct kthread *kthread;
+
+	if (current->flags & PF_KTHREAD) {
+		kthread = to_kthread(current);
+		if (kthread)
+			return kthread->blkcg_css;
+	}
+	return NULL;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of blk_cgroup_congested will reach kthread_blkcg? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `blk_cgroup_congested` invokes `blkcg_css()` to obtain the starting `css` for the loop. If `blkcg_css()` internally uses `kthread_blkcg` (e.g., for kernel threads), then `kthread_blkcg` could be called during the execution of `blk_cgroup_congested`. Since `kthread_blkcg` is designed to return the `blkcg_css` of the current kernel thread, and `blk_cgroup_congested` iterates through `css` hierarchies, the call path is plausible under the condition where `blkcg_css()` leverages `kthread_blkcg` for kernel thread contexts.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: blk_cgroup_congested
+
+Callee candidate: kthread_blkcg
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of blk_cgroup_congested will reach kthread_blkcg? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+blk_cgroup_congested is a function related to tracking I/O congestion within block cgroup (control group) subsystems. It is invoked during I/O operations to update congestion status for a given cgroup. kthread_blkcg, on the other hand, is a kernel thread associated with block cgroup management, typically used for delayed work or periodic tasks. While both are part of the block cgroup framework, there is no direct or indirect control-flow path where blk_cgroup_congested would invoke or reach kthread_blkcg during normal execution. The two functions serve different roles and operate in different execution contexts.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- filemap_fault
+  - page_cache_ra_order
+
+Caller: page_cache_ra_order
+Source code:
+void page_cache_ra_order(struct readahead_control *ractl,
+		struct file_ra_state *ra, unsigned int new_order)
+{
+	struct address_space *mapping = ractl->mapping;
+	pgoff_t index = readahead_index(ractl);
+	pgoff_t limit = (i_size_read(mapping->host) - 1) >> PAGE_SHIFT;
+	pgoff_t mark = index + ra->size - ra->async_size;
+	int err = 0;
+	gfp_t gfp = readahead_gfp_mask(mapping);
+
+	if (!mapping_large_folio_support(mapping) || ra->size < 4)
+		goto fallback;
+
+	limit = min(limit, index + ra->size - 1);
+
+	if (new_order < MAX_PAGECACHE_ORDER) {
+		new_order += 2;
+		if (new_order > MAX_PAGECACHE_ORDER)
+			new_order = MAX_PAGECACHE_ORDER;
+		while ((1 << new_order) > ra->size)
+			new_order--;
+	}
+
+	filemap_invalidate_lock_shared(mapping);
+	while (index <= limit) {
+		unsigned int order = new_order;
+
+		/* Align with smaller pages if needed */
+		if (index & ((1UL << order) - 1)) {
+			order = __ffs(index);
+			if (order == 1)
+				order = 0;
+		}
+		/* Don't allocate pages past EOF */
+		while (index + (1UL << order) - 1 > limit) {
+			if (--order == 1)
+				order = 0;
+		}
+		err = ra_alloc_folio(ractl, index, mark, order, gfp);
+		if (err)
+			break;
+		index += 1UL << order;
+	}
+
+	if (index > limit) {
+		ra->size += index - limit - 1;
+		ra->async_size += index - limit - 1;
+	}
+
+	read_pages(ractl);
+	filemap_invalidate_unlock_shared(mapping);
+
+	/*
+	 */
+	if (!err)
+		return;
+fallback:
+	do_page_cache_ra(ractl, ra->size, ra->async_size);
+}
+
+
+Callee candidate: page_cache_ra_unbounded
+Source code:
+void page_cache_ra_unbounded(struct readahead_control *ractl,
+		unsigned long nr_to_read, unsigned long lookahead_size)
+{
+	struct address_space *mapping = ractl->mapping;
+	unsigned long index = readahead_index(ractl);
+	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+	unsigned long i;
+
+	/*
+	 */
+	unsigned int nofs = memalloc_nofs_save();
+
+	filemap_invalidate_lock_shared(mapping);
+	/*
+	 */
+	for (i = 0; i < nr_to_read; i++) {
+		struct folio *folio = xa_load(&mapping->i_pages, index + i);
+
+		if (folio && !xa_is_value(folio)) {
+			/*
+			 */
+			read_pages(ractl);
+			ractl->_index++;
+			i = ractl->_index + ractl->_nr_pages - index - 1;
+			continue;
+		}
+
+		folio = filemap_alloc_folio(gfp_mask, 0);
+		if (!folio)
+			break;
+		if (filemap_add_folio(mapping, folio, index + i,
+					gfp_mask) < 0) {
+			folio_put(folio);
+			read_pages(ractl);
+			ractl->_index++;
+			i = ractl->_index + ractl->_nr_pages - index - 1;
+			continue;
+		}
+		if (i == nr_to_read - lookahead_size)
+			folio_set_readahead(folio);
+		ractl->_workingset |= folio_test_workingset(folio);
+		ractl->_nr_pages++;
+	}
+
+	/*
+	 */
+	read_pages(ractl);
+	filemap_invalidate_unlock_shared(mapping);
+	memalloc_nofs_restore(nofs);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of page_cache_ra_order will reach page_cache_ra_unbounded? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `page_cache_ra_order` does not directly or indirectly invoke `page_cache_ra_unbounded` in the provided code. The fallback path in `page_cache_ra_order` calls `do_page_cache_ra`, not `page_cache_ra_unbounded`. There is no conditional or control flow in `page_cache_ra_order` that transitions to `page_cache_ra_unbounded`. Since both functions are distinct and no call edge exists between them in the given code, execution of `page_cache_ra_order` cannot reach `page_cache_ra_unbounded` under the provided logic.
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: page_cache_ra_order
+
+Callee candidate: page_cache_ra_unbounded
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of page_cache_ra_order will reach page_cache_ra_unbounded? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+page_cache_ra_order and page_cache_ra_unbounded are both functions involved in read-ahead logic for the page cache in the Linux kernel. The names suggest that they handle different aspects or constraints of read-ahead behavior. Semantically, if page_cache_ra_order is part of the ordered read-ahead process, and page_cache_ra_unbounded is a function that handles an unbounded variant of read-ahead, it may be functionally reasonable for the former to call the latter under certain conditions, such as when constraints are lifted or thresholds are exceeded. Given the naming and context, it is plausible that execution of page_cache_ra_order could reach page_cache_ra_unbounded.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- shmem_get_inode
+  - new_inode
+
+Caller: new_inode
+Source code:
+struct inode *new_inode(struct super_block *sb)
+{
+	struct inode *inode;
+
+	spin_lock_prefetch(&sb->s_inode_list_lock);
+
+	inode = new_inode_pseudo(sb);
+	if (inode)
+		inode_sb_list_add(inode);
+	return inode;
+}
+
+
+Callee candidate: alloc_inode
+Source code:
+static struct inode *alloc_inode(struct super_block *sb)
+{
+	const struct super_operations *ops = sb->s_op;
+	struct inode *inode;
+
+	if (ops->alloc_inode)
+		inode = ops->alloc_inode(sb);
+	else
+		inode = alloc_inode_sb(sb, inode_cachep, GFP_KERNEL);
+
+	if (!inode)
+		return NULL;
+
+	if (unlikely(inode_init_always(sb, inode))) {
+		if (ops->destroy_inode) {
+			ops->destroy_inode(inode);
+			if (!ops->free_inode)
+				return NULL;
+		}
+		inode->free_inode = ops->free_inode;
+		i_callback(&inode->i_rcu);
+		return NULL;
+	}
+
+	return inode;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of new_inode will reach alloc_inode? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `new_inode` calls `new_inode_pseudo`, which internally may invoke `alloc_inode` depending on the superblock's operations (`sb->s_op`). Since `alloc_inode` is a potential path within `new_inode_pseudo` (via the superblock's `alloc_inode` method or fallback), and the historical context involves shmem (which uses `alloc_inode` via `s_op`), it is functionally reasonable to expect `new_inode` to reach `alloc_inode`. This is critical for security enforcement, as `alloc_inode` initializes inodes, a key security-sensitive step.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: new_inode
+
+Callee candidate: alloc_inode
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of new_inode will reach alloc_inode? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+new_inode is responsible for creating a new inode in the VFS layer, and its implementation typically involves allocating a new inode structure, which is precisely what alloc_inode is designed to do. Since alloc_inode is the standard mechanism for allocating inodes in the Linux kernel, it is semantically and functionally reasonable for new_inode to call alloc_inode during the inode creation process.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __wake_up
+  - autoremove_wake_function
+
+Caller: autoremove_wake_function
+Source code:
+int autoremove_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, int sync, void *key)
+{
+	int ret = default_wake_function(wq_entry, mode, sync, key);
+
+	if (ret)
+		list_del_init_careful(&wq_entry->entry);
+
+	return ret;
+}
+
+
+Callee candidate: default_wake_function
+Source code:
+int default_wake_function(wait_queue_entry_t *curr, unsigned mode, int wake_flags,
+			  void *key)
+{
+	WARN_ON_ONCE(IS_ENABLED(CONFIG_SCHED_DEBUG) && wake_flags & ~WF_SYNC);
+	return try_to_wake_up(curr->private, mode, wake_flags);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of autoremove_wake_function will reach default_wake_function? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The `autoremove_wake_function` explicitly invokes `default_wake_function` on the first line of its implementation. There are no conditional checks or security-enforcement mechanisms (e.g., `WARN_ON`, `BUG_ON`, or access controls) in the caller that would prevent this direct call from occurring. The historical call graph also confirms this edge, as `__wake_up` uses `autoremove_wake_function` as a callback, which in turn calls `default_wake_function`. Since the execution path is unconditional and structurally enforced, it is semantically and functionally valid to expect this call. Security enforcement does not block this flow, as the call is part of standard wait-queue handling.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: autoremove_wake_function
+
+Callee candidate: default_wake_function
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of autoremove_wake_function will reach default_wake_function? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `autoremove_wake_function` is typically used in the Linux kernel to wake up a task and automatically remove the wake-up callback afterward. The function `default_wake_function` is the standard wake-up function used by the kernel's task scheduler. While both deal with task waking, `autoremove_wake_function` is not expected to directly invoke `default_wake_function` as part of its execution. Instead, it operates as an alternative or wrapper for waking tasks, not as a caller of the default function.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- mix_pool_bytes
+
+Caller: mix_pool_bytes
+Source code:
+static void mix_pool_bytes(const void *buf, size_t len)
+{
+	unsigned long flags;
+
+	spin_lock_irqsave(&input_pool.lock, flags);
+	_mix_pool_bytes(buf, len);
+	spin_unlock_irqrestore(&input_pool.lock, flags);
+}
+
+
+Callee candidate: blake2s_update
+Source code:
+void blake2s_update(struct blake2s_state *state, const u8 *in, size_t inlen)
+{
+	const size_t fill = BLAKE2S_BLOCK_SIZE - state->buflen;
+
+	if (unlikely(!inlen))
+		return;
+	if (inlen > fill) {
+		memcpy(state->buf + state->buflen, in, fill);
+		blake2s_compress(state, state->buf, 1, BLAKE2S_BLOCK_SIZE);
+		state->buflen = 0;
+		in += fill;
+		inlen -= fill;
+	}
+	if (inlen > BLAKE2S_BLOCK_SIZE) {
+		const size_t nblocks = DIV_ROUND_UP(inlen, BLAKE2S_BLOCK_SIZE);
+		blake2s_compress(state, in, nblocks - 1, BLAKE2S_BLOCK_SIZE);
+		in += BLAKE2S_BLOCK_SIZE * (nblocks - 1);
+		inlen -= BLAKE2S_BLOCK_SIZE * (nblocks - 1);
+	}
+	memcpy(state->buf + state->buflen, in, inlen);
+	state->buflen += inlen;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of mix_pool_bytes will reach blake2s_update? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `mix_pool_bytes` acquires a lock and calls `_mix_pool_bytes`, which is not shown here. The provided code for `mix_pool_bytes` does not directly or transitively invoke `blake2s_update`. Additionally, `_mix_pool_bytes` is likely part of entropy mixing for the kernel's random number generator, which historically uses algorithms like SHA or AES, not Blake2s. Without explicit evidence of a call path from `_mix_pool_bytes` to `blake2s_update`, and given the absence of such a dependency in the shown code or historical context, it is not semantically or functionally reasonable to expect this edge.
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: mix_pool_bytes
+
+Callee candidate: blake2s_update
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of mix_pool_bytes will reach blake2s_update? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+mix_pool_bytes is typically used in cryptographic or entropy mixing contexts, such as in the implementation of deterministic random bit generators (DRBGs) or key derivation functions. blake2s_update is part of the BLAKE2s hash function, commonly used for cryptographic hashing. It is semantically and functionally reasonable for mix_pool_bytes to invoke blake2s_update if the purpose of mix_pool_bytes is to incorporate data into a BLAKE2s-based hash state, which is a common pattern in cryptographic mixing or hashing operations.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- filemap_fault
+  - page_cache_async_ra
+    - ondemand_readahead
+      - page_cache_ra_unbounded
+        - filemap_add_folio
+  - page_cache_ra_order
+
+Caller: filemap_add_folio
+Source code:
+int filemap_add_folio(struct address_space *mapping, struct folio *folio,
+				pgoff_t index, gfp_t gfp)
+{
+	void *shadow = NULL;
+	int ret;
+
+	__folio_set_locked(folio);
+	ret = __filemap_add_folio(mapping, folio, index, gfp, &shadow);
+	if (unlikely(ret))
+		__folio_clear_locked(folio);
+	else {
+		/*
+		 */
+		WARN_ON_ONCE(folio_test_active(folio));
+		if (!(gfp & __GFP_WRITE) && shadow)
+			workingset_refault(folio, shadow);
+		folio_add_lru(folio);
+	}
+	return ret;
+}
+
+
+Callee candidate: folio_add_lru
+Source code:
+void folio_add_lru(struct folio *folio)
+{
+	struct folio_batch *fbatch;
+
+	VM_BUG_ON_FOLIO(folio_test_active(folio) &&
+			folio_test_unevictable(folio), folio);
+	VM_BUG_ON_FOLIO(folio_test_lru(folio), folio);
+
+	/* see the comment in lru_gen_add_folio() */
+	if (lru_gen_enabled() && !folio_test_unevictable(folio) &&
+	    lru_gen_in_fault() && !(current->flags & PF_MEMALLOC))
+		folio_set_active(folio);
+
+	folio_get(folio);
+	local_lock(&cpu_fbatches.lock);
+	fbatch = this_cpu_ptr(&cpu_fbatches.lru_add);
+	folio_batch_add_and_move(fbatch, folio, lru_add_fn);
+	local_unlock(&cpu_fbatches.lock);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of filemap_add_folio will reach folio_add_lru? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `filemap_add_folio` explicitly calls `folio_add_lru` in its success path (when `ret` is not an error). The code shows that after `__filemap_add_folio` succeeds, `folio_add_lru` is invoked unconditionally. This direct invocation is not guarded by any runtime checks that would prevent execution from reaching it under normal operation. The historical call graph also confirms that `filemap_add_folio` is part of a valid execution path.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: filemap_add_folio
+
+Callee candidate: folio_add_lru
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of filemap_add_folio will reach folio_add_lru? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+filemap_add_folio is involved in mapping a folio into a file's address space, typically as part of page fault handling or memory management. On the other hand, folio_add_lru is used to add a folio to the LRU (Least Recently Used) list, which is part of memory reclamation and page cache management. While both deal with folios, filemap_add_folio does not directly transition a folio to the LRU list; that typically occurs when the folio becomes unused and is evicted from the page cache.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- finish_fault
+  - do_set_pte
+    - lru_cache_add_inactive_or_unevictable
+      - folio_add_lru_vma
+        - folio_add_lru
+          - folio_batch_move_lru
+            - lru_add_fn
+- __x64_sys_mmap
+  - ksys_mmap_pgoff
+    - vm_mmap_pgoff
+      - __mm_populate
+        - lru_add_drain
+          - lru_add_drain_cpu
+            - folio_batch_move_lru
+              - lru_add_fn
+      - do_mmap
+        - mmap_region
+          - unmap_region
+- filemap_fault
+  - __filemap_get_folio
+    - folio_add_lru
+      - folio_batch_move_lru
+        - lru_add_fn
+  - page_cache_async_ra
+    - ondemand_readahead
+      - page_cache_ra_unbounded
+        - filemap_add_folio
+  - page_cache_ra_order
+- __get_user_pages
+  - find_extend_vma
+    - populate_vma_page_range
+      - lru_add_drain
+        - lru_add_drain_cpu
+          - folio_batch_move_lru
+            - lru_add_fn
+
+Caller: lru_add_fn
+Source code:
+static void lru_add_fn(struct lruvec *lruvec, struct folio *folio)
+{
+	int was_unevictable = folio_test_clear_unevictable(folio);
+	long nr_pages = folio_nr_pages(folio);
+
+	VM_BUG_ON_FOLIO(folio_test_lru(folio), folio);
+
+	/*
+	 */
+	if (folio_evictable(folio)) {
+		if (was_unevictable)
+			__count_vm_events(UNEVICTABLE_PGRESCUED, nr_pages);
+	} else {
+		folio_clear_active(folio);
+		folio_set_unevictable(folio);
+		/*
+		 */
+		folio->mlock_count = 0;
+		if (!was_unevictable)
+			__count_vm_events(UNEVICTABLE_PGCULLED, nr_pages);
+	}
+
+	lruvec_add_folio(lruvec, folio);
+	trace_mm_lru_insertion(folio);
+}
+
+
+Callee candidate: __mod_zone_page_state
+Source code:
+void __mod_zone_page_state(struct zone *zone, enum zone_stat_item item,
+			   long delta)
+{
+	struct per_cpu_zonestat __percpu *pcp = zone->per_cpu_zonestats;
+	s8 __percpu *p = pcp->vm_stat_diff + item;
+	long x;
+	long t;
+
+	/*
+	 */
+	preempt_disable_nested();
+
+	x = delta + __this_cpu_read(*p);
+
+	t = __this_cpu_read(pcp->stat_threshold);
+
+	if (unlikely(abs(x) > t)) {
+		zone_page_state_add(x, zone, item);
+		x = 0;
+	}
+	__this_cpu_write(*p, x);
+
+	preempt_enable_nested();
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of lru_add_fn will reach __mod_zone_page_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `lru_add_fn` updates VM event counters (e.g., `UNEVICTABLE_PGRESCUED`/`UNEVICTABLE_PGCULLED`) via `__count_vm_events`, which does not directly invoke `__mod_zone_page_state`. However, `lruvec_add_folio` (called at the end of `lru_add_fn`) is responsible for adding the folio to the LRU vector and updating per-zone statistics. This operation inherently requires modifying zone-specific counters, which is the purpose of `__mod_zone_page_state`. Since `lruvec_add_folio` must update zone-level LRU accounting, it will ultimately call `__mod_zone_page_state` to adjust the relevant zone statistics.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: lru_add_fn
+
+Callee candidate: __mod_zone_page_state
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of lru_add_fn will reach __mod_zone_page_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification:**
+The `lru_add_fn` function is typically used to add a page to the LRU (Least Recently Used) list in the Linux memory management subsystem. The `__mod_zone_page_state` function is used to update per-zone page state counters, such as `NR_ACTIVE` or `NR_INACTIVE`. Since adding a page to the LRU list involves updating these counters to reflect the addition, it is semantically and functionally reasonable for `lru_add_fn` to invoke or reach `__mod_zone_page_state` during its execution.
+
+**FINAL ANSWER -> YES**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- alloc_file_pseudo
+  - d_alloc_pseudo
+
+Caller: d_alloc_pseudo
+Source code:
+struct dentry *d_alloc_pseudo(struct super_block *sb, const struct qstr *name)
+{
+	struct dentry *dentry = __d_alloc(sb, name);
+	if (likely(dentry))
+		dentry->d_flags |= DCACHE_NORCU;
+	return dentry;
+}
+
+
+Callee candidate: __d_alloc
+Source code:
+static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
+{
+	struct dentry *dentry;
+	char *dname;
+	int err;
+
+	dentry = kmem_cache_alloc_lru(dentry_cache, &sb->s_dentry_lru,
+				      GFP_KERNEL);
+	if (!dentry)
+		return NULL;
+
+	/*
+	 */
+	dentry->d_iname[DNAME_INLINE_LEN-1] = 0;
+	if (unlikely(!name)) {
+		name = &slash_name;
+		dname = dentry->d_iname;
+	} else if (name->len > DNAME_INLINE_LEN-1) {
+		size_t size = offsetof(struct external_name, name[1]);
+		struct external_name *p = kmalloc(size + name->len,
+						  GFP_KERNEL_ACCOUNT |
+						  __GFP_RECLAIMABLE);
+		if (!p) {
+			kmem_cache_free(dentry_cache, dentry); 
+			return NULL;
+		}
+		atomic_set(&p->u.count, 1);
+		dname = p->name;
+	} else  {
+		dname = dentry->d_iname;
+	}	
+
+	dentry->d_name.len = name->len;
+	dentry->d_name.hash = name->hash;
+	memcpy(dname, name->name, name->len);
+	dname[name->len] = 0;
+
+	/* Make sure we always see the terminating NUL character */
+	smp_store_release(&dentry->d_name.name, dname); /* ^^^ */
+
+	dentry->d_lockref.count = 1;
+	dentry->d_flags = 0;
+	spin_lock_init(&dentry->d_lock);
+	seqcount_spinlock_init(&dentry->d_seq, &dentry->d_lock);
+	dentry->d_inode = NULL;
+	dentry->d_parent = dentry;
+	dentry->d_sb = sb;
+	dentry->d_op = NULL;
+	dentry->d_fsdata = NULL;
+	INIT_HLIST_BL_NODE(&dentry->d_hash);
+	INIT_LIST_HEAD(&dentry->d_lru);
+	INIT_LIST_HEAD(&dentry->d_subdirs);
+	INIT_HLIST_NODE(&dentry->d_u.d_alias);
+	INIT_LIST_HEAD(&dentry->d_child);
+	d_set_d_op(dentry, dentry->d_sb->s_d_op);
+
+	if (dentry->d_op && dentry->d_op->d_init) {
+		err = dentry->d_op->d_init(dentry);
+		if (err) {
+			if (dname_external(dentry))
+				kfree(external_name(dentry));
+			kmem_cache_free(dentry_cache, dentry);
+			return NULL;
+		}
+	}
+
+	this_cpu_inc(nr_dentry);
+
+	return dentry;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of d_alloc_pseudo will reach __d_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `d_alloc_pseudo` explicitly invokes `__d_alloc` as its first operation (`struct dentry *dentry = __d_alloc(sb, name);`). There are no conditional branches or runtime checks in `d_alloc_pseudo` that would bypass this call. Historically, the call graph confirms that `d_alloc_pseudo` directly reaches `__d_alloc`. From a security-enforcement perspective, this is a deterministic and unambiguous control-flow edge.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: d_alloc_pseudo
+
+Callee candidate: __d_alloc
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of d_alloc_pseudo will reach __d_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+d_alloc_pseudo is a function used to allocate a pseudo-dentry, which is a special type of dentry used for virtual filesystems. It internally relies on __d_alloc, which is a core dentry allocation function in the Linux kernel. For d_alloc_pseudo to perform its task correctly, it must use the same low-level allocation mechanism provided by __d_alloc, making it semantically and functionally reasonable for the call graph to include this edge.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- shmem_get_inode
+  - new_inode
+    - alloc_inode
+- new_inode_pseudo
+  - alloc_inode
+
+Caller: alloc_inode
+Source code:
+static struct inode *alloc_inode(struct super_block *sb)
+{
+	const struct super_operations *ops = sb->s_op;
+	struct inode *inode;
+
+	if (ops->alloc_inode)
+		inode = ops->alloc_inode(sb);
+	else
+		inode = alloc_inode_sb(sb, inode_cachep, GFP_KERNEL);
+
+	if (!inode)
+		return NULL;
+
+	if (unlikely(inode_init_always(sb, inode))) {
+		if (ops->destroy_inode) {
+			ops->destroy_inode(inode);
+			if (!ops->free_inode)
+				return NULL;
+		}
+		inode->free_inode = ops->free_inode;
+		i_callback(&inode->i_rcu);
+		return NULL;
+	}
+
+	return inode;
+}
+
+
+Callee candidate: sock_free_inode
+Source code:
+static void sock_free_inode(struct inode *inode)
+{
+	struct socket_alloc *ei;
+
+	ei = container_of(inode, struct socket_alloc, vfs_inode);
+	kmem_cache_free(sock_inode_cachep, ei);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of alloc_inode will reach sock_free_inode? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The alloc_inode function allocates inodes using either a filesystem-specific allocator or the default inode_cachep slab. The sock_free_inode function is specifically tied to socket inodes, which use sock_inode_cachep. For alloc_inode to reach sock_free_inode, the superblock (sb) passed to alloc_inode must use a custom alloc_inode implementation that allocates from sock_inode_cachep. However, the provided code for alloc_inode defaults to inode_cachep, and there is no indication in the historical context or source code shown that the shmem or pseudo inode paths involve socket-specific allocations. Thus, under the given execution context, it is not semantically or functionally reasonable to expect this call path.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: alloc_inode
+
+Callee candidate: sock_free_inode
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of alloc_inode will reach sock_free_inode? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+alloc_inode is a general-purpose function used to allocate an inode structure in the VFS (Virtual File System) layer. sock_free_inode is specifically used in the networking subsystem to free inodes associated with socket files. While both functions are related to inode management, sock_free_inode is a specialized cleanup function, and there's no direct or standard control-flow path from alloc_inode to sock_free_inode. For security enforcement, expecting execution of alloc_inode to reach sock_free_inode would not be semantically or functionally reasonable under normal operation.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __mark_inode_dirty
+  - ext4_dirty_inode
+    - __ext4_journal_start_sb
+      - jbd2__journal_start
+
+Caller: jbd2__journal_start
+Source code:
+handle_t *jbd2__journal_start(journal_t *journal, int nblocks, int rsv_blocks,
+			      int revoke_records, gfp_t gfp_mask,
+			      unsigned int type, unsigned int line_no)
+{
+	handle_t *handle = journal_current_handle();
+	int err;
+
+	if (!journal)
+		return ERR_PTR(-EROFS);
+
+	if (handle) {
+		J_ASSERT(handle->h_transaction->t_journal == journal);
+		handle->h_ref++;
+		return handle;
+	}
+
+	nblocks += DIV_ROUND_UP(revoke_records,
+				journal->j_revoke_records_per_block);
+	handle = new_handle(nblocks);
+	if (!handle)
+		return ERR_PTR(-ENOMEM);
+	if (rsv_blocks) {
+		handle_t *rsv_handle;
+
+		rsv_handle = new_handle(rsv_blocks);
+		if (!rsv_handle) {
+			jbd2_free_handle(handle);
+			return ERR_PTR(-ENOMEM);
+		}
+		rsv_handle->h_reserved = 1;
+		rsv_handle->h_journal = journal;
+		handle->h_rsv_handle = rsv_handle;
+	}
+	handle->h_revoke_credits = revoke_records;
+
+	err = start_this_handle(journal, handle, gfp_mask);
+	if (err < 0) {
+		if (handle->h_rsv_handle)
+			jbd2_free_handle(handle->h_rsv_handle);
+		jbd2_free_handle(handle);
+		return ERR_PTR(err);
+	}
+	handle->h_type = type;
+	handle->h_line_no = line_no;
+	trace_jbd2_handle_start(journal->j_fs_dev->bd_dev,
+				handle->h_transaction->t_tid, type,
+				line_no, nblocks);
+
+	return handle;
+}
+
+
+Callee candidate: kmem_cache_alloc
+Source code:
+void *kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags)
+{
+	return slob_alloc_node(cachep, flags, NUMA_NO_NODE);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of jbd2__journal_start will reach kmem_cache_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `jbd2__journal_start` allocates memory for `handle_t` via `new_handle`, which is likely implemented using `kmem_cache_alloc` (the standard slab allocator in the Linux kernel). Since `new_handle` is explicitly called in `jbd2__journal_start` to create journal handles, and slab allocation is the norm for such structures, it is semantically and functionally valid to expect a call to `kmem_cache_alloc` during execution. This aligns with the historical call graph and standard kernel memory management practices.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: jbd2__journal_start
+
+Callee candidate: kmem_cache_alloc
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of jbd2__journal_start will reach kmem_cache_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The `jbd2__journal_start` function is part of the JBD2 (Journaling Block Device 2) layer in the Linux kernel, responsible for starting a new journal transaction. Memory allocation is a common part of transaction setup, especially when structures such as `journal_t`, `handle_t`, or other internal data structures need to be allocated. `kmem_cache_alloc` is a standard kernel API for allocating memory from a slab cache, which is commonly used for such allocations. Therefore, it is reasonable to expect that `jbd2__journal_start` could invoke or reach `kmem_cache_alloc` during its execution for memory allocation purposes.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- mark_page_accessed
+
+Caller: mark_page_accessed
+Source code:
+void mark_page_accessed(struct page *page)
+{
+	folio_mark_accessed(page_folio(page));
+}
+
+
+Callee candidate: folio_mark_accessed
+Source code:
+void folio_mark_accessed(struct folio *folio)
+{
+	if (lru_gen_enabled()) {
+		folio_inc_refs(folio);
+		return;
+	}
+
+	if (!folio_test_referenced(folio)) {
+		folio_set_referenced(folio);
+	} else if (folio_test_unevictable(folio)) {
+		/*
+		 */
+	} else if (!folio_test_active(folio)) {
+		/*
+		 */
+		if (folio_test_lru(folio))
+			folio_activate(folio);
+		else
+			__lru_cache_activate_folio(folio);
+		folio_clear_referenced(folio);
+		workingset_activation(folio);
+	}
+	if (folio_test_idle(folio))
+		folio_clear_idle(folio);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of mark_page_accessed will reach folio_mark_accessed? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `mark_page_accessed` directly invokes `folio_mark_accessed` via the line `folio_mark_accessed(page_folio(page))`. There are no conditional branches or barriers (e.g., `if` statements, error checks, or return conditions) in the caller function that would prevent this call from executing. Historically, the call graph confirms that `mark_page_accessed` has been executed. Since the code path is unconditional and the function is explicitly structured to call `folio_mark_accessed`, it is semantically and functionally guaranteed that execution will reach the callee.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: mark_page_accessed
+
+Callee candidate: folio_mark_accessed
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of mark_page_accessed will reach folio_mark_accessed? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+mark_page_accessed is a function in the Linux kernel responsible for marking a page as accessed. Given the naming and semantic similarity between "mark_page_accessed" and "folio_mark_accessed", and assuming a transition from "page" to "folio" in the context of page handling (as seen in recent Linux kernel developments for better abstraction), it is reasonable to expect that mark_page_accessed may call or be in the call path of folio_mark_accessed, or vice versa, especially if the latter is a more generalized or newer variant.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __get_user_pages
+  - handle_mm_fault
+    - __handle_mm_fault
+
+Caller: __handle_mm_fault
+Source code:
+static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
+		unsigned long address, unsigned int flags)
+{
+	struct vm_fault vmf = {
+		.vma = vma,
+		.address = address & PAGE_MASK,
+		.real_address = address,
+		.flags = flags,
+		.pgoff = linear_page_index(vma, address),
+		.gfp_mask = __get_fault_gfp_mask(vma),
+	};
+	struct mm_struct *mm = vma->vm_mm;
+	unsigned long vm_flags = vma->vm_flags;
+	pgd_t *pgd;
+	p4d_t *p4d;
+	vm_fault_t ret;
+
+	pgd = pgd_offset(mm, address);
+	p4d = p4d_alloc(mm, pgd, address);
+	if (!p4d)
+		return VM_FAULT_OOM;
+
+	vmf.pud = pud_alloc(mm, p4d, address);
+	if (!vmf.pud)
+		return VM_FAULT_OOM;
+retry_pud:
+	if (pud_none(*vmf.pud) &&
+	    hugepage_vma_check(vma, vm_flags, false, true, true)) {
+		ret = create_huge_pud(&vmf);
+		if (!(ret & VM_FAULT_FALLBACK))
+			return ret;
+	} else {
+		pud_t orig_pud = *vmf.pud;
+
+		barrier();
+		if (pud_trans_huge(orig_pud) || pud_devmap(orig_pud)) {
+
+			/*
+			 */
+			if ((flags & FAULT_FLAG_WRITE) && !pud_write(orig_pud)) {
+				ret = wp_huge_pud(&vmf, orig_pud);
+				if (!(ret & VM_FAULT_FALLBACK))
+					return ret;
+			} else {
+				huge_pud_set_accessed(&vmf, orig_pud);
+				return 0;
+			}
+		}
+	}
+
+	vmf.pmd = pmd_alloc(mm, vmf.pud, address);
+	if (!vmf.pmd)
+		return VM_FAULT_OOM;
+
+	/* Huge pud page fault raced with pmd_alloc? */
+	if (pud_trans_unstable(vmf.pud))
+		goto retry_pud;
+
+	if (pmd_none(*vmf.pmd) &&
+	    hugepage_vma_check(vma, vm_flags, false, true, true)) {
+		ret = create_huge_pmd(&vmf);
+		if (!(ret & VM_FAULT_FALLBACK))
+			return ret;
+	} else {
+		vmf.orig_pmd = *vmf.pmd;
+
+		barrier();
+		if (unlikely(is_swap_pmd(vmf.orig_pmd))) {
+			VM_BUG_ON(thp_migration_supported() &&
+					  !is_pmd_migration_entry(vmf.orig_pmd));
+			if (is_pmd_migration_entry(vmf.orig_pmd))
+				pmd_migration_entry_wait(mm, vmf.pmd);
+			return 0;
+		}
+		if (pmd_trans_huge(vmf.orig_pmd) || pmd_devmap(vmf.orig_pmd)) {
+			if (pmd_protnone(vmf.orig_pmd) && vma_is_accessible(vma))
+				return do_huge_pmd_numa_page(&vmf);
+
+			if ((flags & (FAULT_FLAG_WRITE|FAULT_FLAG_UNSHARE)) &&
+			    !pmd_write(vmf.orig_pmd)) {
+				ret = wp_huge_pmd(&vmf);
+				if (!(ret & VM_FAULT_FALLBACK))
+					return ret;
+			} else {
+				huge_pmd_set_accessed(&vmf);
+				return 0;
+			}
+		}
+	}
+
+	return handle_pte_fault(&vmf);
+}
+
+
+Callee candidate: mod_node_page_state
+Source code:
+void mod_node_page_state(struct pglist_data *pgdat, enum node_stat_item item,
+					long delta)
+{
+	mod_node_state(pgdat, item, delta, 0);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __handle_mm_fault will reach mod_node_page_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The __handle_mm_fault function is responsible for handling page faults by updating page tables and managing memory mappings. The mod_node_page_state function is used to adjust per-node memory statistics. The provided code for __handle_mm_fault does not contain any direct or indirect calls to mod_node_page_state. The functions involved in this code path (e.g., create_huge_pud, wp_huge_pmd, handle_pte_fault) do not manipulate node-level page state counters. While memory allocation during fault handling might indirectly involve mod_node_page_state in lower-level routines, the explicit call graph from __handle_mm_fault does not include it.}
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __handle_mm_fault
+
+Callee candidate: mod_node_page_state
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __handle_mm_fault will reach mod_node_page_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+__handle_mm_fault is part of the memory management subsystem and is involved in handling page faults. It is responsible for determining whether a page fault can be resolved by loading the required page into memory, potentially involving page allocation or reclamation. On the other hand, mod_node_page_state is a function that updates per-node page state counters in the NUMA (Non-Uniform Memory Access) architecture, such as tracking free pages or pages in use. While __handle_mm_fault may indirectly lead to page state changes (e.g., through page allocation), it does not directly call or flow into mod_node_page_state in a typical, direct execution path. The semantic and functional flow between these two functions is not direct or expected.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_mmap
+  - ksys_mmap_pgoff
+    - vm_mmap_pgoff
+      - do_mmap
+        - mmap_region
+          - unmap_region
+            - tlb_finish_mmu
+
+Caller: tlb_finish_mmu
+Source code:
+void tlb_finish_mmu(struct mmu_gather *tlb)
+{
+	/*
+	 */
+	if (mm_tlb_flush_nested(tlb->mm)) {
+		/*
+		 */
+		tlb->fullmm = 1;
+		__tlb_reset_range(tlb);
+		tlb->freed_tables = 1;
+	}
+
+	tlb_flush_mmu(tlb);
+
+#ifndef CONFIG_MMU_GATHER_NO_GATHER
+	tlb_batch_list_free(tlb);
+#endif
+	dec_tlb_flush_pending(tlb->mm);
+}
+
+
+Callee candidate: tlb_flush_mmu
+Source code:
+void tlb_flush_mmu(struct mmu_gather *tlb)
+{
+	tlb_flush_mmu_tlbonly(tlb);
+	tlb_flush_mmu_free(tlb);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of tlb_finish_mmu will reach tlb_flush_mmu? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function tlb_finish_mmu explicitly calls tlb_flush_mmu(tlb) unconditionally on the second line of its implementation. This direct function call exists regardless of the outcome of the preceding conditional block. Since there are no intervening returns or control flow divergences that could bypass this call, execution of tlb_finish_mmu will always reach tlb_flush_mmu.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: tlb_finish_mmu
+
+Callee candidate: tlb_flush_mmu
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of tlb_finish_mmu will reach tlb_flush_mmu? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In the context of the Linux kernel, `tlb_finish_mmu` is typically responsible for concluding operations related to the Translation Lookaside Buffer (TLB) after a series of MMU (Memory Management Unit) updates. Its role often includes coordinating TLB flushes, which are commonly managed by functions like `tlb_flush_mmu`. Therefore, it is semantically and functionally reasonable to expect that `tlb_finish_mmu` may invoke `tlb_flush_mmu` as part of completing MMU operations and ensuring TLB consistency.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- filemap_fault
+  - __filemap_get_folio
+    - __filemap_add_folio
+  - page_cache_async_ra
+    - ondemand_readahead
+      - page_cache_ra_unbounded
+        - filemap_add_folio
+  - page_cache_ra_order
+
+Caller: __filemap_add_folio
+Source code:
+noinline int __filemap_add_folio(struct address_space *mapping,
+		struct folio *folio, pgoff_t index, gfp_t gfp, void **shadowp)
+{
+	XA_STATE(xas, &mapping->i_pages, index);
+	int huge = folio_test_hugetlb(folio);
+	bool charged = false;
+	long nr = 1;
+
+	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
+	VM_BUG_ON_FOLIO(folio_test_swapbacked(folio), folio);
+	mapping_set_update(&xas, mapping);
+
+	if (!huge) {
+		int error = mem_cgroup_charge(folio, NULL, gfp);
+		VM_BUG_ON_FOLIO(index & (folio_nr_pages(folio) - 1), folio);
+		if (error)
+			return error;
+		charged = true;
+		xas_set_order(&xas, index, folio_order(folio));
+		nr = folio_nr_pages(folio);
+	}
+
+	gfp &= GFP_RECLAIM_MASK;
+	folio_ref_add(folio, nr);
+	folio->mapping = mapping;
+	folio->index = xas.xa_index;
+
+	do {
+		unsigned int order = xa_get_order(xas.xa, xas.xa_index);
+		void *entry, *old = NULL;
+
+		if (order > folio_order(folio))
+			xas_split_alloc(&xas, xa_load(xas.xa, xas.xa_index),
+					order, gfp);
+		xas_lock_irq(&xas);
+		xas_for_each_conflict(&xas, entry) {
+			old = entry;
+			if (!xa_is_value(entry)) {
+				xas_set_err(&xas, -EEXIST);
+				goto unlock;
+			}
+		}
+
+		if (old) {
+			if (shadowp)
+				*shadowp = old;
+			/* entry may have been split before we acquired lock */
+			order = xa_get_order(xas.xa, xas.xa_index);
+			if (order > folio_order(folio)) {
+				/* How to handle large swap entries? */
+				BUG_ON(shmem_mapping(mapping));
+				xas_split(&xas, old, order);
+				xas_reset(&xas);
+			}
+		}
+
+		xas_store(&xas, folio);
+		if (xas_error(&xas))
+			goto unlock;
+
+		mapping->nrpages += nr;
+
+		/* hugetlb pages do not participate in page cache accounting */
+		if (!huge) {
+			__lruvec_stat_mod_folio(folio, NR_FILE_PAGES, nr);
+			if (folio_test_pmd_mappable(folio))
+				__lruvec_stat_mod_folio(folio,
+						NR_FILE_THPS, nr);
+		}
+unlock:
+		xas_unlock_irq(&xas);
+	} while (xas_nomem(&xas, gfp));
+
+	if (xas_error(&xas))
+		goto error;
+
+	trace_mm_filemap_add_to_page_cache(folio);
+	return 0;
+error:
+	if (charged)
+		mem_cgroup_uncharge(folio);
+	folio->mapping = NULL;
+	/* Leave page->index set: truncation relies upon it */
+	folio_put_refs(folio, nr);
+	return xas_error(&xas);
+}
+
+
+Callee candidate: __mod_node_page_state
+Source code:
+void __mod_node_page_state(struct pglist_data *pgdat, enum node_stat_item item,
+				long delta)
+{
+	struct per_cpu_nodestat __percpu *pcp = pgdat->per_cpu_nodestats;
+	s8 __percpu *p = pcp->vm_node_stat_diff + item;
+	long x;
+	long t;
+
+	if (vmstat_item_in_bytes(item)) {
+		/*
+		 */
+		VM_WARN_ON_ONCE(delta & (PAGE_SIZE - 1));
+		delta >>= PAGE_SHIFT;
+	}
+
+	/* See __mod_node_page_state */
+	preempt_disable_nested();
+
+	x = delta + __this_cpu_read(*p);
+
+	t = __this_cpu_read(pcp->stat_threshold);
+
+	if (unlikely(abs(x) > t)) {
+		node_page_state_add(x, pgdat, item);
+		x = 0;
+	}
+	__this_cpu_write(*p, x);
+
+	preempt_enable_nested();
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __filemap_add_folio will reach __mod_node_page_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function __filemap_add_folio updates memory statistics via __lruvec_stat_mod_folio for NR_FILE_PAGES and NR_FILE_THPS. These functions typically delegate to __mod_node_page_state to adjust per-node counters. Since __filemap_add_folio explicitly triggers such updates when adding a folio to the page cache, the call chain is semantically valid.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __filemap_add_folio
+
+Callee candidate: __mod_node_page_state
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __filemap_add_folio will reach __mod_node_page_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification:**
+The function `__filemap_add_folio` is involved in adding a folio (a 2^order page) to a file's page cache. When such an operation occurs, it often entails updating memory accounting, specifically per-node page state statistics (e.g., NR_FILE_PAGES). The function `__mod_node_page_state` is responsible for modifying these statistics. Given that `__filemap_add_folio` is likely part of a memory allocation or cache update path, it is semantically and functionally reasonable for it to eventually invoke `__mod_node_page_state` to update page state counters.
+
+**FINAL ANSWER -> YES**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __get_user_pages
+
+Caller: __get_user_pages
+Source code:
+static long __get_user_pages(struct mm_struct *mm,
+		unsigned long start, unsigned long nr_pages,
+		unsigned int gup_flags, struct page **pages,
+		struct vm_area_struct **vmas, int *locked)
+{
+	long ret = 0, i = 0;
+	struct vm_area_struct *vma = NULL;
+	struct follow_page_context ctx = { NULL };
+
+	if (!nr_pages)
+		return 0;
+
+	start = untagged_addr(start);
+
+	VM_BUG_ON(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
+
+	do {
+		struct page *page;
+		unsigned int foll_flags = gup_flags;
+		unsigned int page_increm;
+
+		/* first iteration or cross vma bound */
+		if (!vma || start >= vma->vm_end) {
+			vma = find_extend_vma(mm, start);
+			if (!vma && in_gate_area(mm, start)) {
+				ret = get_gate_page(mm, start & PAGE_MASK,
+						gup_flags, &vma,
+						pages ? &pages[i] : NULL);
+				if (ret)
+					goto out;
+				ctx.page_mask = 0;
+				goto next_page;
+			}
+
+			if (!vma) {
+				ret = -EFAULT;
+				goto out;
+			}
+			ret = check_vma_flags(vma, gup_flags);
+			if (ret)
+				goto out;
+
+			if (is_vm_hugetlb_page(vma)) {
+				i = follow_hugetlb_page(mm, vma, pages, vmas,
+						&start, &nr_pages, i,
+						gup_flags, locked);
+				if (locked && *locked == 0) {
+					/*
+					 */
+					BUG_ON(gup_flags & FOLL_NOWAIT);
+					goto out;
+				}
+				continue;
+			}
+		}
+retry:
+		/*
+		 */
+		if (fatal_signal_pending(current)) {
+			ret = -EINTR;
+			goto out;
+		}
+		cond_resched();
+
+		page = follow_page_mask(vma, start, foll_flags, &ctx);
+		if (!page || PTR_ERR(page) == -EMLINK) {
+			ret = faultin_page(vma, start, &foll_flags,
+					   PTR_ERR(page) == -EMLINK, locked);
+			switch (ret) {
+			case 0:
+				goto retry;
+			case -EBUSY:
+			case -EAGAIN:
+				ret = 0;
+				fallthrough;
+			case -EFAULT:
+			case -ENOMEM:
+			case -EHWPOISON:
+				goto out;
+			}
+			BUG();
+		} else if (PTR_ERR(page) == -EEXIST) {
+			/*
+			 */
+			if (pages) {
+				ret = PTR_ERR(page);
+				goto out;
+			}
+
+			goto next_page;
+		} else if (IS_ERR(page)) {
+			ret = PTR_ERR(page);
+			goto out;
+		}
+		if (pages) {
+			pages[i] = page;
+			flush_anon_page(vma, page, start);
+			flush_dcache_page(page);
+			ctx.page_mask = 0;
+		}
+next_page:
+		if (vmas) {
+			vmas[i] = vma;
+			ctx.page_mask = 0;
+		}
+		page_increm = 1 + (~(start >> PAGE_SHIFT) & ctx.page_mask);
+		if (page_increm > nr_pages)
+			page_increm = nr_pages;
+		i += page_increm;
+		start += page_increm * PAGE_SIZE;
+		nr_pages -= page_increm;
+	} while (nr_pages);
+out:
+	if (ctx.pgmap)
+		put_dev_pagemap(ctx.pgmap);
+	return i ? i : ret;
+}
+
+
+Callee candidate: handle_mm_fault
+Source code:
+vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+			   unsigned int flags, struct pt_regs *regs)
+{
+	vm_fault_t ret;
+
+	__set_current_state(TASK_RUNNING);
+
+	count_vm_event(PGFAULT);
+	count_memcg_event_mm(vma->vm_mm, PGFAULT);
+
+	/* do counter updates before entering really critical section. */
+	check_sync_rss_stat(current);
+
+	if (!arch_vma_access_permitted(vma, flags & FAULT_FLAG_WRITE,
+					    flags & FAULT_FLAG_INSTRUCTION,
+					    flags & FAULT_FLAG_REMOTE))
+		return VM_FAULT_SIGSEGV;
+
+	/*
+	 */
+	if (flags & FAULT_FLAG_USER)
+		mem_cgroup_enter_user_fault();
+
+	lru_gen_enter_fault(vma);
+
+	if (unlikely(is_vm_hugetlb_page(vma)))
+		ret = hugetlb_fault(vma->vm_mm, vma, address, flags);
+	else
+		ret = __handle_mm_fault(vma, address, flags);
+
+	lru_gen_exit_fault();
+
+	if (flags & FAULT_FLAG_USER) {
+		mem_cgroup_exit_user_fault();
+		/*
+		 */
+		if (task_in_memcg_oom(current) && !(ret & VM_FAULT_OOM))
+			mem_cgroup_oom_synchronize(false);
+	}
+
+	mm_account_fault(regs, address, flags, ret);
+
+	return ret;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __get_user_pages will reach handle_mm_fault? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function __get_user_pages may invoke handle_mm_fault indirectly when a page fault occurs during the process of acquiring user pages. Specifically, if follow_page_mask returns an error (e.g., -EMLINK) or requires fault handling, faultin_page is called. This function triggers page fault resolution, which ultimately involves handle_mm_fault for non-HugeTLB VMAs. Since handle_mm_fault is the core fault handler, this call path is semantically valid and functionally expected.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __get_user_pages
+
+Callee candidate: handle_mm_fault
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __get_user_pages will reach handle_mm_fault? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+__get_user_pages is a function used to pin user-space pages in memory, and it operates by walking the page tables and potentially triggering page faults if the requested pages are not already resident. When a page fault occurs during this process, it is naturally handled by the handle_mm_fault function, which is the core handler for memory faults in the Linux kernel. Therefore, it is semantically and functionally reasonable to expect that __get_user_pages may reach handle_mm_fault during execution.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_mmap
+  - ksys_mmap_pgoff
+    - vm_mmap_pgoff
+      - do_mmap
+        - mmap_region
+          - vm_area_alloc
+
+Caller: vm_area_alloc
+Source code:
+struct vm_area_struct *vm_area_alloc(struct mm_struct *mm)
+{
+	struct vm_area_struct *vma;
+
+	vma = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
+	if (vma)
+		vma_init(vma, mm);
+	return vma;
+}
+
+
+Callee candidate: kmem_cache_alloc
+Source code:
+void *kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags)
+{
+	return slob_alloc_node(cachep, flags, NUMA_NO_NODE);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of vm_area_alloc will reach kmem_cache_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `vm_area_alloc` explicitly calls `kmem_cache_alloc` to allocate a `vm_area_struct` from the `vm_area_cachep` slab cache. This is a direct, unconditional function call in the source code. Historically, during `mmap` operations, `vm_area_alloc` is invoked to create a new VMA, which inherently requires memory allocation via `kmem_cache_alloc`. Since there are no conditional checks or alternative paths in the provided code that bypass this call, the execution of `vm_area_alloc` will always reach `kmem_cache_alloc` when allocating a VMA.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: vm_area_alloc
+
+Callee candidate: kmem_cache_alloc
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of vm_area_alloc will reach kmem_cache_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+vm_area_alloc is responsible for allocating a virtual memory area (VMA) structure in the Linux kernel. This allocation typically uses a slab cache, which is managed via kmem_cache_alloc. Since VMA structures are allocated from kernel memory caches, it is expected that vm_area_alloc will invoke kmem_cache_alloc internally or through another helper function to perform the actual allocation.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- ext4_find_extent
+  - __kmalloc
+- alloc_file_pseudo
+  - d_alloc_pseudo
+    - __d_alloc
+      - __kmalloc
+
+Caller: __kmalloc
+Source code:
+void *__kmalloc(size_t size, gfp_t gfp)
+{
+	return __do_kmalloc_node(size, gfp, NUMA_NO_NODE, _RET_IP_);
+}
+
+
+Callee candidate: __kmem_cache_alloc_node
+Source code:
+void *__kmem_cache_alloc_node(struct kmem_cache *s, gfp_t gfpflags,
+			      int node, size_t orig_size,
+			      unsigned long caller)
+{
+	return slab_alloc_node(s, NULL, gfpflags, node,
+			       caller, orig_size);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __kmalloc will reach __kmem_cache_alloc_node? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The __kmalloc function is a standard kernel memory allocator that internally uses the slab allocator mechanism. The __kmem_cache_alloc_node function is a core slab allocator implementation. Since __kmalloc is designed to delegate memory allocation to the slab subsystem, and historical examples (like kmem_cache_alloc_lru in __d_alloc) demonstrate slab usage in similar contexts, it is semantically and functionally valid to expect __kmalloc to reach __kmem_cache_alloc_node via internal slab paths.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __kmalloc
+
+Callee candidate: __kmem_cache_alloc_node
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __kmalloc will reach __kmem_cache_alloc_node? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification:**
+The `__kmalloc` function is a wrapper in the Linux kernel that internally uses slab allocation. It typically calls `kmem_cache_alloc` (or similar variants) to allocate memory. `__kmem_cache_alloc_node` is a lower-level slab allocator function that can be invoked by `kmem_cache_alloc` when node-specific allocation is required. Therefore, it is semantically and functionally reasonable for `__kmalloc` to reach `__kmem_cache_alloc_node` during execution, as they are part of the same memory allocation hierarchy.
+
+**FINAL ANSWER -> YES**
+

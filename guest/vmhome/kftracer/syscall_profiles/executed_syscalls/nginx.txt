@@ -1,0 +1,11 @@
+1:write
+3:close
+20:writev
+40:sendfile
+45:recvfrom
+54:setsockopt
+232:epoll_wait
+233:epoll_ctl
+257:openat
+262:newfstatat
+288:accept4

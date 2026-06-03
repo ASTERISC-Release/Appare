@@ -1,0 +1,9 @@
+__rcu_read_lock
+__rcu_read_unlock
+__x64_sys_getpgid
+find_task_by_vpid
+idr_find
+pid_vnr
+radix_tree_lookup
+security_task_getpgid
+selinux_task_getpgid

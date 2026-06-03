@@ -1,0 +1,509 @@
+Baseline name: nginx-ltp
+0:read
+    redis-server-all.txt: total funcs: 279; not profiled: 197/279 (70.6%) [___bpf_prog_run, __alloc_pages, __alloc_skb, __bpf_prog_run32, __build_skb_around, __copy_skb_header, __dev_queue_xmit, __folio_alloc, __get_task_comm, __get_vma_policy, __handle_mm_fault, __ip_finish_output, __ip_local_out, __ip_queue_xmit, __kmalloc_node_track_caller, __ksize, __local_bh_enable_ip, __netif_schedule, __note_gp_changes, __page_set_anon_rmap, __pte_alloc, __ptrace_may_access, __qdisc_run, __send_ipi_mask, __sk_dst_check, __sk_mem_reduce_allocated, __skb_clone, __skb_datagram_iter, __skb_pad, __slab_alloc.isra.0, __slab_free, __task_pid_nr_ns, __tcp_cleanup_rbuf, __tcp_retransmit_skb, __tcp_select_window, __tcp_send_ack.part.0, __tcp_transmit_skb, __tcp_v4_send_check, __unfreeze_partials, alloc_pages, anon_pipe_buf_release, avc_has_perm, blake2s_compress, blake2s_update, calc_wheel_index, consume_skb, cubictcp_cwnd_event, cubictcp_recalc_ssthresh, cubictcp_state, default_send_IPI_single, detach_if_pending, dev_hard_start_xmit, dev_qdisc_enqueue, dev_queue_xmit_nit, do_task_stat, do_wp_page, e1000_maybe_stop_tx, e1000_xmit_frame, ep_autoremove_wake_function, ep_poll_callback, eth_header, file_has_perm, folio_add_lru, folio_add_lru_vma, folio_batch_add_and_move, fput, generic_exec_single, get_page_from_freelist, get_random_u32, get_task_mm, get_task_policy.part.0, get_vma_policy.part.0, handle_mm_fault, housekeeping_cpumask, i_callback, inet_recvmsg, inet_sk_rebuild_header, inode_has_perm, ip_finish_output2, ip_local_out, ip_output, ip_queue_xmit, ip_send_check, ipv4_dst_check, ipv4_mtu, is_swiotlb_active, jiffies_to_msecs, kfree_skbmem, kmalloc_reserve, kmem_cache_alloc_node, ksize, kvm_send_ipi_mask, lru_cache_add_inactive_or_unevictable, migrate_disable, migrate_enable, migrate_task_rq_fair, mix_interrupt_randomness, mix_pool_bytes, mmput, neigh_resolve_output, netdev_core_pick_tx, netif_skb_features, netlbl_enabled, nf_hook_slow, packet_rcv, page_add_new_anon_rmap, page_frag_free, page_move_anon_rmap, pfifo_fast_dequeue, pfifo_fast_enqueue, pick_next_entity, pid_nr_ns, place_entity.constprop.0, pmd_install, policy_node, policy_nodemask, prep_new_page, proc_single_show, proc_task_name, proc_tgid_stat, pte_alloc_one, ptep_set_access_flags, ptrace_may_access, put_cpu_partial, release_sock, remove_entity_load_avg, retransmits_timed_out.part.0, rmqueue_bulk, run_filter, sch_direct_xmit, second_overflow, security_socket_recvmsg, selinux_ip_output, selinux_ip_postroute, selinux_ip_postroute_compat.isra.0, selinux_parse_skb.constprop.0, selinux_socket_recvmsg, seq_put_decimal_ll, seq_put_decimal_ull, seq_putc, seq_read, set_next_entity, set_task_cpu, set_task_rq_fair, should_fail_alloc_page, simple_copy_to_iter, skb_attempt_defer_free, skb_clone, skb_copy_datagram_iter, skb_csum_hwoffload_help, skb_free_head, skb_network_protocol, skb_push, skb_release_all, skb_release_data, skb_release_head_state, skb_still_in_host_queue, smp_call_function_single_async, sock_free_inode, sock_has_perm, sock_read_iter, sock_recvmsg, sock_rfree, swake_up_one, swiotlb_bounce, swiotlb_map, swiotlb_tbl_map_single, sync_mm_rss, task_prio, task_sched_runtime, task_vsize, tcp_cleanup_rbuf, tcp_current_mss, tcp_eat_recv_skb, tcp_enter_loss, tcp_established_options, tcp_fastopen_active_detect_blackhole, tcp_mark_skb_lost, tcp_mstamp_refresh, tcp_options_write, tcp_rate_skb_sent, tcp_rcv_space_adjust, tcp_recvmsg, tcp_release_cb, tcp_retransmit_skb, tcp_send_ack, tcp_set_ca_state, tcp_update_skb_after_send, tcp_v4_send_check, ttwu_do_activate.isra.0, ttwu_do_wakeup.isra.0, update_curr_fair, validate_xmit_skb.isra.0, validate_xmit_skb_list, vm_normal_page, vma_alloc_folio, wakeup_preempt_entity.isra.0]
+1:write
+    redis-server-all.txt: total funcs: 379; not profiled: 63/379 (16.6%) [__d_free, __netif_schedule, __put_cred, __put_task_struct, __release_sock, __tcp_retransmit_skb, arch_release_task_struct, cgroup_free, cubictcp_cwnd_event, cubictcp_recalc_ssthresh, delayed_put_pid, delayed_put_task_struct, exit_creds, fpstate_free, fput, free_task, inet_send_prepare, inet_sendmsg, jiffies_to_msecs, net_tx_action, perf_event_delayed_put, proc_free_inode, put_pid.part.0, put_pid_ns, qdisc_maybe_clear_missed, release_sock, release_user_cpus_ptr, retransmits_timed_out.part.0, security_socket_sendmsg, security_task_free, selinux_socket_sendmsg, sk_error_report, sk_page_frag_refill, skb_page_frag_refill, skb_still_in_host_queue, sock_def_error_report, sock_has_perm, sock_sendmsg, sock_write_iter, tcp_chrono_start, tcp_cwnd_restart, tcp_drop_reason, tcp_enter_loss, tcp_fastopen_active_detect_blackhole, tcp_fin, tcp_grow_window, tcp_init_cwnd, tcp_mark_skb_lost, tcp_push, tcp_rate_check_app_limited, tcp_rearm_rto, tcp_release_cb, tcp_reset, tcp_retransmit_skb, tcp_send_delayed_ack, tcp_send_mss, tcp_sendmsg, tcp_skb_entail, tcp_stream_alloc_skb, tcp_stream_memory_free, tcp_tx_timestamp, tcp_wmem_schedule, wake_up_nohz_cpu]
+3:close
+    redis-server-all.txt: total funcs: 46; not profiled: 0/46 (0.0%) []
+7:poll
+    redis-server-all.txt: total funcs: NA; 
+8:lseek
+    redis-server-all.txt: total funcs: 7; not profiled: 1/7 (14.3%) [fput]
+9:mmap
+    redis-server-all.txt: total funcs: 59; not profiled: 6/59 (10.2%) [__slab_alloc.isra.0, can_vma_merge_before.isra.0, get_task_policy.part.0, i_callback, kmem_cache_free_bulk.part.0, sock_free_inode]
+10:mprotect
+    redis-server-all.txt: total funcs: NA; 
+11:munmap
+    redis-server-all.txt: total funcs: 0; not profiled: 0/0 (0.0%) []
+12:brk
+    redis-server-all.txt: total funcs: NA; 
+13:rt_sigaction
+    redis-server-all.txt: total funcs: NA; 
+14:rt_sigprocmask
+    redis-server-all.txt: total funcs: NA; 
+19:readv
+    redis-server-all.txt: total funcs: NA; 
+20:writev
+    redis-server-all.txt: total funcs: NA; 
+21:access
+    redis-server-all.txt: total funcs: NA; 
+23:select
+    redis-server-all.txt: total funcs: NA; 
+24:sched_yield
+    redis-server-all.txt: total funcs: NA; 
+25:mremap
+    redis-server-all.txt: total funcs: NA; 
+26:msync
+    redis-server-all.txt: total funcs: NA; 
+27:mincore
+    redis-server-all.txt: total funcs: NA; 
+28:madvise
+    redis-server-all.txt: total funcs: 92; not profiled: 45/92 (48.9%) [__alloc_pages, __enqueue_entity, __free_pages, __free_slab, __get_free_pages, __slab_free, __traceiter_sched_switch, __traceiter_sched_wakeup, __unfreeze_partials, alloc_pages, check_preempt_curr, check_preempt_wakeup, clear_buddies, enqueue_task_fair, finish_task_switch, free_pages, free_pages.part.0, free_pcppages_bulk, free_unref_page, free_unref_page_prepare.part.0, get_page_from_freelist, get_task_policy.part.0, i_callback, kvm_flush_tlb_multi, mod_node_page_state, native_flush_tlb_local, native_flush_tlb_multi, on_each_cpu_cond_mask, pick_next_entity, pick_next_task_fair, place_entity.constprop.0, policy_node, policy_nodemask, prep_new_page, put_cpu_partial, put_prev_entity, resched_curr, set_next_entity, should_fail_alloc_page, smp_call_function_many_cond, sock_free_inode, tlb_is_not_lazy, ttwu_do_activate.isra.0, ttwu_do_wakeup.isra.0, wakeup_preempt_entity.isra.0]
+32:dup
+    redis-server-all.txt: total funcs: NA; 
+33:dup2
+    redis-server-all.txt: total funcs: NA; 
+34:pause
+    redis-server-all.txt: total funcs: NA; 
+36:getitimer
+    redis-server-all.txt: total funcs: NA; 
+37:alarm
+    redis-server-all.txt: total funcs: NA; 
+38:setitimer
+    redis-server-all.txt: total funcs: NA; 
+39:getpid
+    redis-server-all.txt: total funcs: 18; not profiled: 18/18 (100.0%) [__msecs_to_jiffies, __send_ipi_mask, __smp_call_single_queue, __task_pid_nr_ns, __x64_sys_getpid, default_send_IPI_single, generic_exec_single, housekeeping_cpumask, kvm_send_ipi_mask, native_send_call_func_single_ipi, preempt_count_add, preempt_count_sub, rebalance_domains, run_rebalance_domains, send_call_function_single_ipi, smp_call_function_single_async, update_dl_rq_load_avg, update_rt_rq_load_avg]
+40:sendfile
+    redis-server-all.txt: total funcs: NA; 
+41:socket
+    redis-server-all.txt: total funcs: NA; 
+42:connect
+    redis-server-all.txt: total funcs: NA; 
+43:accept
+    redis-server-all.txt: total funcs: 198; not profiled: 112/198 (56.6%) [___bpf_prog_run, __alloc_pages, __alloc_skb, __bpf_prog_run32, __build_skb_around, __copy_skb_header, __dev_queue_xmit, __init_swait_queue_head, __ip_finish_output, __ip_local_out, __ip_queue_xmit, __kmalloc_node, __kmalloc_node_track_caller, __kmem_cache_alloc_node, __ksize, __mod_zone_page_state, __note_gp_changes, __send_ipi_mask, __sk_dst_check, __skb_clone, __skb_pad, __slab_alloc.isra.0, __sysvec_call_function, __tcp_select_window, __tcp_send_ack.part.0, __tcp_transmit_skb, __tcp_v4_send_check, __unfreeze_partials, __zone_watermark_ok, alloc_fdtable, alloc_pages, consume_skb, copy_fd_bitmaps, d_instantiate.part.0, default_send_IPI_single, dev_hard_start_xmit, dev_queue_xmit_nit, dma_map_page_attrs, do_sync_core, e1000_maybe_stop_tx, e1000_xmit_frame, eth_header, fixup_red_left, get_page_from_freelist, get_partial_node.part.0, get_task_policy.part.0, i_callback, init_once, inode_init_once, ip_finish_output2, ip_local_out, ip_output, ip_queue_xmit, ip_send_check, ipv4_dst_check, is_swiotlb_active, is_vmalloc_addr, kfree_skbmem, kmalloc_reserve, kmalloc_slab, kmalloc_trace, kmem_cache_alloc_node, ksize, kvm_send_ipi_mask, kvmalloc_node, mempolicy_slab_node, migrate_disable, migrate_enable, mod_node_page_state, neigh_resolve_output, netdev_core_pick_tx, netif_skb_features, netlbl_enabled, new_slab, nf_hook_slow, packet_rcv, policy_node, policy_nodemask, prep_new_page, put_cpu_partial, rebalance_domains, rmqueue_bulk, run_filter, run_rebalance_domains, sch_direct_xmit, selinux_ip_output, selinux_ip_postroute, selinux_ip_postroute_compat.isra.0, selinux_parse_skb.constprop.0, setup_object_debug, should_fail_alloc_page, skb_clone, skb_csum_hwoffload_help, skb_network_protocol, skb_push, skb_release_all, skb_release_data, skb_release_head_state, sock_free_inode, swiotlb_bounce, swiotlb_map, swiotlb_tbl_map_single, tcp_established_options, tcp_mstamp_refresh, tcp_options_write, tcp_send_ack, tcp_v4_send_check, update_dl_rq_load_avg, update_rt_rq_load_avg, validate_xmit_skb.isra.0, validate_xmit_skb_list, wait_for_completion]
+44:sendto
+    redis-server-all.txt: total funcs: NA; 
+45:recvfrom
+    redis-server-all.txt: total funcs: NA; 
+46:sendmsg
+    redis-server-all.txt: total funcs: NA; 
+47:recvmsg
+    redis-server-all.txt: total funcs: NA; 
+48:shutdown
+    redis-server-all.txt: total funcs: NA; 
+49:bind
+    redis-server-all.txt: total funcs: NA; 
+50:listen
+    redis-server-all.txt: total funcs: NA; 
+51:getsockname
+    redis-server-all.txt: total funcs: NA; 
+52:getpeername
+    redis-server-all.txt: total funcs: NA; 
+53:socketpair
+    redis-server-all.txt: total funcs: NA; 
+54:setsockopt
+    redis-server-all.txt: total funcs: 162; not profiled: 6/162 (3.7%) [__free_slab, __tcp_sock_set_nodelay.part.0, discard_slab, fput, free_slab, tcp_set_keepalive]
+55:getsockopt
+    redis-server-all.txt: total funcs: NA; 
+56:clone
+    redis-server-all.txt: total funcs: 252; not profiled: 73/252 (29.0%) [___bpf_prog_run, __bpf_prog_run32, __copy_skb_header, __dev_queue_xmit, __ip_finish_output, __ip_local_out, __ip_queue_xmit, __sched_fork.isra.0, __send_ipi_mask, __sk_dst_check, __skb_clone, __skb_pad, __slab_alloc.isra.0, __tcp_select_window, __tcp_send_ack.part.0, __tcp_transmit_skb, __tcp_v4_send_check, _get_random_bytes.part.0, alloc_fdtable, anon_vma_ctor, default_send_IPI_single, dev_hard_start_xmit, dev_queue_xmit_nit, dma_map_page_attrs, dup_mm.isra.0, e1000_maybe_stop_tx, e1000_xmit_frame, eth_header, get_partial_node.part.0, get_task_policy.part.0, insert_vmap_area.constprop.0, insert_vmap_area_augment.constprop.0, ip_finish_output2, ip_local_out, ip_output, ip_queue_xmit, ip_send_check, ipv4_dst_check, is_swiotlb_active, klp_copy_process, kmem_cache_free_bulk.part.0, kvm_send_ipi_mask, migrate_disable, migrate_enable, mm_init.isra.0, neigh_resolve_output, netdev_core_pick_tx, netif_skb_features, netlbl_enabled, nf_hook_slow, packet_rcv, preallocate_pmds.constprop.0, put_pid.part.0, run_filter, sch_direct_xmit, selinux_ip_output, selinux_ip_postroute, selinux_ip_postroute_compat.isra.0, selinux_parse_skb.constprop.0, skb_clone, skb_csum_hwoffload_help, skb_network_protocol, skb_push, swiotlb_bounce, swiotlb_map, swiotlb_tbl_map_single, tcp_established_options, tcp_mstamp_refresh, tcp_options_write, tcp_send_ack, tcp_v4_send_check, validate_xmit_skb.isra.0, validate_xmit_skb_list]
+57:fork
+    redis-server-all.txt: total funcs: NA; 
+59:execve
+    redis-server-all.txt: total funcs: NA; 
+61:wait4
+    redis-server-all.txt: total funcs: 74; not profiled: 3/74 (4.1%) [__d_drop.part.0, iput.part.0, put_pid.part.0]
+62:kill
+    redis-server-all.txt: total funcs: NA; 
+72:fcntl
+    redis-server-all.txt: total funcs: 45; not profiled: 9/45 (20.0%) [__send_ipi_mask, default_send_IPI_single, i_callback, kvm_send_ipi_mask, place_entity.constprop.0, sock_free_inode, ttwu_do_activate.isra.0, ttwu_do_wakeup.isra.0, wakeup_preempt_entity.isra.0]
+73:flock
+    redis-server-all.txt: total funcs: NA; 
+74:fsync
+    redis-server-all.txt: total funcs: NA; 
+75:fdatasync
+    redis-server-all.txt: total funcs: NA; 
+76:truncate
+    redis-server-all.txt: total funcs: NA; 
+77:ftruncate
+    redis-server-all.txt: total funcs: NA; 
+78:getdents
+    redis-server-all.txt: total funcs: NA; 
+79:getcwd
+    redis-server-all.txt: total funcs: NA; 
+80:chdir
+    redis-server-all.txt: total funcs: NA; 
+81:fchdir
+    redis-server-all.txt: total funcs: NA; 
+82:rename
+    redis-server-all.txt: total funcs: NA; 
+83:mkdir
+    redis-server-all.txt: total funcs: NA; 
+84:rmdir
+    redis-server-all.txt: total funcs: NA; 
+85:creat
+    redis-server-all.txt: total funcs: NA; 
+86:link
+    redis-server-all.txt: total funcs: NA; 
+87:unlink
+    redis-server-all.txt: total funcs: NA; 
+88:symlink
+    redis-server-all.txt: total funcs: NA; 
+89:readlink
+    redis-server-all.txt: total funcs: NA; 
+90:chmod
+    redis-server-all.txt: total funcs: NA; 
+91:fchmod
+    redis-server-all.txt: total funcs: NA; 
+92:chown
+    redis-server-all.txt: total funcs: NA; 
+93:fchown
+    redis-server-all.txt: total funcs: NA; 
+94:lchown
+    redis-server-all.txt: total funcs: NA; 
+95:umask
+    redis-server-all.txt: total funcs: NA; 
+96:gettimeofday
+    redis-server-all.txt: total funcs: NA; 
+97:getrlimit
+    redis-server-all.txt: total funcs: NA; 
+98:getrusage
+    redis-server-all.txt: total funcs: NA; 
+99:sysinfo
+    redis-server-all.txt: total funcs: NA; 
+100:times
+    redis-server-all.txt: total funcs: NA; 
+101:ptrace
+    redis-server-all.txt: total funcs: NA; 
+102:getuid
+    redis-server-all.txt: total funcs: NA; 
+103:syslog
+    redis-server-all.txt: total funcs: NA; 
+104:getgid
+    redis-server-all.txt: total funcs: NA; 
+105:setuid
+    redis-server-all.txt: total funcs: NA; 
+106:setgid
+    redis-server-all.txt: total funcs: NA; 
+107:geteuid
+    redis-server-all.txt: total funcs: NA; 
+108:getegid
+    redis-server-all.txt: total funcs: NA; 
+109:setpgid
+    redis-server-all.txt: total funcs: NA; 
+110:getppid
+    redis-server-all.txt: total funcs: NA; 
+111:getpgrp
+    redis-server-all.txt: total funcs: NA; 
+113:setreuid
+    redis-server-all.txt: total funcs: NA; 
+114:setregid
+    redis-server-all.txt: total funcs: NA; 
+115:getgroups
+    redis-server-all.txt: total funcs: NA; 
+116:setgroups
+    redis-server-all.txt: total funcs: NA; 
+117:setresuid
+    redis-server-all.txt: total funcs: NA; 
+118:getresuid
+    redis-server-all.txt: total funcs: NA; 
+119:setresgid
+    redis-server-all.txt: total funcs: NA; 
+120:getresgid
+    redis-server-all.txt: total funcs: NA; 
+121:getpgid
+    redis-server-all.txt: total funcs: NA; 
+122:setfsuid
+    redis-server-all.txt: total funcs: NA; 
+123:setfsgid
+    redis-server-all.txt: total funcs: NA; 
+124:getsid
+    redis-server-all.txt: total funcs: NA; 
+125:capget
+    redis-server-all.txt: total funcs: NA; 
+126:capset
+    redis-server-all.txt: total funcs: NA; 
+128:rt_sigtimedwait
+    redis-server-all.txt: total funcs: NA; 
+129:rt_sigqueueinfo
+    redis-server-all.txt: total funcs: NA; 
+130:rt_sigsuspend
+    redis-server-all.txt: total funcs: NA; 
+131:sigaltstack
+    redis-server-all.txt: total funcs: NA; 
+135:personality
+    redis-server-all.txt: total funcs: NA; 
+136:ustat
+    redis-server-all.txt: total funcs: NA; 
+137:statfs
+    redis-server-all.txt: total funcs: NA; 
+138:fstatfs
+    redis-server-all.txt: total funcs: NA; 
+139:sysfs
+    redis-server-all.txt: total funcs: NA; 
+140:getpriority
+    redis-server-all.txt: total funcs: NA; 
+141:setpriority
+    redis-server-all.txt: total funcs: NA; 
+142:sched_setparam
+    redis-server-all.txt: total funcs: NA; 
+143:sched_getparam
+    redis-server-all.txt: total funcs: NA; 
+144:sched_setscheduler
+    redis-server-all.txt: total funcs: NA; 
+145:sched_getscheduler
+    redis-server-all.txt: total funcs: NA; 
+146:sched_get_priority_max
+    redis-server-all.txt: total funcs: NA; 
+147:sched_get_priority_min
+    redis-server-all.txt: total funcs: NA; 
+148:sched_rr_get_interval
+    redis-server-all.txt: total funcs: NA; 
+149:mlock
+    redis-server-all.txt: total funcs: NA; 
+150:munlock
+    redis-server-all.txt: total funcs: NA; 
+151:mlockall
+    redis-server-all.txt: total funcs: NA; 
+152:munlockall
+    redis-server-all.txt: total funcs: NA; 
+155:pivot_root
+    redis-server-all.txt: total funcs: NA; 
+157:prctl
+    redis-server-all.txt: total funcs: NA; 
+158:arch_prctl
+    redis-server-all.txt: total funcs: NA; 
+159:adjtimex
+    redis-server-all.txt: total funcs: NA; 
+161:chroot
+    redis-server-all.txt: total funcs: NA; 
+162:sync
+    redis-server-all.txt: total funcs: NA; 
+163:acct
+    redis-server-all.txt: total funcs: NA; 
+165:mount
+    redis-server-all.txt: total funcs: NA; 
+167:swapon
+    redis-server-all.txt: total funcs: NA; 
+168:swapoff
+    redis-server-all.txt: total funcs: NA; 
+169:reboot
+    redis-server-all.txt: total funcs: NA; 
+170:sethostname
+    redis-server-all.txt: total funcs: NA; 
+172:iopl
+    redis-server-all.txt: total funcs: NA; 
+173:ioperm
+    redis-server-all.txt: total funcs: NA; 
+176:delete_module
+    redis-server-all.txt: total funcs: NA; 
+179:quotactl
+    redis-server-all.txt: total funcs: NA; 
+186:gettid
+    redis-server-all.txt: total funcs: NA; 
+187:readahead
+    redis-server-all.txt: total funcs: NA; 
+188:setxattr
+    redis-server-all.txt: total funcs: NA; 
+190:fsetxattr
+    redis-server-all.txt: total funcs: NA; 
+191:getxattr
+    redis-server-all.txt: total funcs: NA; 
+192:lgetxattr
+    redis-server-all.txt: total funcs: NA; 
+193:fgetxattr
+    redis-server-all.txt: total funcs: NA; 
+194:listxattr
+    redis-server-all.txt: total funcs: NA; 
+195:llistxattr
+    redis-server-all.txt: total funcs: NA; 
+196:flistxattr
+    redis-server-all.txt: total funcs: NA; 
+197:removexattr
+    redis-server-all.txt: total funcs: NA; 
+198:lremovexattr
+    redis-server-all.txt: total funcs: NA; 
+199:fremovexattr
+    redis-server-all.txt: total funcs: NA; 
+200:tkill
+    redis-server-all.txt: total funcs: NA; 
+203:sched_setaffinity
+    redis-server-all.txt: total funcs: NA; 
+204:sched_getaffinity
+    redis-server-all.txt: total funcs: NA; 
+206:io_setup
+    redis-server-all.txt: total funcs: NA; 
+207:io_destroy
+    redis-server-all.txt: total funcs: NA; 
+208:io_getevents
+    redis-server-all.txt: total funcs: NA; 
+209:io_submit
+    redis-server-all.txt: total funcs: NA; 
+210:io_cancel
+    redis-server-all.txt: total funcs: NA; 
+213:epoll_create
+    redis-server-all.txt: total funcs: NA; 
+216:remap_file_pages
+    redis-server-all.txt: total funcs: NA; 
+218:set_tid_address
+    redis-server-all.txt: total funcs: NA; 
+222:timer_create
+    redis-server-all.txt: total funcs: NA; 
+223:timer_settime
+    redis-server-all.txt: total funcs: NA; 
+224:timer_gettime
+    redis-server-all.txt: total funcs: NA; 
+225:timer_getoverrun
+    redis-server-all.txt: total funcs: NA; 
+226:timer_delete
+    redis-server-all.txt: total funcs: NA; 
+227:clock_settime
+    redis-server-all.txt: total funcs: NA; 
+228:clock_gettime
+    redis-server-all.txt: total funcs: NA; 
+229:clock_getres
+    redis-server-all.txt: total funcs: NA; 
+230:clock_nanosleep
+    redis-server-all.txt: total funcs: NA; 
+231:exit_group
+    redis-server-all.txt: total funcs: NA; 
+232:epoll_wait
+    redis-server-all.txt: total funcs: 158; not profiled: 19/158 (12.0%) [__folio_alloc, __get_vma_policy, __handle_mm_fault, __mod_node_page_state, __page_set_anon_rmap, do_wp_page, folio_add_lru, folio_add_lru_vma, folio_batch_add_and_move, fput, get_task_policy.part.0, get_vma_policy.part.0, handle_mm_fault, lru_cache_add_inactive_or_unevictable, page_add_new_anon_rmap, page_move_anon_rmap, ptep_set_access_flags, vm_normal_page, vma_alloc_folio]
+233:epoll_ctl
+    redis-server-all.txt: total funcs: 149; not profiled: 4/149 (2.7%) [__sysvec_call_function, do_sync_core, ep_unregister_pollwait.isra.0, fput]
+234:tgkill
+    redis-server-all.txt: total funcs: NA; 
+240:mq_open
+    redis-server-all.txt: total funcs: NA; 
+241:mq_unlink
+    redis-server-all.txt: total funcs: NA; 
+242:mq_timedsend
+    redis-server-all.txt: total funcs: NA; 
+243:mq_timedreceive
+    redis-server-all.txt: total funcs: NA; 
+244:mq_notify
+    redis-server-all.txt: total funcs: NA; 
+247:waitid
+    redis-server-all.txt: total funcs: NA; 
+248:add_key
+    redis-server-all.txt: total funcs: NA; 
+249:request_key
+    redis-server-all.txt: total funcs: NA; 
+250:keyctl
+    redis-server-all.txt: total funcs: NA; 
+257:openat
+    redis-server-all.txt: total funcs: 192; not profiled: 1/192 (0.5%) [has_pid_permissions.isra.0]
+258:mkdirat
+    redis-server-all.txt: total funcs: NA; 
+259:mknodat
+    redis-server-all.txt: total funcs: NA; 
+260:fchownat
+    redis-server-all.txt: total funcs: NA; 
+261:futimesat
+    redis-server-all.txt: total funcs: NA; 
+262:newfstatat
+    redis-server-all.txt: total funcs: 38; not profiled: 1/38 (2.6%) [fput]
+263:unlinkat
+    redis-server-all.txt: total funcs: NA; 
+264:renameat
+    redis-server-all.txt: total funcs: NA; 
+265:linkat
+    redis-server-all.txt: total funcs: NA; 
+266:symlinkat
+    redis-server-all.txt: total funcs: NA; 
+267:readlinkat
+    redis-server-all.txt: total funcs: NA; 
+268:fchmodat
+    redis-server-all.txt: total funcs: NA; 
+271:ppoll
+    redis-server-all.txt: total funcs: NA; 
+272:unshare
+    redis-server-all.txt: total funcs: NA; 
+273:set_robust_list
+    redis-server-all.txt: total funcs: NA; 
+274:get_robust_list
+    redis-server-all.txt: total funcs: NA; 
+275:splice
+    redis-server-all.txt: total funcs: NA; 
+276:tee
+    redis-server-all.txt: total funcs: NA; 
+277:sync_file_range
+    redis-server-all.txt: total funcs: NA; 
+278:vmsplice
+    redis-server-all.txt: total funcs: NA; 
+280:utimensat
+    redis-server-all.txt: total funcs: NA; 
+281:epoll_pwait
+    redis-server-all.txt: total funcs: NA; 
+285:fallocate
+    redis-server-all.txt: total funcs: NA; 
+288:accept4
+    redis-server-all.txt: total funcs: NA; 
+289:signalfd4
+    redis-server-all.txt: total funcs: NA; 
+290:eventfd2
+    redis-server-all.txt: total funcs: NA; 
+291:epoll_create1
+    redis-server-all.txt: total funcs: NA; 
+292:dup3
+    redis-server-all.txt: total funcs: NA; 
+293:pipe2
+    redis-server-all.txt: total funcs: 51; not profiled: 3/51 (5.9%) [___slab_alloc, __slab_alloc.isra.0, d_instantiate.part.0]
+295:preadv
+    redis-server-all.txt: total funcs: NA; 
+296:pwritev
+    redis-server-all.txt: total funcs: NA; 
+297:rt_tgsigqueueinfo
+    redis-server-all.txt: total funcs: NA; 
+298:perf_event_open
+    redis-server-all.txt: total funcs: NA; 
+299:recvmmsg
+    redis-server-all.txt: total funcs: NA; 
+303:name_to_handle_at
+    redis-server-all.txt: total funcs: NA; 
+304:open_by_handle_at
+    redis-server-all.txt: total funcs: NA; 
+305:clock_adjtime
+    redis-server-all.txt: total funcs: NA; 
+306:syncfs
+    redis-server-all.txt: total funcs: NA; 
+307:sendmmsg
+    redis-server-all.txt: total funcs: NA; 
+308:setns
+    redis-server-all.txt: total funcs: NA; 
+312:kcmp
+    redis-server-all.txt: total funcs: NA; 
+314:sched_setattr
+    redis-server-all.txt: total funcs: NA; 
+315:sched_getattr
+    redis-server-all.txt: total funcs: NA; 
+316:renameat2
+    redis-server-all.txt: total funcs: NA; 
+317:seccomp
+    redis-server-all.txt: total funcs: NA; 
+318:getrandom
+    redis-server-all.txt: total funcs: NA; 
+319:memfd_create
+    redis-server-all.txt: total funcs: NA; 
+323:userfaultfd
+    redis-server-all.txt: total funcs: NA; 
+324:membarrier
+    redis-server-all.txt: total funcs: NA; 
+325:mlock2
+    redis-server-all.txt: total funcs: NA; 
+326:copy_file_range
+    redis-server-all.txt: total funcs: NA; 
+327:preadv2
+    redis-server-all.txt: total funcs: NA; 
+328:pwritev2
+    redis-server-all.txt: total funcs: NA; 
+332:statx
+    redis-server-all.txt: total funcs: NA; 
+424:pidfd_send_signal
+    redis-server-all.txt: total funcs: NA; 
+428:open_tree
+    redis-server-all.txt: total funcs: NA; 
+429:move_mount
+    redis-server-all.txt: total funcs: NA; 
+430:fsopen
+    redis-server-all.txt: total funcs: NA; 
+431:fsconfig
+    redis-server-all.txt: total funcs: NA; 
+432:fsmount
+    redis-server-all.txt: total funcs: NA; 
+433:fspick
+    redis-server-all.txt: total funcs: NA; 
+434:pidfd_open
+    redis-server-all.txt: total funcs: NA; 
+435:clone3
+    redis-server-all.txt: total funcs: NA; 
+436:close_range
+    redis-server-all.txt: total funcs: NA; 
+437:openat2
+    redis-server-all.txt: total funcs: NA; 
+438:pidfd_getfd
+    redis-server-all.txt: total funcs: NA; 
+439:faccessat2
+    redis-server-all.txt: total funcs: NA; 
+442:mount_setattr
+    redis-server-all.txt: total funcs: NA; 

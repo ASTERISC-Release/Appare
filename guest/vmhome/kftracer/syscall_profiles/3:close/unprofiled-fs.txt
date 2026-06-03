@@ -1,0 +1,5 @@
+3:close
+    cp-0.txt: total funcs: 21; not profiled: 0/21 (0.0%) []
+    ls-0.txt: total funcs: 21; not profiled: 0/21 (0.0%) []
+    tar-0.txt: total funcs: 21; not profiled: 0/21 (0.0%) []
+    unqlite-0.txt: total funcs: 17; not profiled: 0/17 (0.0%) []

@@ -1,0 +1,319 @@
+Subgraph has 314 nodes and 291 edges.
+Markdown tree representation:
+- do_nanosleep <profiled>
+  - ns_to_timespec64 <profiled>
+  - put_timespec64 <profiled>
+    - _copy_to_user
+  - schedule <profiled>
+    - __schedule
+      - __delayacct_blkio_start
+      - dequeue_task_dl
+      - perf_event_task_sched_out
+      - set_next_task_dl
+      - set_next_task_fair
+      - set_next_task_rt
+- get_timespec64 <profiled>
+  - _copy_from_user
+- __get_vma_policy <profiled>
+- __alloc_pages <profiled>
+  - get_page_from_freelist <profiled>
+    - __next_zones_zonelist
+    - rmqueue
+      - rmqueue_pcplist
+      - wakeup_kswapd
+    - zone_watermark_ok
+  - __alloc_pages_slowpath
+    - compaction_zonelist_suitable
+    - out_of_memory
+    - try_to_free_pages
+    - wake_all_kswapds
+    - warn_alloc
+- common_nsleep_timens <profiled>
+- generic_exec_single <profiled>
+  - flush_tlb_func <profiled>
+  - __cpa_flush_all
+    - __flush_tlb_all
+  - __cpa_flush_tlb
+    - flush_tlb_one_kernel
+  - __perf_event_read
+    - _x86_pmu_read
+    - amd_uncore_read
+    - bts_event_read
+    - cstate_pmu_event_update
+    - hw_breakpoint_pmu_read
+    - i915_pmu_event_read
+    - intel_pmu_read_event
+    - msr_event_update
+    - perf_ibs_read
+    - perf_iommu_read
+    - perf_pmu_commit_txn
+    - perf_pmu_nop_int
+    - perf_pmu_nop_txn
+    - perf_pmu_start_txn
+    - perf_swevent_read
+    - pt_event_read
+    - rapl_pmu_event_read
+    - uncore_pmu_event_read
+    - x86_pmu_commit_txn
+    - x86_pmu_read
+    - x86_pmu_start_txn
+  - __rdmsr_on_cpu
+  - __rdmsr_safe_on_cpu
+    - complete
+  - __rdmsr_safe_regs_on_cpu
+  - __relay_set_buf_dentry
+  - __wrmsr_on_cpu
+  - __wrmsr_safe_on_cpu
+  - __wrmsr_safe_regs_on_cpu
+  - acpi_ev_asynch_enable_gpe
+    - acpi_ev_finish_gpe
+  - boost_set_msr_each
+  - collect_cpu_info_local
+    - collect_cpu_info
+    - collect_cpu_info_amd
+  - cpuid_smp_cpuid
+  - cr4_update_pce
+  - devm_aperture_acquire_release
+  - do_drv_read
+    - cpu_freq_read_amd
+  - do_drv_write
+    - cpu_freq_write_amd
+    - cpu_freq_write_intel
+    - cpu_freq_write_io
+  - do_flush_tlb_all
+  - do_kernel_range_flush
+  - do_nothing
+  - do_sync_core
+  - flip_smm_bit
+    - msr_clear_bit
+    - msr_set_bit
+  - flush_ldt
+    - load_mm_ldt
+  - hybrid_get_type
+    - get_this_hybrid_cpu_type
+  - intel_pmu_arch_lbr_xrstors
+    - xrstors
+  - intel_pmu_lbr_save
+  - ipi_handler
+  - ipi_mb
+  - ipi_sync_core
+  - ipi_sync_rq_state
+  - kmem_dump_obj
+    - __kmem_obj_info
+    - __virt_addr_valid
+  - kvm_pv_guest_cpu_reboot
+    - kvm_guest_cpu_offline
+  - llist_add_batch
+  - mce_cpu_restart
+    - __mcheck_cpu_init_clear_banks
+  - mce_disable_cmci
+    - cmci_clear
+  - net_drop_ns
+  - nfs3_nlm_release_call
+    - put_nfs_open_context
+  - nfs4_delegreturn_release
+    - nfs_refresh_inode
+    - nfs_sb_deactive
+  - nfs4_open_release
+    - nfs4_close_state
+    - nfs4_opendata_put
+    - nfs4_opendata_to_nfs4_state
+  - nfs4_renew_release
+    - nfs4_schedule_state_renewal
+  - nfs_async_rename_release
+    - __put_cred
+    - nfs_force_lookup_revalidate
+  - nfs_pgio_release
+    - nfs_direct_read_completion
+    - nfs_direct_write_completion
+    - nfs_read_completion
+  - nlm4svc_callback_release
+    - nlmsvc_release_call
+  - nlmclnt_rpc_release
+  - nohz_csd_func
+  - page_put_link
+  - ping
+  - pm_runtime_disable_action
+    - __pm_runtime_disable
+  - rpc_cb_add_xprt_release
+    - xprt_put
+    - xprt_switch_put
+  - shmem_init_inode
+    - inode_init_once
+  - threshold_restart_bank
+  - tlb_remove_table_smp_sync
+  - update_stibp_msr
+  - update_tfa_sched
+    - perf_pmu_resched
+    - x86_get_pmu
+  - v1_tlb_flush_all
+  - vmware_pv_guest_cpu_reboot
+  - wakeup_all_recovery_waiters
+- policy_nodemask <profiled>
+- common_nsleep <profiled>
+- bad_area_access_error <profiled>
+  - __bad_area_nosemaphore <profiled>
+    - kernelmode_fixup_or_oops <profiled>
+      - fixup_exception <profiled>
+        - search_exception_tables <profiled>
+          - search_module_extables
+            - mod_find
+      - force_sig_fault
+      - force_sig_pkuerr
+      - page_fault_oops
+        - __die
+        - is_vmalloc_addr
+        - lookup_address_in_pgd
+        - oops_end
+        - oops_may_print
+  - up_read <profiled>
+    - rwsem_mark_wake
+      - wake_q_add
+      - wake_q_add_safe
+- handle_mm_fault <profiled>
+  - __handle_mm_fault <profiled>
+    - do_wp_page <profiled>
+      - vm_normal_page <profiled>
+        - print_bad_pte
+          - dump_page
+          - dump_stack
+      - wp_page_copy <profiled>
+        - free_swap_cache <profiled>
+          - folio_free_swap
+            - delete_from_swap_cache
+            - pm_suspended_storage
+          - folio_mapped
+        - lru_cache_add_inactive_or_unevictable <profiled>
+          - folio_add_lru_vma <profiled>
+            - folio_add_lru <profiled>
+              - folio_batch_move_lru
+                - lru_add_fn
+                - lru_deactivate_file_fn
+                - lru_deactivate_fn
+                - lru_move_tail_fn
+        - page_add_new_anon_rmap <profiled>
+          - __mod_node_page_state <profiled>
+          - __page_set_anon_rmap <profiled>
+        - page_remove_rmap <profiled>
+        - ptep_clear_flush <profiled>
+        - vma_alloc_folio <profiled>
+          - __folio_alloc <profiled>
+          - alloc_page_interleave
+          - shm_get_policy
+        - __anon_vma_prepare
+          - __put_anon_vma
+          - down_write
+          - find_mergeable_anon_vma
+          - kmem_cache_alloc
+          - up_write
+        - __delayacct_wpcopy_end
+        - __delayacct_wpcopy_start
+        - __mmu_notifier_change_pte
+        - __mmu_notifier_invalidate_range
+        - __mmu_notifier_invalidate_range_end
+          - mn_itree_inv_end
+      - lru_add_drain
+        - lru_add_drain_cpu
+      - page_move_anon_rmap
+      - wp_page_shared
+        - ext4_page_mkwrite
+        - fault_dirty_shared_page
+        - filemap_page_mkwrite
+        - kernfs_vma_page_mkwrite
+        - nfs_vm_page_mkwrite
+        - v9fs_vm_page_mkwrite
+    - __p4d_alloc
+      - free_pages
+    - __pmd_alloc
+    - __pud_alloc
+    - do_anonymous_page
+      - __pte_alloc
+    - do_cow_fault
+      - finish_fault
+    - do_shared_fault
+  - hugetlb_fault
+    - __vma_reservation_common
+    - huge_pte_alloc
+    - hugetlb_no_page
+    - hugetlb_wp
+    - migration_entry_wait_huge
+- tcp_orphan_update <profiled>
+- nanosleep_copyout <profiled>
+  - put_timespec64 <profiled>
+    - _copy_to_user
+  - put_old_timespec32
+- native_flush_tlb_one_user <profiled>
+- calc_wheel_index <profiled>
+- tcp_orphan_count_sum <profiled>
+- should_fail_alloc_page <profiled>
+- find_vma <profiled>
+  - mt_find
+    - mas_next_entry
+- __cond_resched <profiled>
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - aio_poll_wake
+    - iocb_put
+    - queue_work_on
+  - blk_mq_dispatch_wake
+    - blk_mq_run_hw_queue
+  - ep_autoremove_wake_function
+  - ep_poll_callback
+    - __pm_stay_awake
+  - i915_sw_fence_wake
+  - io_async_buf_func
+    - io_req_task_queue
+  - io_poll_wake
+    - io_pollfree_wake
+  - io_wake_function
+  - io_wqe_hash_wake
+    - io_wqe_activate_free_worker
+  - iocg_wake_fn
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - p9_pollwake
+  - percpu_rwsem_wake_function
+  - wake_page_function
+    - wake_up_state
+- housekeeping_cpumask <profiled>
+- pick_next_task_fair <profiled>
+  - pick_next_entity <profiled>
+  - put_prev_entity <profiled>
+    - __update_stats_wait_start
+    - rb_insert_color
+    - update_load_avg
+  - put_prev_task_fair <profiled>
+  - set_next_entity <profiled>
+    - rb_erase
+    - rb_next
+  - update_misfit_status
+- dequeue_task_fair <profiled>
+  - dequeue_entity
+- smp_call_function_single_async <profiled>
+- update_dl_rq_load_avg <profiled>
+- select_task_rq_fair <profiled>
+- run_rebalance_domains <profiled>
+  - rebalance_domains <profiled>
+    - __msecs_to_jiffies <profiled>
+    - load_balance <profiled>
+      - update_group_capacity <profiled>
+      - detach_tasks
+        - can_migrate_task
+      - need_active_balance
+      - stop_one_cpu_nowait
+        - cpu_stop_queue_work
+- flush_tlb_mm_range <profiled>
+  - flush_tlb_func <profiled>
+- update_rt_rq_load_avg <profiled>
+- finish_task_switch <profiled>
+  - __mmdrop
+    - __mmu_notifier_subscriptions_destroy
+    - pgd_free
+  - __perf_event_task_sched_in
+    - ctx_sched_in
+    - perf_pmu_nop_void
+    - uncore_pmu_enable
+    - x86_pmu_sched_task
+  - put_task_stack
+  - task_dead_fair

@@ -1,0 +1,45 @@
+Subgraph has 43 nodes and 50 edges.
+Markdown tree representation:
+- select_task_rq_fair <profiled>
+  - _find_first_bit
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - aio_poll_wake
+    - iocb_put
+    - queue_work_on
+  - blk_mq_dispatch_wake
+    - blk_mq_run_hw_queue
+  - child_wait_callback
+  - cwt_wakefn
+  - do_rps_boost
+    - drm_crtc_vblank_put
+    - intel_rps_boost
+    - refcount_warn_saturate
+  - ep_poll_callback
+    - __pm_stay_awake
+  - i915_sw_fence_wake
+  - io_async_buf_func
+    - io_req_task_queue
+  - io_poll_wake
+    - __io_req_task_work_add
+    - io_pollfree_wake
+  - io_wake_function
+  - io_wqe_hash_wake
+    - io_wqe_activate_free_worker
+  - iocg_wake_fn
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - p9_pollwake
+  - receiver_wake_function
+  - synchronous_wake_function
+  - unix_dgram_peer_wake_relay
+  - wake_bit_function
+  - wake_page_function
+    - wake_up_state
+  - woken_wake_function
+- __x64_sys_rt_sigaction <profiled>
+  - do_sigaction <profiled>
+    - sigaction_compat_abi <profiled>
+  - _copy_from_user
+  - _copy_to_user

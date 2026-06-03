@@ -1,0 +1,21 @@
+Profiled functions: 19 nodes and 15 edges.
+Profiled (filtered) functions:
+default_wake_function
+bad_area_access_error
+find_task_by_vpid
+fixup_exception
+up_read
+autoremove_wake_function
+sched_getaffinity
+find_vma
+__cond_resched
+select_task_rq_fair
+selinux_task_getscheduler
+selinux_task_getioprio
+security_task_getscheduler
+kernelmode_fixup_or_oops
+__x64_sys_sched_getaffinity
+avc_has_perm
+search_exception_tables
+__bad_area_nosemaphore
+__wake_up

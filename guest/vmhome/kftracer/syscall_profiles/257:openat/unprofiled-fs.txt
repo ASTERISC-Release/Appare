@@ -1,0 +1,5 @@
+257:openat
+    cp-0.txt: total funcs: 303; not profiled: 10/303 (3.3%) [__check_block_validity.constprop.0, cap_capable, capable_wrt_inode_uidgid, cred_has_capability, ext4_inode_attach_jinode.part.0, ext4_inode_csum.isra.0, find_inode_bit.isra.0, ns_capable_common, security_capable, selinux_capable]
+    ls-0.txt: total funcs: 183; not profiled: 0/183 (0.0%) []
+    tar-0.txt: total funcs: 216; not profiled: 0/216 (0.0%) []
+    unqlite-0.txt: total funcs: 85; not profiled: 0/85 (0.0%) []

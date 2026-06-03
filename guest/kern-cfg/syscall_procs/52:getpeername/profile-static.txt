@@ -1,0 +1,230 @@
+Subgraph has 205 nodes and 320 edges.
+Markdown tree representation:
+- release_sock <profiled>
+  - ip4_datagram_release_cb <profiled>
+    - dst_blackhole_check
+    - dst_release <profiled>
+      - __warn_printk
+    - ip6_dst_check
+    - ip_route_output_flow
+    - ipv4_dst_check <profiled>
+    - security_sk_classify_flow
+    - xfrm_dst_check
+      - dst_blackhole_mtu
+      - ip6_mtu
+      - ipv4_mtu <profiled>
+      - sch_frag_dst_get_mtu
+      - xfrm_mtu
+  - ip6_datagram_release_cb
+    - ip6_datagram_dst_update
+  - tcp_release_cb <profiled>
+    - refcount_warn_saturate
+    - tcp_tsq_write
+      - tcp_current_mss <profiled>
+        - tcp_sync_mss
+      - tcp_write_xmit <profiled>
+      - tcp_xmit_retransmit_queue
+    - tcp_v4_mtu_reduced
+      - inet_csk_update_pmtu
+      - tcp_simple_retransmit
+    - tcp_v6_mtu_reduced
+      - inet6_csk_update_pmtu
+      - tcp_mtu_to_mss
+- __local_bh_enable_ip <profiled>
+- __wake_up <profiled>
+  - aio_poll_wake
+    - iocb_put
+      - fput <profiled>
+        - llist_add_batch
+        - queue_delayed_work_on <profiled>
+      - refcount_warn_saturate
+        - __warn_printk
+    - queue_work_on <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - barrier_wake
+    - i915_sw_fence_complete
+  - blk_mq_dispatch_wake
+    - blk_mq_run_hw_queue <profiled>
+  - child_wait_callback
+  - cwt_wakefn
+  - do_rps_boost
+    - drm_crtc_vblank_put
+    - intel_rps_boost
+  - ep_autoremove_wake_function
+  - ep_poll_callback
+    - __pm_stay_awake
+    - sock_from_file
+  - i915_sw_fence_wake
+  - io_async_buf_func
+    - io_req_task_queue
+      - __io_req_task_work_add
+  - io_poll_wake
+    - io_pollfree_wake
+  - io_wake_function
+  - io_wqe_hash_wake
+    - io_wqe_activate_free_worker
+  - iocg_wake_fn
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - p9_pollwake
+  - percpu_rwsem_wake_function
+  - pollwake <profiled>
+  - receiver_wake_function
+  - rq_qos_wake_function
+    - iolat_acquire_inflight
+  - synchronous_wake_function
+  - unix_dgram_peer_wake_relay
+  - var_wake_function
+  - wake_bit_function <profiled>
+  - wake_page_function
+    - wake_up_state <profiled>
+  - woken_wake_function
+- __x64_sys_getpeername <profiled>
+  - __sys_getpeername <profiled>
+    - __fdget <profiled>
+      - __fget_files
+        - fput <profiled>
+          - llist_add_batch
+          - queue_delayed_work_on <profiled>
+    - inet6_getname
+      - __ipv6_addr_type
+    - inet_getname <profiled>
+    - move_addr_to_user <profiled>
+      - _copy_to_user
+    - netlink_getname
+    - packet_getname
+    - packet_getname_spkt
+      - strscpy
+    - security_socket_getpeername <profiled>
+      - selinux_socket_getpeername <profiled>
+        - avc_has_perm <profiled>
+      - selinux_socket_getsockname <profiled>
+    - unix_getname <profiled>
+      - refcount_warn_saturate
+        - __warn_printk
+- select_task_rq_fair <profiled>
+  - __bitmap_and
+  - __bitmap_intersects
+  - __bitmap_weight
+  - _find_first_bit
+  - _find_next_and_bit
+  - _find_next_bit
+  - wake_affine
+    - cpus_share_cache <profiled>
+- unix_peer_get <profiled>
+  - refcount_warn_saturate
+    - __warn_printk
+- __cond_resched <profiled>
+  - __schedule
+    - __delayacct_blkio_start
+    - __schedule_bug
+    - balance_dl
+      - pull_dl_task
+        - _find_next_bit
+        - refcount_warn_saturate
+          - __warn_printk
+    - balance_fair
+    - balance_push
+    - balance_rt
+      - pull_rt_task
+    - balance_stop
+    - dequeue_task_dl
+    - dequeue_task_fair <profiled>
+    - dequeue_task_rt
+    - dequeue_task_stop
+    - enqueue_task_fair <profiled>
+    - enqueue_task_rt
+    - enqueue_task_stop
+    - enter_lazy_tlb
+    - finish_task_switch <profiled>
+      - push_dl_tasks
+      - push_rt_tasks
+    - perf_event_task_sched_out
+    - pick_next_task_fair <profiled>
+      - put_prev_task_dl
+      - put_prev_task_fair <profiled>
+      - put_prev_task_rt
+      - put_prev_task_stop
+    - profile_hits
+    - set_cpus_allowed_common
+      - __bitmap_weight
+    - set_cpus_allowed_dl
+      - __bitmap_intersects
+      - _find_next_and_bit
+    - set_next_task_dl
+    - set_next_task_fair
+    - set_next_task_rt
+    - set_next_task_stop
+- bad_area <profiled>
+  - __bad_area_nosemaphore <profiled>
+    - __printk_ratelimit
+      - ___ratelimit
+    - _printk
+      - vprintk
+    - fixup_vdso_exception
+    - force_sig_fault
+      - force_sig_info_to_task
+        - wake_up_state <profiled>
+    - force_sig_pkuerr
+    - is_prefetch
+      - convert_ip_to_linear
+      - copy_from_kernel_nofault
+    - kernelmode_fixup_or_oops <profiled>
+      - fixup_exception <profiled>
+        - __warn_printk
+        - ex_handler_msr_mce
+          - panic
+            - __fdget <profiled>
+              - __fget_files
+                - fput <profiled>
+                  - llist_add_batch
+                  - queue_delayed_work_on <profiled>
+          - show_stack_regs
+            - show_trace_log_lvl
+              - show_opcodes
+                - copy_from_user_nmi
+        - fpu_reset_from_exception_fixup
+          - restore_fpregs_from_fpstate
+        - insn_decode
+          - insn_get_immediate
+            - insn_get_displacement
+              - insn_get_modrm
+                - insn_get_opcode
+        - insn_get_addr_ref
+          - get_eff_addr_modrm
+          - get_eff_addr_reg
+          - get_eff_addr_sib
+          - get_seg_base_limit
+        - insn_get_modrm_reg_ptr
+        - pt_regs_offset
+        - search_exception_tables <profiled>
+          - search_extable
+            - bsearch
+          - search_module_extables
+            - mod_find
+      - page_fault_oops
+        - __die
+        - dump_pagetable
+        - efi_crash_gracefully_on_page_fault
+        - get_stack_info_noinstr
+        - is_vmalloc_addr <profiled>
+        - lookup_address_in_pgd
+        - oops_begin
+        - oops_end
+        - oops_may_print
+        - show_ldttss
+    - print_vma_addr
+      - __get_free_pages
+      - file_path
+      - find_vma <profiled>
+        - mt_find
+          - mas_next_entry
+      - free_pages <profiled>
+      - strrchr
+      - up_read <profiled>
+        - rwsem_mark_wake <profiled>
+          - refcount_warn_saturate
+          - wake_q_add <profiled>
+          - wake_q_add_safe
+    - unhandled_signal

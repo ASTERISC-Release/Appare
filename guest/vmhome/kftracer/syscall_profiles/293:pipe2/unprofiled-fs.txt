@@ -1,0 +1,5 @@
+293:pipe2
+    cp-0.txt: total funcs: N/A; 
+    ls-0.txt: total funcs: N/A; 
+    tar-0.txt: total funcs: 58; not profiled: 6/58 (10.3%) [___slab_alloc, __audit_syscall_entry, __audit_syscall_exit, __slab_alloc.isra.0, d_instantiate.part.0, syscall_exit_work]
+    unqlite-0.txt: total funcs: N/A; 

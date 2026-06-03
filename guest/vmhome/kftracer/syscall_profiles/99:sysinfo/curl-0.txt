@@ -1,0 +1,16 @@
+__audit_syscall_entry
+__audit_syscall_exit
+__x64_sys_sysinfo
+_raw_spin_lock
+_raw_spin_unlock
+get_avenrun
+ktime_get_coarse_real_ts64
+ktime_get_with_offset
+nr_blockdev_pages
+ns_to_timespec64
+preempt_count_add
+preempt_count_sub
+set_normalized_timespec64
+si_meminfo
+si_swapinfo
+syscall_exit_work

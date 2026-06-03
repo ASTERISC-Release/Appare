@@ -1,0 +1,15 @@
+__fdget
+__fget_light
+__sys_getsockopt
+__x64_sys_getsockopt
+_raw_spin_lock
+_raw_spin_unlock
+pid_vnr
+preempt_count_add
+preempt_count_sub
+security_socket_getsockopt
+selinux_socket_getsockopt
+sk_getsockopt
+sock_getsockopt
+sock_has_perm
+sockfd_lookup_light

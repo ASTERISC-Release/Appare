@@ -1,0 +1,6 @@
+__x64_sys_getrlimit
+_raw_spin_lock
+_raw_spin_unlock
+do_prlimit
+preempt_count_add
+preempt_count_sub

@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d2" for="edge" attr.name="indirect" attr.type="boolean" />
+  <key id="d1" for="edge" attr.name="inferred" attr.type="boolean" />
+  <key id="d0" for="node" attr.name="profiled" attr.type="boolean" />
+  <graph edgedefault="directed">
+    <node id="do_arch_prctl_common">
+      <data key="d0">True</data>
+    </node>
+    <node id="do_arch_prctl_64">
+      <data key="d0">True</data>
+    </node>
+    <node id="__x64_sys_arch_prctl">
+      <data key="d0">True</data>
+    </node>
+    <node id="fpu_xstate_prctl" />
+    <node id="__xstate_request_perm" />
+    <node id="__wrgsbase_inactive" />
+    <node id="x86_fsbase_read_task" />
+    <node id="x86_gsbase_read_task" />
+    <node id="wrmsrl" />
+    <node id="__rdgsbase_inactive" />
+    <edge source="do_arch_prctl_common" target="fpu_xstate_prctl">
+      <data key="d1">True</data>
+    </edge>
+    <edge source="do_arch_prctl_64" target="__wrgsbase_inactive">
+      <data key="d1">True</data>
+    </edge>
+    <edge source="do_arch_prctl_64" target="x86_fsbase_read_task">
+      <data key="d1">True</data>
+    </edge>
+    <edge source="do_arch_prctl_64" target="x86_gsbase_read_task">
+      <data key="d1">True</data>
+    </edge>
+    <edge source="__x64_sys_arch_prctl" target="do_arch_prctl_64">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__x64_sys_arch_prctl" target="do_arch_prctl_common">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="fpu_xstate_prctl" target="__xstate_request_perm">
+      <data key="d1">True</data>
+    </edge>
+    <edge source="__wrgsbase_inactive" target="wrmsrl">
+      <data key="d1">True</data>
+    </edge>
+    <edge source="x86_gsbase_read_task" target="__rdgsbase_inactive">
+      <data key="d1">True</data>
+    </edge>
+  </graph>
+</graphml>

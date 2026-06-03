@@ -1,0 +1,26 @@
+Subgraph has 24 nodes and 25 edges.
+Markdown tree representation:
+- __x64_sys_getpeername
+  - __sys_getpeername
+    - __fdget <profiled>
+      - __fget_files
+        - fput <profiled>
+          - llist_add_batch
+          - queue_delayed_work_on <profiled>
+            - __queue_delayed_work <profiled>
+    - inet6_getname
+      - __ipv6_addr_type
+    - inet_getname
+    - move_addr_to_user
+      - _copy_to_user
+    - netlink_getname
+    - packet_getname
+    - packet_getname_spkt
+      - strscpy
+    - security_socket_getpeername
+      - selinux_socket_getpeername
+        - avc_has_perm <profiled>
+      - selinux_socket_getsockname
+    - unix_getname
+      - refcount_warn_saturate
+        - __warn_printk

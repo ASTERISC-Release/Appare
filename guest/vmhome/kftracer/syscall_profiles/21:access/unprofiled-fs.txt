@@ -1,0 +1,5 @@
+21:access
+    cp-0.txt: total funcs: 51; not profiled: 5/51 (9.8%) [__audit_syscall_entry, __audit_syscall_exit, link_path_walk.part.0, path_lookupat.isra.0, syscall_exit_work]
+    ls-0.txt: total funcs: 121; not profiled: 9/121 (7.4%) [__audit_syscall_entry, __audit_syscall_exit, cgroup_base_stat_cputime_account_end.isra.0, link_path_walk.part.0, path_lookupat.isra.0, raw_spin_rq_lock_nested.constprop.0, syscall_exit_work, tick_sched_handle.isra.0, update_rq_clock.part.0]
+    tar-0.txt: total funcs: 51; not profiled: 5/51 (9.8%) [__audit_syscall_entry, __audit_syscall_exit, link_path_walk.part.0, path_lookupat.isra.0, syscall_exit_work]
+    unqlite-0.txt: total funcs: 51; not profiled: 5/51 (9.8%) [__audit_syscall_entry, __audit_syscall_exit, link_path_walk.part.0, path_lookupat.isra.0, syscall_exit_work]

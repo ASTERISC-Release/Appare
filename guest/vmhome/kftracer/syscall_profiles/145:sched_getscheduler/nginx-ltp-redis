@@ -1,0 +1,8 @@
+__rcu_read_lock
+__rcu_read_unlock
+__x64_sys_sched_getscheduler
+avc_has_perm
+find_task_by_vpid
+security_task_getscheduler
+selinux_task_getioprio
+selinux_task_getscheduler

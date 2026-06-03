@@ -1,0 +1,78 @@
+Subgraph has 76 nodes and 70 edges.
+Markdown tree representation:
+- __cond_resched <profiled>
+  - __schedule
+    - dequeue_task_dl
+    - dequeue_task_fair
+    - finish_task_switch
+    - perf_event_task_sched_out
+    - pick_next_task_fair
+    - set_next_task_fair
+- __x64_sys_getrandom <profiled>
+  - get_random_bytes_user <profiled>
+    - crng_make_state <profiled>
+      - extract_entropy
+        - blake2s_final
+        - blake2s_update
+    - _copy_to_iter
+  - import_single_range
+  - wait_for_random_bytes
+    - finish_wait
+    - init_wait_entry
+    - prepare_to_wait_event
+    - try_to_generate_entropy
+- find_vma <profiled>
+  - mt_find
+    - mas_next_entry
+- chacha_permute <profiled>
+- select_task_rq_fair <profiled>
+  - __bitmap_and
+  - __bitmap_weight
+  - _find_first_bit
+  - _find_next_and_bit
+- bad_area <profiled>
+  - __bad_area_nosemaphore <profiled>
+    - kernelmode_fixup_or_oops <profiled>
+      - fixup_exception <profiled>
+        - search_exception_tables <profiled>
+          - search_module_extables
+            - mod_find
+        - fpu_reset_from_exception_fixup
+          - restore_fpregs_from_fpstate
+      - is_prefetch
+      - page_fault_oops
+        - __die
+        - dump_pagetable
+        - get_stack_info_noinstr
+        - lookup_address_in_pgd
+        - oops_begin
+        - oops_end
+        - oops_may_print
+  - up_read <profiled>
+    - rwsem_mark_wake
+      - wake_q_add
+      - wake_q_add_safe
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - aio_poll_wake
+    - iocb_put
+    - queue_work_on
+  - cwt_wakefn
+  - ep_poll_callback
+    - __pm_stay_awake
+  - i915_sw_fence_wake
+  - io_poll_wake
+    - __io_req_task_work_add
+    - io_pollfree_wake
+  - io_wqe_hash_wake
+    - io_wqe_activate_free_worker
+  - iocg_wake_fn
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - percpu_rwsem_wake_function
+  - receiver_wake_function
+  - synchronous_wake_function
+  - unix_dgram_peer_wake_relay
+  - wake_page_function
+    - wake_up_state

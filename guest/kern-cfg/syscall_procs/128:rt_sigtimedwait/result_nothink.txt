@@ -1,0 +1,110 @@
+Subgraph has 108 nodes and 90 edges.
+Markdown tree representation:
+- update_rt_rq_load_avg <profiled>
+- recalc_sigpending <profiled>
+- __x64_sys_rt_sigtimedwait <profiled>
+  - get_timespec64 <profiled>
+    - _copy_from_user
+  - do_sigtimedwait
+- finish_task_switch <profiled>
+  - ___perf_sw_event
+    - perf_swevent_event
+  - __mmdrop
+    - __mmu_notifier_subscriptions_destroy
+    - pgd_free
+  - __perf_event_task_sched_in
+    - perf_pmu_nop_void
+    - x86_pmu_sched_task
+  - put_task_stack
+  - task_dead_fair
+- bad_area <profiled>
+  - __bad_area_nosemaphore <profiled>
+    - kernelmode_fixup_or_oops <profiled>
+      - fixup_exception <profiled>
+        - search_exception_tables <profiled>
+          - search_module_extables
+            - mod_find
+      - force_sig_fault
+      - is_prefetch
+      - page_fault_oops
+        - __die
+        - is_vmalloc_addr
+        - lookup_address_in_pgd
+        - oops_begin
+        - oops_end
+        - oops_may_print
+    - unhandled_signal
+  - up_read <profiled>
+    - rwsem_mark_wake
+      - wake_q_add
+      - wake_q_add_safe
+- update_dl_rq_load_avg <profiled>
+- housekeeping_cpumask <profiled>
+- pick_next_task_fair <profiled>
+  - put_prev_entity <profiled>
+    - __update_stats_wait_start
+    - rb_insert_color
+    - update_load_avg
+      - attach_entity_load_avg
+      - detach_entity_load_avg
+  - put_prev_task_fair <profiled>
+  - pick_next_entity
+  - set_next_entity
+- dequeue_task_fair <profiled>
+  - dequeue_entity
+    - rb_erase
+    - rb_next
+- find_vma <profiled>
+  - mt_find
+    - mas_next_entry
+- __cond_resched <profiled>
+- select_task_rq_fair <profiled>
+  - _find_first_bit
+- dequeue_signal <profiled>
+  - __dequeue_signal <profiled>
+    - dec_rlimit_put_ucounts <profiled>
+- put_ucounts <profiled>
+- run_rebalance_domains <profiled>
+  - rebalance_domains <profiled>
+    - __msecs_to_jiffies <profiled>
+    - load_balance <profiled>
+      - __bitmap_and
+      - arch_asym_cpu_priority
+      - detach_tasks
+        - can_migrate_task
+      - need_active_balance
+      - stop_one_cpu_nowait
+        - cpu_stop_queue_work
+- schedule_hrtimeout_range <profiled>
+- kmem_cache_free <profiled>
+  - __slab_free <profiled>
+    - __free_slab
+      - slab_pad_check
+    - cmpxchg_double_slab
+    - free_debug_processing
+- schedule <profiled>
+  - __schedule
+    - __delayacct_blkio_start
+    - __schedule_bug
+    - perf_event_task_sched_out
+- copy_siginfo_to_user <profiled>
+  - _copy_to_user
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - aio_poll_wake
+    - iocb_put
+    - queue_work_on
+  - i915_sw_fence_wake
+  - io_poll_wake
+    - __io_req_task_work_add
+    - io_pollfree_wake
+  - io_wqe_hash_wake
+    - io_wqe_activate_free_worker
+  - iocg_wake_fn
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - pollwake
+  - synchronous_wake_function
+  - wake_page_function
+    - wake_up_state

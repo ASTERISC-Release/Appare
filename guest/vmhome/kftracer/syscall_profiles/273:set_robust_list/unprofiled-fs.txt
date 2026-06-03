@@ -1,0 +1,5 @@
+273:set_robust_list
+    cp-0.txt: total funcs: 5; not profiled: 4/5 (80.0%) [__audit_syscall_entry, __audit_syscall_exit, ktime_get_coarse_real_ts64, syscall_exit_work]
+    ls-0.txt: total funcs: 5; not profiled: 4/5 (80.0%) [__audit_syscall_entry, __audit_syscall_exit, ktime_get_coarse_real_ts64, syscall_exit_work]
+    tar-0.txt: total funcs: 5; not profiled: 4/5 (80.0%) [__audit_syscall_entry, __audit_syscall_exit, ktime_get_coarse_real_ts64, syscall_exit_work]
+    unqlite-0.txt: total funcs: 5; not profiled: 4/5 (80.0%) [__audit_syscall_entry, __audit_syscall_exit, ktime_get_coarse_real_ts64, syscall_exit_work]

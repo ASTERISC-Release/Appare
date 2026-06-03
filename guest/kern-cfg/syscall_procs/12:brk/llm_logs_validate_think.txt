@@ -1,0 +1,1087 @@
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_brk
+  - do_brk_flags
+    - vm_area_alloc
+
+Caller: vm_area_alloc
+Source code:
+struct vm_area_struct *vm_area_alloc(struct mm_struct *mm)
+{
+	struct vm_area_struct *vma;
+
+	vma = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
+	if (vma)
+		vma_init(vma, mm);
+	return vma;
+}
+
+
+Callee candidate: kmem_cache_alloc
+Source code:
+void *kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags)
+{
+	return slob_alloc_node(cachep, flags, NUMA_NO_NODE);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of vm_area_alloc will reach kmem_cache_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `vm_area_alloc` explicitly invokes `kmem_cache_alloc` in its first line (`vma = kmem_cache_alloc(...)`). This is a direct, unconditional call with no intervening control flow that could bypass it. Historically, `do_brk_flags` calls `vm_area_alloc`, which in turn triggers `kmem_cache_alloc`. Since the code explicitly links these functions and there are no runtime conditions in `vm_area_alloc` that prevent the call to `kmem_cache_alloc`, it is both semantically and functionally guaranteed that execution will reach `kmem_cache_alloc` during `vm_area_alloc`'s execution.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: vm_area_alloc
+
+Callee candidate: kmem_cache_alloc
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of vm_area_alloc will reach kmem_cache_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+vm_area_alloc is responsible for allocating a virtual memory area (VMA) structure, which is used in memory management. The allocation of such structures typically involves memory allocation from the kernel's slab allocator. kmem_cache_alloc is the function used to allocate memory from a kernel slab cache, which is the standard mechanism for such allocations in the Linux kernel. Therefore, it is reasonable to expect that vm_area_alloc would invoke kmem_cache_alloc internally as part of its execution.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- unmap_region
+  - free_pgtables
+    - unlink_file_vma
+
+Caller: unlink_file_vma
+Source code:
+void unlink_file_vma(struct vm_area_struct *vma)
+{
+	struct file *file = vma->vm_file;
+
+	if (file) {
+		struct address_space *mapping = file->f_mapping;
+		i_mmap_lock_write(mapping);
+		__remove_shared_vm_struct(vma, file, mapping);
+		i_mmap_unlock_write(mapping);
+	}
+}
+
+
+Callee candidate: up_write
+Source code:
+void up_write(struct rw_semaphore *sem)
+{
+	rwsem_release(&sem->dep_map, _RET_IP_);
+	__up_write(sem);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of unlink_file_vma will reach up_write? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `unlink_file_vma` acquires a write lock using `i_mmap_lock_write` (which likely corresponds to `down_write`) and releases it with `i_mmap_unlock_write`. The `i_mmap_unlock_write` function is expected to internally invoke `up_write` to release the `rw_semaphore`. Since unlocking the semaphore is necessary after the critical section, the execution path of `unlink_file_vma` semantically and functionally leads to `up_write` being called during its execution.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: unlink_file_vma
+
+Callee candidate: up_write
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of unlink_file_vma will reach up_write? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+`unlink_file_vma` is a function in the Linux kernel responsible for removing a virtual memory area (VMA) from a process's address space, typically during operations like `mmap` or `munmap`. `up_write` is a function used to release a write lock on a `struct rw_semaphore`.
+
+For `unlink_file_vma` to reach `up_write`, it would need to be part of a sequence that acquires a write lock (e.g., via `down_write`) to protect some shared resource (like the VMA tree), and then later releases that lock. However, `unlink_file_vma` itself does not acquire a write lock on a semaphore, nor is it typically the point at which such a lock is released.
+
+Thus, while `up_write` may appear in the same call context (e.g., in a parent or sibling function), it is not semantically or functionally expected that `unlink_file_vma` directly calls or reaches `up_write`.
+
+**FINAL ANSWER -> NO**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- unmap_region
+  - free_pgtables
+    - unlink_anon_vmas
+
+Caller: unlink_anon_vmas
+Source code:
+void unlink_anon_vmas(struct vm_area_struct *vma)
+{
+	struct anon_vma_chain *avc, *next;
+	struct anon_vma *root = NULL;
+
+	/*
+	 */
+	list_for_each_entry_safe(avc, next, &vma->anon_vma_chain, same_vma) {
+		struct anon_vma *anon_vma = avc->anon_vma;
+
+		root = lock_anon_vma_root(root, anon_vma);
+		anon_vma_interval_tree_remove(avc, &anon_vma->rb_root);
+
+		/*
+		 */
+		if (RB_EMPTY_ROOT(&anon_vma->rb_root.rb_root)) {
+			anon_vma->parent->num_children--;
+			continue;
+		}
+
+		list_del(&avc->same_vma);
+		anon_vma_chain_free(avc);
+	}
+	if (vma->anon_vma) {
+		vma->anon_vma->num_active_vmas--;
+
+		/*
+		 */
+		vma->anon_vma = NULL;
+	}
+	unlock_anon_vma_root(root);
+
+	/*
+	 */
+	list_for_each_entry_safe(avc, next, &vma->anon_vma_chain, same_vma) {
+		struct anon_vma *anon_vma = avc->anon_vma;
+
+		VM_WARN_ON(anon_vma->num_children);
+		VM_WARN_ON(anon_vma->num_active_vmas);
+		put_anon_vma(anon_vma);
+
+		list_del(&avc->same_vma);
+		anon_vma_chain_free(avc);
+	}
+}
+
+
+Callee candidate: anon_vma_interval_tree_remove
+Source code:
+void anon_vma_interval_tree_remove(struct anon_vma_chain *node,
+				   struct rb_root_cached *root)
+{
+	__anon_vma_interval_tree_remove(node, root);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of unlink_anon_vmas will reach anon_vma_interval_tree_remove? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `unlink_anon_vmas` explicitly invokes `anon_vma_interval_tree_remove` within its loop over `avc` entries. This call is unconditional in the code path, as it directly follows the retrieval of `anon_vma` from the chain. Historical execution contexts confirm that `unlink_anon_vmas` is triggered during memory unmap operations, ensuring the function is executed in normal kernel operation. The semantic purpose of `unlink_anon_vmas` includes cleaning up anonymous VMA mappings, which inherently requires the tree removal.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: unlink_anon_vmas
+
+Callee candidate: anon_vma_interval_tree_remove
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of unlink_anon_vmas will reach anon_vma_interval_tree_remove? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In Linux memory management, `unlink_anon_vmas` is responsible for removing an anonymous VMA (virtual memory area) from its associated `anon_vma` structure. The `anon_vma_interval_tree` is used to efficiently track and manage mappings of anonymous virtual memory. For `unlink_anon_vmas` to properly clean up these mappings, it must remove the corresponding entries from the interval tree, which is done by `anon_vma_interval_tree_remove`. This is a direct functional dependency in the VMA cleanup process.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- unmap_region
+  - free_pgtables
+    - unlink_anon_vmas
+      - __put_anon_vma
+
+Caller: __put_anon_vma
+Source code:
+void __put_anon_vma(struct anon_vma *anon_vma)
+{
+	struct anon_vma *root = anon_vma->root;
+
+	anon_vma_free(anon_vma);
+	if (root != anon_vma && atomic_dec_and_test(&root->refcount))
+		anon_vma_free(root);
+}
+
+
+Callee candidate: up_write
+Source code:
+void up_write(struct rw_semaphore *sem)
+{
+	rwsem_release(&sem->dep_map, _RET_IP_);
+	__up_write(sem);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __put_anon_vma will reach up_write? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{Your justification}
+The function `__put_anon_vma` is responsible for freeing `anon_vma` structures and decrementing reference counts. It does not directly or indirectly invoke `up_write`, which is used to release a write lock on an `rw_semaphore`. While `unlock_anon_vma_root` (called earlier in the call chain) might involve semaphore operations, `__put_anon_vma` itself does not handle locking or unlocking. The historical call graph shows `up_write` is not a direct or indirect callee of `__put_anon_vma`.
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __put_anon_vma
+
+Callee candidate: up_write
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __put_anon_vma will reach up_write? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+`__put_anon_vma` is responsible for decrementing the reference count of an anonymous VMA (Virtual Memory Area) structure. If the VMA was created with a write lock (e.g., using `down_write`), it is semantically and functionally reasonable for `__put_anon_vma` to eventually call `up_write` to release that lock when the reference count drops to zero. This ensures proper synchronization and prevents deadlocks.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- unmap_region
+  - lru_add_drain
+    - lru_add_drain_cpu
+      - folio_batch_move_lru
+        - lru_add_fn
+  - tlb_finish_mmu
+    - tlb_flush_mmu
+      - free_pages_and_swap_cache
+
+Caller: lru_add_fn
+Source code:
+static void lru_add_fn(struct lruvec *lruvec, struct folio *folio)
+{
+	int was_unevictable = folio_test_clear_unevictable(folio);
+	long nr_pages = folio_nr_pages(folio);
+
+	VM_BUG_ON_FOLIO(folio_test_lru(folio), folio);
+
+	/*
+	 */
+	if (folio_evictable(folio)) {
+		if (was_unevictable)
+			__count_vm_events(UNEVICTABLE_PGRESCUED, nr_pages);
+	} else {
+		folio_clear_active(folio);
+		folio_set_unevictable(folio);
+		/*
+		 */
+		folio->mlock_count = 0;
+		if (!was_unevictable)
+			__count_vm_events(UNEVICTABLE_PGCULLED, nr_pages);
+	}
+
+	lruvec_add_folio(lruvec, folio);
+	trace_mm_lru_insertion(folio);
+}
+
+
+Callee candidate: folio_mapping
+Source code:
+struct address_space *folio_mapping(struct folio *folio)
+{
+	struct address_space *mapping;
+
+	/* This happens if someone calls flush_dcache_page on slab page */
+	if (unlikely(folio_test_slab(folio)))
+		return NULL;
+
+	if (unlikely(folio_test_swapcache(folio)))
+		return swap_address_space(folio_swap_entry(folio));
+
+	mapping = folio->mapping;
+	if ((unsigned long)mapping & PAGE_MAPPING_FLAGS)
+		return NULL;
+
+	return mapping;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of lru_add_fn will reach folio_mapping? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `lru_add_fn` is designed to manage the LRU list membership of a folio by adjusting its evictability flags and adding it to the LRU vector. It does not directly or indirectly access the `folio_mapping` function, which retrieves the address space associated with a folio. The operations in `lru_add_fn` (e.g., flag manipulation, LRU list updates) do not require querying the folio's address space. Additionally, the provided historical call graph and code show no path from `lru_add_fn` to `folio_mapping`.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: lru_add_fn
+
+Callee candidate: folio_mapping
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of lru_add_fn will reach folio_mapping? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The `lru_add_fn` function is typically involved in LRU (Least Recently Used) list management for page reclaim, often in the context of memory management. It is responsible for adding a page to an LRU list. The `folio_mapping` function, on the other hand, is used to obtain the address space (or mapping) associated with a folio (a modern abstraction for a page or group of pages).
+
+For `lru_add_fn` to invoke `folio_mapping` directly would be unusual, as `lru_add_fn` operates on page structures and LRU lists, not on the mapping of pages to address spaces. Typically, such mapping information is needed when handling page faults or during page table operations, which are separate from LRU list management.
+
+{Your justification}
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- unmap_region
+  - tlb_finish_mmu
+    - tlb_flush_mmu
+      - free_pages_and_swap_cache
+
+Caller: free_pages_and_swap_cache
+Source code:
+void free_pages_and_swap_cache(struct page **pages, int nr)
+{
+	struct page **pagep = pages;
+	int i;
+
+	lru_add_drain();
+	for (i = 0; i < nr; i++)
+		free_swap_cache(pagep[i]);
+	release_pages(pagep, nr);
+}
+
+
+Callee candidate: free_swap_cache
+Source code:
+void free_swap_cache(struct page *page)
+{
+	struct folio *folio = page_folio(page);
+
+	if (folio_test_swapcache(folio) && !folio_mapped(folio) &&
+	    folio_trylock(folio)) {
+		folio_free_swap(folio);
+		folio_unlock(folio);
+	}
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of free_pages_and_swap_cache will reach free_swap_cache? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `free_pages_and_swap_cache` explicitly contains a loop (`for (i = 0; i < nr; i++)`) that invokes `free_swap_cache(pagep[i])` for each element in the input array. This is a direct, unconditional call path. The historical call graph also confirms this relationship, showing `free_pages_and_swap_cache` directly calling `free_swap_cache`. Since the code unambiguously establishes this execution flow, it is semantically and functionally reasonable to expect the call.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: free_pages_and_swap_cache
+
+Callee candidate: free_swap_cache
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of free_pages_and_swap_cache will reach free_swap_cache? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+{The function `free_pages_and_swap_cache` is typically responsible for releasing both physical memory pages and their associated swap cache entries. For this to be semantically and functionally correct, it is reasonable to expect that it would invoke `free_swap_cache` to handle the release of swap cache entries.}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- unmap_region
+  - free_pgtables
+
+Caller: free_pgtables
+Source code:
+void free_pgtables(struct mmu_gather *tlb, struct maple_tree *mt,
+		   struct vm_area_struct *vma, unsigned long floor,
+		   unsigned long ceiling)
+{
+	MA_STATE(mas, mt, vma->vm_end, vma->vm_end);
+
+	do {
+		unsigned long addr = vma->vm_start;
+		struct vm_area_struct *next;
+
+		/*
+		 */
+		next = mas_find(&mas, ceiling - 1);
+
+		/*
+		 */
+		unlink_anon_vmas(vma);
+		unlink_file_vma(vma);
+
+		if (is_vm_hugetlb_page(vma)) {
+			hugetlb_free_pgd_range(tlb, addr, vma->vm_end,
+				floor, next ? next->vm_start : ceiling);
+		} else {
+			/*
+			 */
+			while (next && next->vm_start <= vma->vm_end + PMD_SIZE
+			       && !is_vm_hugetlb_page(next)) {
+				vma = next;
+				next = mas_find(&mas, ceiling - 1);
+				unlink_anon_vmas(vma);
+				unlink_file_vma(vma);
+			}
+			free_pgd_range(tlb, addr, vma->vm_end,
+				floor, next ? next->vm_start : ceiling);
+		}
+		vma = next;
+	} while (vma);
+}
+
+
+Callee candidate: unlink_anon_vmas
+Source code:
+void unlink_anon_vmas(struct vm_area_struct *vma)
+{
+	struct anon_vma_chain *avc, *next;
+	struct anon_vma *root = NULL;
+
+	/*
+	 */
+	list_for_each_entry_safe(avc, next, &vma->anon_vma_chain, same_vma) {
+		struct anon_vma *anon_vma = avc->anon_vma;
+
+		root = lock_anon_vma_root(root, anon_vma);
+		anon_vma_interval_tree_remove(avc, &anon_vma->rb_root);
+
+		/*
+		 */
+		if (RB_EMPTY_ROOT(&anon_vma->rb_root.rb_root)) {
+			anon_vma->parent->num_children--;
+			continue;
+		}
+
+		list_del(&avc->same_vma);
+		anon_vma_chain_free(avc);
+	}
+	if (vma->anon_vma) {
+		vma->anon_vma->num_active_vmas--;
+
+		/*
+		 */
+		vma->anon_vma = NULL;
+	}
+	unlock_anon_vma_root(root);
+
+	/*
+	 */
+	list_for_each_entry_safe(avc, next, &vma->anon_vma_chain, same_vma) {
+		struct anon_vma *anon_vma = avc->anon_vma;
+
+		VM_WARN_ON(anon_vma->num_children);
+		VM_WARN_ON(anon_vma->num_active_vmas);
+		put_anon_vma(anon_vma);
+
+		list_del(&avc->same_vma);
+		anon_vma_chain_free(avc);
+	}
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of free_pgtables will reach unlink_anon_vmas? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The function free_pgtables explicitly calls unlink_anon_vmas(vma) unconditionally for each processed VMA in its loop. This occurs both in the case of handling huge pages and during iteration over adjacent VMAs. Since the code directly invokes unlink_anon_vmas in all valid execution paths, it is semantically and functionally guaranteed that free_pgtables will reach unlink_anon_vmas during execution.}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: free_pgtables
+
+Callee candidate: unlink_anon_vmas
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of free_pgtables will reach unlink_anon_vmas? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+free_pgtables is responsible for freeing page tables associated with a virtual memory area (VMA). unlink_anon_vmas is used to remove anonymous VMA entries from the VMA list, typically during process exit or memory unmap operations. While both functions deal with VMA cleanup, they serve different purposes and are part of different cleanup paths. free_pgtables does not inherently require VMA un-linking to proceed with page table deallocation. Thus, there is no direct semantic expectation that free_pgtables would call unlink_anon_vmas.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_brk
+  - do_brk_flags
+
+Caller: do_brk_flags
+Source code:
+static int do_brk_flags(struct ma_state *mas, struct vm_area_struct *vma,
+		unsigned long addr, unsigned long len, unsigned long flags)
+{
+	struct mm_struct *mm = current->mm;
+
+	validate_mm_mt(mm);
+	/*
+	 */
+	flags |= VM_DATA_DEFAULT_FLAGS | VM_ACCOUNT | mm->def_flags;
+	if (!may_expand_vm(mm, flags, len >> PAGE_SHIFT))
+		return -ENOMEM;
+
+	if (mm->map_count > sysctl_max_map_count)
+		return -ENOMEM;
+
+	if (security_vm_enough_memory_mm(mm, len >> PAGE_SHIFT))
+		return -ENOMEM;
+
+	/*
+	 */
+	if (vma && vma->vm_end == addr && !vma_policy(vma) &&
+	    can_vma_merge_after(vma, flags, NULL, NULL,
+				addr >> PAGE_SHIFT, NULL_VM_UFFD_CTX, NULL)) {
+		mas_set_range(mas, vma->vm_start, addr + len - 1);
+		if (mas_preallocate(mas, vma, GFP_KERNEL))
+			return -ENOMEM;
+
+		vma_adjust_trans_huge(vma, vma->vm_start, addr + len, 0);
+		if (vma->anon_vma) {
+			anon_vma_lock_write(vma->anon_vma);
+			anon_vma_interval_tree_pre_update_vma(vma);
+		}
+		vma->vm_end = addr + len;
+		vma->vm_flags |= VM_SOFTDIRTY;
+		mas_store_prealloc(mas, vma);
+
+		if (vma->anon_vma) {
+			anon_vma_interval_tree_post_update_vma(vma);
+			anon_vma_unlock_write(vma->anon_vma);
+		}
+		khugepaged_enter_vma(vma, flags);
+		goto out;
+	}
+
+	/* create a vma struct for an anonymous mapping */
+	vma = vm_area_alloc(mm);
+	if (!vma)
+		goto vma_alloc_fail;
+
+	vma_set_anonymous(vma);
+	vma->vm_start = addr;
+	vma->vm_end = addr + len;
+	vma->vm_pgoff = addr >> PAGE_SHIFT;
+	vma->vm_flags = flags;
+	vma->vm_page_prot = vm_get_page_prot(flags);
+	mas_set_range(mas, vma->vm_start, addr + len - 1);
+	if (mas_store_gfp(mas, vma, GFP_KERNEL))
+		goto mas_store_fail;
+
+	mm->map_count++;
+out:
+	perf_event_mmap(vma);
+	mm->total_vm += len >> PAGE_SHIFT;
+	mm->data_vm += len >> PAGE_SHIFT;
+	if (flags & VM_LOCKED)
+		mm->locked_vm += (len >> PAGE_SHIFT);
+	vma->vm_flags |= VM_SOFTDIRTY;
+	validate_mm(mm);
+	return 0;
+
+mas_store_fail:
+	vm_area_free(vma);
+vma_alloc_fail:
+	vm_unacct_memory(len >> PAGE_SHIFT);
+	return -ENOMEM;
+}
+
+
+Callee candidate: vm_area_free
+Source code:
+void vm_area_free(struct vm_area_struct *vma)
+{
+	free_anon_vma_name(vma);
+	kmem_cache_free(vm_area_cachep, vma);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of do_brk_flags will reach vm_area_free? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The function do_brk_flags allocates a VMA using vm_area_alloc and, in error cases (e.g., failure of mas_store_gfp), explicitly calls vm_area_free to clean up the allocated VMA. This is a standard error-handling pattern in kernel code to prevent memory leaks. From a security perspective, proper cleanup of allocated resources on failure is critical to avoid vulnerabilities like resource exhaustion or inconsistent state. The execution path to vm_area_free is semantically valid and functionally necessary in this context.}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: do_brk_flags
+
+Callee candidate: vm_area_free
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of do_brk_flags will reach vm_area_free? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+do_brk_flags is responsible for adjusting the heap region in a process's virtual memory, potentially modifying or extending a VMA (Virtual Memory Area). If the adjustment results in splitting or removing a VMA, it may trigger the freeing of a VMA structure, which is handled by vm_area_free. Thus, it is reasonable for the call graph to include an edge from do_brk_flags to vm_area_free.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __wake_up
+
+Caller: __wake_up
+Source code:
+void __wake_up(struct wait_queue_head *wq_head, unsigned int mode,
+			int nr_exclusive, void *key)
+{
+	__wake_up_common_lock(wq_head, mode, nr_exclusive, 0, key);
+}
+
+
+Callee candidate: default_wake_function
+Source code:
+int default_wake_function(wait_queue_entry_t *curr, unsigned mode, int wake_flags,
+			  void *key)
+{
+	WARN_ON_ONCE(IS_ENABLED(CONFIG_SCHED_DEBUG) && wake_flags & ~WF_SYNC);
+	return try_to_wake_up(curr->private, mode, wake_flags);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __wake_up will reach default_wake_function? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The `__wake_up` function calls `__wake_up_common_lock`, which is responsible for waking up processes in a wait queue. The `default_wake_function` is a standard callback used to wake up individual processes in such queues. While `__wake_up` does not directly invoke `default_wake_function`, the `__wake_up_common_lock` function (not shown here) typically iterates through wait queue entries and invokes their associated wake functions, which may include `default_wake_function`. Since `__wake_up` is part of the broader wake-up mechanism that relies on these callbacks, it is semantically and functionally reasonable to expect the call path to reach `default_wake_function`.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __wake_up
+
+Callee candidate: default_wake_function
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __wake_up will reach default_wake_function? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The `__wake_up` function in the Linux kernel is a core function responsible for waking up processes waiting on a wait queue. It typically iterates over the wait queue entries and invokes the wake-up function associated with each entry. The `default_wake_function` is the standard wake-up callback used for most wait queues.
+
+Semantically and functionally, it is entirely reasonable for `__wake_up` to reach `default_wake_function`, as it is the expected and common path when a process is woken up via a standard wait queue.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- flush_tlb_mm_range
+
+Caller: flush_tlb_mm_range
+Source code:
+void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+			unsigned long end)
+{
+	fix_range(mm, start, end, 0);
+}
+
+
+Callee candidate: flush_tlb_func
+Source code:
+static void flush_tlb_func(void *info)
+{
+	/*
+	 */
+	const struct flush_tlb_info *f = info;
+	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
+	u32 loaded_mm_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
+	u64 local_tlb_gen = this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen);
+	bool local = smp_processor_id() == f->initiating_cpu;
+	unsigned long nr_invalidate = 0;
+	u64 mm_tlb_gen;
+
+	/* This code cannot presently handle being reentered. */
+	VM_WARN_ON(!irqs_disabled());
+
+	if (!local) {
+		inc_irq_stat(irq_tlb_count);
+		count_vm_tlb_event(NR_TLB_REMOTE_FLUSH_RECEIVED);
+
+		/* Can only happen on remote CPUs */
+		if (f->mm && f->mm != loaded_mm)
+			return;
+	}
+
+	if (unlikely(loaded_mm == &init_mm))
+		return;
+
+	VM_WARN_ON(this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].ctx_id) !=
+		   loaded_mm->context.ctx_id);
+
+	if (this_cpu_read(cpu_tlbstate_shared.is_lazy)) {
+		/*
+		 */
+		switch_mm_irqs_off(NULL, &init_mm, NULL);
+		return;
+	}
+
+	if (unlikely(f->new_tlb_gen != TLB_GENERATION_INVALID &&
+		     f->new_tlb_gen <= local_tlb_gen)) {
+		/*
+		 */
+		return;
+	}
+
+	/*
+	 */
+	mm_tlb_gen = atomic64_read(&loaded_mm->context.tlb_gen);
+
+	if (unlikely(local_tlb_gen == mm_tlb_gen)) {
+		/*
+		 */
+		goto done;
+	}
+
+	WARN_ON_ONCE(local_tlb_gen > mm_tlb_gen);
+	WARN_ON_ONCE(f->new_tlb_gen > mm_tlb_gen);
+
+	/*
+	 */
+	if (f->end != TLB_FLUSH_ALL &&
+	    f->new_tlb_gen == local_tlb_gen + 1 &&
+	    f->new_tlb_gen == mm_tlb_gen) {
+		/* Partial flush */
+		unsigned long addr = f->start;
+
+		/* Partial flush cannot have invalid generations */
+		VM_WARN_ON(f->new_tlb_gen == TLB_GENERATION_INVALID);
+
+		/* Partial flush must have valid mm */
+		VM_WARN_ON(f->mm == NULL);
+
+		nr_invalidate = (f->end - f->start) >> f->stride_shift;
+
+		while (addr < f->end) {
+			flush_tlb_one_user(addr);
+			addr += 1UL << f->stride_shift;
+		}
+		if (local)
+			count_vm_tlb_events(NR_TLB_LOCAL_FLUSH_ONE, nr_invalidate);
+	} else {
+		/* Full flush. */
+		nr_invalidate = TLB_FLUSH_ALL;
+
+		flush_tlb_local();
+		if (local)
+			count_vm_tlb_event(NR_TLB_LOCAL_FLUSH_ALL);
+	}
+
+	/* Both paths above update our state to mm_tlb_gen. */
+	this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb_gen);
+
+	/* Tracing is done in a unified manner to reduce the code size */
+done:
+	trace_tlb_flush(!local ? TLB_REMOTE_SHOOTDOWN :
+				(f->mm == NULL) ? TLB_LOCAL_SHOOTDOWN :
+						  TLB_LOCAL_MM_SHOOTDOWN,
+			nr_invalidate);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of flush_tlb_mm_range will reach flush_tlb_func? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{Your justification}
+The function `flush_tlb_mm_range` directly calls `fix_range`, but the provided code does not show a direct invocation of `flush_tlb_func`. `flush_tlb_func` appears to be a static function used for remote TLB shootdowns, typically triggered via IPIs. While `flush_tlb_mm_range` may initiate a process that indirectly leads to `flush_tlb_func` execution on other CPUs, the function call graph (considering direct, in-line calls) does not show a semantic or functional path from `flush_tlb_mm_range` to `flush_tlb_func`.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: flush_tlb_mm_range
+
+Callee candidate: flush_tlb_func
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of flush_tlb_mm_range will reach flush_tlb_func? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In the Linux kernel, `flush_tlb_mm_range` is a function responsible for flushing a range of the Translation Lookaside Buffer (TLB) entries associated with a given memory management context. Depending on the architecture and the specific flush operation, it may invoke a function pointer such as `flush_tlb_func`, which is typically an architecture-specific function used to perform the actual TLB flush.
+
+From a security-enforcement standpoint, the transition from `flush_tlb_mm_range` to `flush_tlb_func` is semantically and functionally reasonable if the architecture defines `flush_tlb_func` as the target of such a flush operation. This is a standard mechanism in the Linux kernel for abstracting architecture-specific TLB operations.
+
+{Your justification}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- kmem_cache_alloc_bulk
+
+Caller: kmem_cache_alloc_bulk
+Source code:
+int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t nr,
+								void **p)
+{
+	size_t i;
+
+	for (i = 0; i < nr; i++) {
+		void *x = p[i] = kmem_cache_alloc(s, flags);
+
+		if (!x) {
+			kmem_cache_free_bulk(s, i, p);
+			return 0;
+		}
+	}
+	return i;
+}
+
+
+Callee candidate: should_failslab
+Source code:
+int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+{
+	if (__should_failslab(s, gfpflags))
+		return -ENOMEM;
+	return 0;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of kmem_cache_alloc_bulk will reach should_failslab? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `kmem_cache_alloc_bulk` internally calls `kmem_cache_alloc` in a loop. The `kmem_cache_alloc` function (not shown) is known in the Linux kernel to invoke `should_failslab` to enforce artificial memory allocation failures for testing. Since `should_failslab` is part of the failure path in `kmem_cache_alloc`, and `kmem_cache_alloc_bulk` relies on `kmem_cache_alloc`, it is semantically and functionally reasonable to expect that `kmem_cache_alloc_bulk` execution could reach `should_failslab` during allocation attempts.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: kmem_cache_alloc_bulk
+
+Callee candidate: should_failslab
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of kmem_cache_alloc_bulk will reach should_failslab? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The `kmem_cache_alloc_bulk` function is part of the Linux kernel's slab allocator, used for allocating multiple objects from a slab cache. The `should_failslab` function is a helper used in the implementation of the `CONFIG_FAILSLAB` kernel configuration option, which allows inducing artificial slab allocation failures for testing purposes. For `should_failslab` to be invoked, the kernel must be compiled with `CONFIG_FAILSLAB=y` and the feature must be enabled at runtime. While it is possible for `kmem_cache_alloc_bulk` to invoke `should_failslab` under these specific conditions, it is not a standard or semantically required part of its normal execution path. Therefore, expecting it to always reach `should_failslab` is not functionally reasonable.
+
+{Your justification}
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- page_remove_rmap
+
+Caller: page_remove_rmap
+Source code:
+void page_remove_rmap(struct page *page,
+	struct vm_area_struct *vma, bool compound)
+{
+	lock_page_memcg(page);
+
+	if (!PageAnon(page)) {
+		page_remove_file_rmap(page, compound);
+		goto out;
+	}
+
+	if (compound) {
+		page_remove_anon_compound_rmap(page);
+		goto out;
+	}
+
+	/* page still mapped by someone else? */
+	if (!atomic_add_negative(-1, &page->_mapcount))
+		goto out;
+
+	/*
+	 */
+	__dec_lruvec_page_state(page, NR_ANON_MAPPED);
+
+	if (PageTransCompound(page))
+		deferred_split_huge_page(compound_head(page));
+
+	/*
+	 */
+out:
+	unlock_page_memcg(page);
+
+	munlock_vma_page(page, vma, compound);
+}
+
+
+Callee candidate: __mod_node_page_state
+Source code:
+void __mod_node_page_state(struct pglist_data *pgdat, enum node_stat_item item,
+				long delta)
+{
+	struct per_cpu_nodestat __percpu *pcp = pgdat->per_cpu_nodestats;
+	s8 __percpu *p = pcp->vm_node_stat_diff + item;
+	long x;
+	long t;
+
+	if (vmstat_item_in_bytes(item)) {
+		/*
+		 */
+		VM_WARN_ON_ONCE(delta & (PAGE_SIZE - 1));
+		delta >>= PAGE_SHIFT;
+	}
+
+	/* See __mod_node_page_state */
+	preempt_disable_nested();
+
+	x = delta + __this_cpu_read(*p);
+
+	t = __this_cpu_read(pcp->stat_threshold);
+
+	if (unlikely(abs(x) > t)) {
+		node_page_state_add(x, pgdat, item);
+		x = 0;
+	}
+	__this_cpu_write(*p, x);
+
+	preempt_enable_nested();
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of page_remove_rmap will reach __mod_node_page_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `page_remove_rmap` calls `__dec_lruvec_page_state(page, NR_ANON_MAPPED)`, which is designed to decrement a page state counter. The `__mod_node_page_state` function is a low-level utility for modifying node-specific page state counters. Since `__dec_lruvec_page_state` would logically use `__mod_node_page_state` (or a similar mechanism) to adjust the `NR_ANON_MAPPED` counter, there is an implicit call chain between `page_remove_rmap` and `__mod_node_page_state`.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: page_remove_rmap
+
+Callee candidate: __mod_node_page_state
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of page_remove_rmap will reach __mod_node_page_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+page_remove_rmap is involved in removing a reverse mapping for a page, which is part of page table and memory management operations. __mod_node_page_state is used to update per-node page state counters, typically for metrics like free pages, reserved pages, etc. Given that page_remove_rmap affects page state by removing mappings, it is reasonable that it may call __mod_node_page_state to update relevant counters. This aligns with normal memory management semantics and does not inherently violate security enforcement boundaries.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_brk
+  - do_brk_flags
+    - security_vm_enough_memory_mm
+
+Caller: security_vm_enough_memory_mm
+Source code:
+int security_vm_enough_memory_mm(struct mm_struct *mm, long pages)
+{
+	struct security_hook_list *hp;
+	int cap_sys_admin = 1;
+	int rc;
+
+	/*
+	 */
+	hlist_for_each_entry(hp, &security_hook_heads.vm_enough_memory, list) {
+		rc = hp->hook.vm_enough_memory(mm, pages);
+		if (rc <= 0) {
+			cap_sys_admin = 0;
+			break;
+		}
+	}
+	return __vm_enough_memory(mm, pages, cap_sys_admin);
+}
+
+
+Callee candidate: __vm_enough_memory
+Source code:
+int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
+{
+	long allowed;
+
+	vm_acct_memory(pages);
+
+	/*
+	 */
+	if (sysctl_overcommit_memory == OVERCOMMIT_ALWAYS)
+		return 0;
+
+	if (sysctl_overcommit_memory == OVERCOMMIT_GUESS) {
+		if (pages > totalram_pages() + total_swap_pages)
+			goto error;
+		return 0;
+	}
+
+	allowed = vm_commit_limit();
+	/*
+	 */
+	if (!cap_sys_admin)
+		allowed -= sysctl_admin_reserve_kbytes >> (PAGE_SHIFT - 10);
+
+	/*
+	 */
+	if (mm) {
+		long reserve = sysctl_user_reserve_kbytes >> (PAGE_SHIFT - 10);
+
+		allowed -= min_t(long, mm->total_vm / 32, reserve);
+	}
+
+	if (percpu_counter_read_positive(&vm_committed_as) < allowed)
+		return 0;
+error:
+	pr_warn_ratelimited("%s: pid: %d, comm: %s, no enough memory for the allocation\n",
+			    __func__, current->pid, current->comm);
+	vm_unacct_memory(pages);
+
+	return -ENOMEM;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of security_vm_enough_memory_mm will reach __vm_enough_memory? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `security_vm_enough_memory_mm` explicitly calls `__vm_enough_memory` as its final step, regardless of the outcome of the security hooks. The hooks may influence the `cap_sys_admin` flag, but the call to `__vm_enough_memory` is unconditional and directly follows the hook iteration. The historical call graph also confirms this edge.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: security_vm_enough_memory_mm
+
+Callee candidate: __vm_enough_memory
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of security_vm_enough_memory_mm will reach __vm_enough_memory? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `security_vm_enough_memory_mm` is part of the Linux Security Module (LSM) infrastructure and serves as a wrapper or hook point that invokes security module policies before delegating to the core memory accounting logic. The LSM hook is expected to eventually call the core kernel function `__vm_enough_memory` to perform the actual memory enforcement logic, unless a security module explicitly denies or modifies the behavior.
+
+Thus, from a security-enforcement standpoint, it is semantically and functionally reasonable to expect that `security_vm_enough_memory_mm` may reach `__vm_enough_memory`, as it is the intended target of the security hook.
+
+FINAL ANSWER -> YES
+

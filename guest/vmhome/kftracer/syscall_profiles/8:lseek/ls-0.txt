@@ -1,0 +1,13 @@
+__audit_syscall_entry
+__audit_syscall_exit
+__fdget_pos
+__fget_light
+__x64_sys_lseek
+_raw_spin_lock
+_raw_spin_unlock
+ext4_llseek
+generic_file_llseek_size
+ktime_get_coarse_real_ts64
+preempt_count_add
+preempt_count_sub
+syscall_exit_work

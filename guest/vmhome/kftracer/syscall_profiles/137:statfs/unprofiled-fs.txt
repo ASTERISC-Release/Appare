@@ -1,0 +1,5 @@
+137:statfs
+    cp-0.txt: total funcs: 76; not profiled: 13/76 (17.1%) [__audit_syscall_entry, __audit_syscall_exit, __legitimize_path.isra.0, __traverse_mounts, kernfs_dop_revalidate, kernfs_iop_permission, kernfs_refresh_inode, link_path_walk.part.0, lookup_mnt, path_lookupat.isra.0, set_nlink, simple_statfs, syscall_exit_work]
+    ls-0.txt: total funcs: 76; not profiled: 13/76 (17.1%) [__audit_syscall_entry, __audit_syscall_exit, __legitimize_path.isra.0, __traverse_mounts, kernfs_dop_revalidate, kernfs_iop_permission, kernfs_refresh_inode, link_path_walk.part.0, lookup_mnt, path_lookupat.isra.0, set_nlink, simple_statfs, syscall_exit_work]
+    tar-0.txt: total funcs: 76; not profiled: 13/76 (17.1%) [__audit_syscall_entry, __audit_syscall_exit, __legitimize_path.isra.0, __traverse_mounts, kernfs_dop_revalidate, kernfs_iop_permission, kernfs_refresh_inode, link_path_walk.part.0, lookup_mnt, path_lookupat.isra.0, set_nlink, simple_statfs, syscall_exit_work]
+    unqlite-0.txt: total funcs: N/A; 

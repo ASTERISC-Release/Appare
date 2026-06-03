@@ -1,0 +1,1786 @@
+Baseline name: nginx-ltp-redis
+0:read
+    cp-0.txt: total funcs: 204; not profiled: 24/204 (11.8%) [__es_tree_search.isra.0, __filemap_add_folio, blk_cgroup_congested, blk_mq_plug_issue_direct.constprop.0, blk_mq_rq_ctx_init.isra.0, do_page_cache_ra, enter_lazy_tlb, ext4_es_cache_extent, ext4_inode_csum.isra.0, ext4_mpage_readpages, ext4_readahead, filemap_add_folio, filemap_alloc_folio, find_revoke_record, folio_alloc, ondemand_readahead, page_cache_ra_unbounded, page_cache_sync_ra, read_pages, save_fpregs_to_fpstate, should_fail_bio.isra.0, vring_map_single.constprop.0, wb_io_lists_populated, xfd_validate_state]
+    curl-0.txt: total funcs: 23; not profiled: 0/23 (0.0%) []
+    ls-0.txt: total funcs: 23; not profiled: 0/23 (0.0%) []
+    tar-0.txt: total funcs: 185; not profiled: 23/185 (12.4%) [__es_tree_search.isra.0, __filemap_add_folio, blk_cgroup_congested, blk_mq_plug_issue_direct.constprop.0, blk_mq_rq_ctx_init.isra.0, do_page_cache_ra, enter_lazy_tlb, ext4_es_cache_extent, ext4_inode_csum.isra.0, ext4_mpage_readpages, ext4_readahead, filemap_add_folio, filemap_alloc_folio, folio_alloc, ondemand_readahead, page_cache_ra_unbounded, page_cache_sync_ra, read_pages, save_fpregs_to_fpstate, should_fail_bio.isra.0, vring_map_single.constprop.0, wb_io_lists_populated, xfd_validate_state]
+    wget-0.txt: total funcs: 51; not profiled: 2/51 (3.9%) [shmem_file_read_iter, shmem_get_folio_gfp.isra.0]
+    unqlite-0.txt: total funcs: 28; not profiled: 5/28 (17.9%) [chacha_permute, crng_fast_key_erasure, crng_make_state, get_random_bytes_user, urandom_read_iter]
+1:write
+    cp-0.txt: total funcs: 150; not profiled: 0/150 (0.0%) []
+    curl-0.txt: total funcs: 202; not profiled: 1/202 (0.5%) [file_tty_write.isra.0]
+    ls-0.txt: total funcs: 58; not profiled: 1/58 (1.7%) [file_tty_write.isra.0]
+    tar-0.txt: total funcs: 66; not profiled: 3/66 (4.5%) [__mnt_drop_write, __mnt_want_write, file_tty_write.isra.0]
+    wget-0.txt: total funcs: 292; not profiled: 10/292 (3.4%) [__netif_receive_skb, __netif_receive_skb_one_core, __netif_rx, enqueue_to_backlog, file_tty_write.isra.0, ip_rcv, ip_rcv_finish, loopback_xmit, netif_rx_internal, process_backlog]
+    unqlite-0.txt: total funcs: 51; not profiled: 1/51 (2.0%) [file_tty_write.isra.0]
+3:close
+    cp-0.txt: total funcs: 8; not profiled: 0/8 (0.0%) []
+    curl-0.txt: total funcs: 8; not profiled: 0/8 (0.0%) []
+    ls-0.txt: total funcs: 8; not profiled: 0/8 (0.0%) []
+    tar-0.txt: total funcs: 8; not profiled: 0/8 (0.0%) []
+    wget-0.txt: total funcs: 8; not profiled: 0/8 (0.0%) []
+    unqlite-0.txt: total funcs: 6; not profiled: 0/6 (0.0%) []
+7:poll
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 30; not profiled: 7/30 (23.3%) [enter_lazy_tlb, save_fpregs_to_fpstate, sock_poll, tcp_poll, tcp_stream_memory_free, unix_poll, xfd_validate_state]
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+8:lseek
+    cp-0.txt: total funcs: 3; not profiled: 0/3 (0.0%) []
+    curl-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    ls-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    tar-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    wget-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    unqlite-0.txt: total funcs: NA; 
+9:mmap
+    cp-0.txt: total funcs: 115; not profiled: 4/115 (3.5%) [__remove_shared_vm_struct.isra.0, can_vma_merge_after.isra.0, do_mas_align_munmap.constprop.0, get_partial_node.part.0]
+    curl-0.txt: total funcs: 126; not profiled: 4/126 (3.2%) [__remove_shared_vm_struct.isra.0, can_vma_merge_after.isra.0, do_mas_align_munmap.constprop.0, get_partial_node.part.0]
+    ls-0.txt: total funcs: 98; not profiled: 4/98 (4.1%) [__remove_shared_vm_struct.isra.0, can_vma_merge_after.isra.0, do_mas_align_munmap.constprop.0, get_partial_node.part.0]
+    tar-0.txt: total funcs: 112; not profiled: 4/112 (3.6%) [__remove_shared_vm_struct.isra.0, can_vma_merge_after.isra.0, do_mas_align_munmap.constprop.0, get_partial_node.part.0]
+    wget-0.txt: total funcs: 99; not profiled: 3/99 (3.0%) [__remove_shared_vm_struct.isra.0, can_vma_merge_after.isra.0, do_mas_align_munmap.constprop.0]
+    unqlite-0.txt: total funcs: 98; not profiled: 3/98 (3.1%) [__remove_shared_vm_struct.isra.0, can_vma_merge_after.isra.0, do_mas_align_munmap.constprop.0]
+10:mprotect
+    cp-0.txt: total funcs: 68; not profiled: 16/68 (23.5%) [__alloc_pages, __slab_alloc.isra.0, alloc_pages, can_vma_merge_after.isra.0, fixup_red_left, get_page_from_freelist, get_task_policy.part.0, kmem_cache_free_bulk.part.0, mempolicy_slab_node, mod_node_page_state, new_slab, policy_node, policy_nodemask, prep_new_page, setup_object_debug, should_fail_alloc_page]
+    curl-0.txt: total funcs: 81; not profiled: 22/81 (27.2%) [__alloc_pages, __slab_alloc.isra.0, __unfreeze_partials, alloc_pages, can_vma_merge_after.isra.0, fixup_red_left, get_page_from_freelist, get_partial_node.part.0, get_task_policy.part.0, kmem_cache_free_bulk.part.0, kthread_is_per_cpu, mempolicy_slab_node, mod_node_page_state, native_flush_tlb_local, new_slab, policy_node, policy_nodemask, prep_new_page, setup_object_debug, should_fail_alloc_page, swake_up_one, wake_up_process]
+    ls-0.txt: total funcs: 58; not profiled: 4/58 (6.9%) [can_vma_merge_after.isra.0, kmem_cache_free_bulk.part.0, swake_up_one, wake_up_process]
+    tar-0.txt: total funcs: 54; not profiled: 3/54 (5.6%) [__slab_alloc.isra.0, can_vma_merge_after.isra.0, kmem_cache_free_bulk.part.0]
+    wget-0.txt: total funcs: 69; not profiled: 17/69 (24.6%) [__alloc_pages, __slab_alloc.isra.0, alloc_pages, can_vma_merge_after.isra.0, fixup_red_left, get_page_from_freelist, get_task_policy.part.0, kmem_cache_free_bulk.part.0, mempolicy_slab_node, mod_node_page_state, native_flush_tlb_local, new_slab, policy_node, policy_nodemask, prep_new_page, setup_object_debug, should_fail_alloc_page]
+    unqlite-0.txt: total funcs: 55; not profiled: 3/55 (5.5%) [__slab_alloc.isra.0, can_vma_merge_after.isra.0, kmem_cache_free_bulk.part.0]
+11:munmap
+    cp-0.txt: total funcs: 77; not profiled: 7/77 (9.1%) [__put_anon_vma, __remove_shared_vm_struct.isra.0, do_mas_align_munmap.constprop.0, free_pages.part.0, free_unref_page_prepare.part.0, get_task_policy.part.0, kmem_cache_free_bulk.part.0]
+    curl-0.txt: total funcs: 75; not profiled: 6/75 (8.0%) [__remove_shared_vm_struct.isra.0, do_mas_align_munmap.constprop.0, free_pages.part.0, free_unref_page_prepare.part.0, get_task_policy.part.0, kmem_cache_free_bulk.part.0]
+    ls-0.txt: total funcs: 75; not profiled: 6/75 (8.0%) [__remove_shared_vm_struct.isra.0, do_mas_align_munmap.constprop.0, free_pages.part.0, free_unref_page_prepare.part.0, get_task_policy.part.0, kmem_cache_free_bulk.part.0]
+    tar-0.txt: total funcs: 74; not profiled: 6/74 (8.1%) [__remove_shared_vm_struct.isra.0, do_mas_align_munmap.constprop.0, free_pages.part.0, free_unref_page_prepare.part.0, get_task_policy.part.0, kmem_cache_free_bulk.part.0]
+    wget-0.txt: total funcs: 75; not profiled: 6/75 (8.0%) [__remove_shared_vm_struct.isra.0, do_mas_align_munmap.constprop.0, free_pages.part.0, free_unref_page_prepare.part.0, get_task_policy.part.0, kmem_cache_free_bulk.part.0]
+    unqlite-0.txt: total funcs: 85; not profiled: 10/85 (11.8%) [___pte_free_tlb, __remove_shared_vm_struct.isra.0, do_mas_align_munmap.constprop.0, free_pages.part.0, free_unref_page_prepare.part.0, get_task_policy.part.0, kmem_cache_free_bulk.part.0, mod_node_page_state, native_flush_tlb_local, tlb_remove_table]
+12:brk
+    cp-0.txt: total funcs: 22; not profiled: 0/22 (0.0%) []
+    curl-0.txt: total funcs: 35; not profiled: 5/35 (14.3%) [__unfreeze_partials, anon_vma_interval_tree_insert, can_vma_merge_after.isra.0, get_partial_node.part.0, kmem_cache_free_bulk.part.0]
+    ls-0.txt: total funcs: 26; not profiled: 1/26 (3.8%) [kmem_cache_free_bulk.part.0]
+    tar-0.txt: total funcs: 22; not profiled: 0/22 (0.0%) []
+    wget-0.txt: total funcs: 22; not profiled: 0/22 (0.0%) []
+    unqlite-0.txt: total funcs: 30; not profiled: 3/30 (10.0%) [anon_vma_interval_tree_insert, can_vma_merge_after.isra.0, kmem_cache_free_bulk.part.0]
+13:rt_sigaction
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 4; not profiled: 1/4 (25.0%) [flush_sigqueue_mask]
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: 4; not profiled: 1/4 (25.0%) [flush_sigqueue_mask]
+    wget-0.txt: total funcs: 4; not profiled: 1/4 (25.0%) [flush_sigqueue_mask]
+    unqlite-0.txt: total funcs: NA; 
+14:rt_sigprocmask
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+19:readv
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+20:writev
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+21:access
+    cp-0.txt: total funcs: 42; not profiled: 2/42 (4.8%) [link_path_walk.part.0, path_lookupat.isra.0]
+    curl-0.txt: total funcs: 44; not profiled: 3/44 (6.8%) [__slab_alloc.isra.0, link_path_walk.part.0, path_lookupat.isra.0]
+    ls-0.txt: total funcs: 43; not profiled: 2/43 (4.7%) [link_path_walk.part.0, path_lookupat.isra.0]
+    tar-0.txt: total funcs: 42; not profiled: 2/42 (4.8%) [link_path_walk.part.0, path_lookupat.isra.0]
+    wget-0.txt: total funcs: 42; not profiled: 2/42 (4.8%) [link_path_walk.part.0, path_lookupat.isra.0]
+    unqlite-0.txt: total funcs: 42; not profiled: 2/42 (4.8%) [link_path_walk.part.0, path_lookupat.isra.0]
+23:select
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+24:sched_yield
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+25:mremap
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+26:msync
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+27:mincore
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+28:madvise
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+32:dup
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+33:dup2
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+34:pause
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+36:getitimer
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+37:alarm
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+38:setitimer
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+39:getpid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+40:sendfile
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+41:socket
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 92; not profiled: 20/92 (21.7%) [__alloc_pages, __slab_alloc.isra.0, __sys_socket_create.part.0, __unix_insert_socket.isra.0, __zone_watermark_ok, alloc_pages, d_instantiate.part.0, fixup_red_left, get_page_from_freelist, get_task_policy.part.0, inet6_create, mempolicy_slab_node, mod_node_page_state, new_slab, policy_node, policy_nodemask, prep_new_page, setup_object_debug, should_fail_alloc_page, udpv6_init_sock]
+    ls-0.txt: total funcs: 65; not profiled: 4/65 (6.2%) [__slab_alloc.isra.0, __sys_socket_create.part.0, __unix_insert_socket.isra.0, d_instantiate.part.0]
+    tar-0.txt: total funcs: 65; not profiled: 4/65 (6.2%) [__slab_alloc.isra.0, __sys_socket_create.part.0, __unix_insert_socket.isra.0, d_instantiate.part.0]
+    wget-0.txt: total funcs: 74; not profiled: 3/74 (4.1%) [__sys_socket_create.part.0, __unix_insert_socket.isra.0, d_instantiate.part.0]
+    unqlite-0.txt: total funcs: NA; 
+42:connect
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 368; not profiled: 79/368 (21.5%) [___d_drop, __d_alloc, __d_drop.part.0, __d_lookup_unhash, __d_rehash, __dentry_kill, __inode_security_revalidate, __legitimize_mnt, __legitimize_path.isra.0, __lookup_mnt, __lookup_slow, __sk_free, __slab_alloc.isra.0, __tcp_send_ack.part.0, __unix_insert_socket.isra.0, _get_random_bytes.part.0, always_delete_dentry, atime_needs_update, cgroup_sk_alloc, current_time, d_add, d_alloc, d_alloc_parallel, d_set_d_op, dentry_free, down_read, dput, ep_autoremove_wake_function, ep_poll_callback, filename_lookup, generic_permission, get_max_files, getname_kernel, inode_permission, ip_rcv_core.isra.0, ip_rcv_finish_core.isra.0, kern_path, kmem_cache_alloc_lru, legitimize_links, legitimize_root, link_path_walk.part.0, lookup_fast, mntput, mntput_no_expire, move_addr_to_kernel.part.0, nd_jump_root, path_init, path_lookupat.isra.0, putname, restore_nameidata, security_inode_follow_link, security_inode_permission, selinux_inode_follow_link, selinux_inode_permission, selinux_ip_postroute_compat.isra.0, selinux_parse_skb.constprop.0, selinux_socket_connect_helper.isra.0, set_root, simple_lookup, sk_alloc, sk_destruct, skb_dequeue, skb_queue_purge, sock_init_data, sock_wmalloc, step_into, tcp_ack_update_rtt.isra.0, terminate_walk, timestamp_truncate, try_to_unlazy, unix_create1, unix_find_other, unix_release_sock, unix_sock_destructor, unix_stream_connect, unix_write_space, up_read, validate_xmit_skb.isra.0, walk_component]
+    ls-0.txt: total funcs: 123; not profiled: 69/123 (56.1%) [___d_drop, __d_alloc, __d_drop.part.0, __d_lookup_unhash, __d_rehash, __dentry_kill, __inode_security_revalidate, __legitimize_mnt, __legitimize_path.isra.0, __lookup_mnt, __lookup_slow, __sk_free, __slab_alloc.isra.0, __unix_insert_socket.isra.0, always_delete_dentry, atime_needs_update, cgroup_sk_alloc, current_time, d_add, d_alloc, d_alloc_parallel, d_set_d_op, dentry_free, down_read, dput, filename_lookup, generic_permission, get_max_files, getname_kernel, inode_permission, kern_path, kmem_cache_alloc_lru, legitimize_links, legitimize_root, link_path_walk.part.0, lookup_fast, mntput, mntput_no_expire, move_addr_to_kernel.part.0, nd_jump_root, path_init, path_lookupat.isra.0, putname, restore_nameidata, security_inode_follow_link, security_inode_permission, selinux_inode_follow_link, selinux_inode_permission, selinux_socket_connect_helper.isra.0, set_root, simple_lookup, sk_alloc, sk_destruct, skb_dequeue, skb_queue_purge, sock_init_data, sock_wmalloc, step_into, terminate_walk, timestamp_truncate, try_to_unlazy, unix_create1, unix_find_other, unix_release_sock, unix_sock_destructor, unix_stream_connect, unix_write_space, up_read, walk_component]
+    tar-0.txt: total funcs: 123; not profiled: 69/123 (56.1%) [___d_drop, __d_alloc, __d_drop.part.0, __d_lookup_unhash, __d_rehash, __dentry_kill, __inode_security_revalidate, __legitimize_mnt, __legitimize_path.isra.0, __lookup_mnt, __lookup_slow, __sk_free, __slab_alloc.isra.0, __unix_insert_socket.isra.0, always_delete_dentry, atime_needs_update, cgroup_sk_alloc, current_time, d_add, d_alloc, d_alloc_parallel, d_set_d_op, dentry_free, down_read, dput, filename_lookup, generic_permission, get_max_files, getname_kernel, inode_permission, kern_path, kmem_cache_alloc_lru, legitimize_links, legitimize_root, link_path_walk.part.0, lookup_fast, mntput, mntput_no_expire, move_addr_to_kernel.part.0, nd_jump_root, path_init, path_lookupat.isra.0, putname, restore_nameidata, security_inode_follow_link, security_inode_permission, selinux_inode_follow_link, selinux_inode_permission, selinux_socket_connect_helper.isra.0, set_root, simple_lookup, sk_alloc, sk_destruct, skb_dequeue, skb_queue_purge, sock_init_data, sock_wmalloc, step_into, terminate_walk, timestamp_truncate, try_to_unlazy, unix_create1, unix_find_other, unix_release_sock, unix_sock_destructor, unix_stream_connect, unix_write_space, up_read, walk_component]
+    wget-0.txt: total funcs: 382; not profiled: 81/382 (21.2%) [___d_drop, __d_alloc, __d_drop.part.0, __d_lookup_unhash, __d_rehash, __dentry_kill, __inode_security_revalidate, __legitimize_mnt, __legitimize_path.isra.0, __lookup_mnt, __lookup_slow, __sk_free, __slab_alloc.isra.0, __tcp_send_ack.part.0, __unix_insert_socket.isra.0, _get_random_bytes.part.0, always_delete_dentry, atime_needs_update, cgroup_sk_alloc, current_time, d_add, d_alloc, d_alloc_parallel, d_set_d_op, dentry_free, down_read, dput, ep_autoremove_wake_function, ep_poll_callback, filename_lookup, generic_permission, get_max_files, getname_kernel, inode_permission, ip_rcv_core.isra.0, ip_rcv_finish_core.isra.0, kern_path, kmem_cache_alloc_lru, legitimize_links, legitimize_root, link_path_walk.part.0, lookup_fast, mntput, mntput_no_expire, move_addr_to_kernel.part.0, nd_jump_root, path_init, path_lookupat.isra.0, putname, restore_nameidata, rt_set_nexthop.constprop.0, security_inode_follow_link, security_inode_permission, selinux_inode_follow_link, selinux_inode_permission, selinux_ip_postroute_compat.isra.0, selinux_parse_skb.constprop.0, selinux_socket_connect_helper.isra.0, set_root, simple_lookup, sk_alloc, sk_destruct, skb_dequeue, skb_queue_purge, sock_init_data, sock_wmalloc, step_into, tcp_ack_update_rtt.isra.0, terminate_walk, timestamp_truncate, try_to_unlazy, unix_create1, unix_find_other, unix_release_sock, unix_sock_destructor, unix_stream_connect, unix_write_space, up_read, update_cfs_rq_h_load, validate_xmit_skb.isra.0, walk_component]
+    unqlite-0.txt: total funcs: NA; 
+43:accept
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+44:sendto
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 183; not profiled: 13/183 (7.1%) [__tcp_send_ack.part.0, __wake_up_sync_key, ep_autoremove_wake_function, ep_poll_callback, get_task_policy.part.0, ip_rcv_core.isra.0, ip_rcv_finish_core.isra.0, selinux_ip_postroute_compat.isra.0, selinux_parse_skb.constprop.0, tcp_ack_update_rtt.isra.0, tcp_rearm_rto.part.0, tcp_small_queue_check.isra.0, validate_xmit_skb.isra.0]
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+45:recvfrom
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 48; not profiled: 16/48 (33.3%) [__folio_alloc, __get_vma_policy, __handle_mm_fault, __mod_node_page_state, __page_set_anon_rmap, find_vma, folio_add_lru, folio_add_lru_vma, folio_batch_add_and_move, get_task_policy.part.0, get_vma_policy.part.0, handle_mm_fault, lru_cache_add_inactive_or_unevictable, page_add_new_anon_rmap, up_read, vma_alloc_folio]
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: 22; not profiled: 0/22 (0.0%) []
+    unqlite-0.txt: total funcs: NA; 
+46:sendmsg
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+47:recvmsg
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+48:shutdown
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+49:bind
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+50:listen
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+51:getsockname
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 14; not profiled: 0/14 (0.0%) []
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+52:getpeername
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 15; not profiled: 0/15 (0.0%) []
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+53:socketpair
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 69; not profiled: 3/69 (4.3%) [__slab_alloc.isra.0, __unix_insert_socket.isra.0, d_instantiate.part.0]
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+54:setsockopt
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 22; not profiled: 0/22 (0.0%) []
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+55:getsockopt
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 10; not profiled: 0/10 (0.0%) []
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+56:clone
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: 152; not profiled: 0/152 (0.0%) []
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+57:fork
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+59:execve
+    cp-0.txt: total funcs: 624; not profiled: 35/624 (5.6%) [__es_tree_search.isra.0, __legitimize_path.isra.0, __remove_shared_vm_struct.isra.0, __slab_alloc.isra.0, _get_random_bytes.part.0, acct_arg_size.isra.0, alloc_new_pud.isra.0, blk_mq_plug_issue_direct.constprop.0, blk_mq_rq_ctx_init.isra.0, can_vma_merge_after.isra.0, check_nnp_nosuid.isra.0, count.constprop.0, crng_reseed_interval.part.0, delayed_uprobe_remove.part.0, do_mas_align_munmap.constprop.0, enter_lazy_tlb, ext4_inode_csum.isra.0, filemap_readahead.isra.0, find_inode_fast.isra.0, free_pages.part.0, free_unref_page_prepare.part.0, get_task_policy.part.0, get_vma_policy.part.0, kmem_cache_free_bulk.part.0, link_path_walk.part.0, mm_init.isra.0, move_page_tables.part.0, preallocate_pmds.constprop.0, rebalance_domains, run_rebalance_domains, save_fpregs_to_fpstate, should_fail_bio.isra.0, vring_map_single.constprop.0, vring_unmap_one_split_indirect.part.0, xfd_validate_state]
+    curl-0.txt: total funcs: 397; not profiled: 19/397 (4.8%) [__legitimize_path.isra.0, __remove_shared_vm_struct.isra.0, _get_random_bytes.part.0, acct_arg_size.isra.0, alloc_new_pud.isra.0, can_vma_merge_after.isra.0, check_nnp_nosuid.isra.0, count.constprop.0, delayed_uprobe_remove.part.0, do_mas_align_munmap.constprop.0, free_pages.part.0, free_unref_page_prepare.part.0, get_task_policy.part.0, get_vma_policy.part.0, kmem_cache_free_bulk.part.0, link_path_walk.part.0, mm_init.isra.0, move_page_tables.part.0, preallocate_pmds.constprop.0]
+    ls-0.txt: total funcs: 410; not profiled: 24/410 (5.9%) [__legitimize_path.isra.0, __remove_shared_vm_struct.isra.0, __slab_alloc.isra.0, _get_random_bytes.part.0, acct_arg_size.isra.0, alloc_new_pud.isra.0, can_vma_merge_after.isra.0, check_nnp_nosuid.isra.0, count.constprop.0, delayed_uprobe_remove.part.0, do_mas_align_munmap.constprop.0, folio_activate, folio_activate_fn, free_pages.part.0, free_unref_page_prepare.part.0, get_task_policy.part.0, get_vma_policy.part.0, kmem_cache_free_bulk.part.0, link_path_walk.part.0, mm_init.isra.0, move_page_tables.part.0, preallocate_pmds.constprop.0, rebalance_domains, run_rebalance_domains]
+    tar-0.txt: total funcs: 632; not profiled: 37/632 (5.9%) [__d_free, __es_tree_search.isra.0, __legitimize_path.isra.0, __remove_shared_vm_struct.isra.0, __slab_alloc.isra.0, _get_random_bytes.part.0, acct_arg_size.isra.0, alloc_new_pud.isra.0, blk_mq_plug_issue_direct.constprop.0, blk_mq_rq_ctx_init.isra.0, can_vma_merge_after.isra.0, check_nnp_nosuid.isra.0, count.constprop.0, delayed_uprobe_remove.part.0, do_mas_align_munmap.constprop.0, enter_lazy_tlb, ext4_inode_csum.isra.0, filemap_readahead.isra.0, find_inode_fast.isra.0, free_page_and_swap_cache, free_pages.part.0, free_uid, free_unref_page_prepare.part.0, get_task_policy.part.0, get_vma_policy.part.0, kmem_cache_free_bulk.part.0, link_path_walk.part.0, mm_init.isra.0, move_page_tables.part.0, preallocate_pmds.constprop.0, put_ucounts, save_fpregs_to_fpstate, security_cred_free, should_fail_bio.isra.0, vring_map_single.constprop.0, vring_unmap_one_split_indirect.part.0, xfd_validate_state]
+    wget-0.txt: total funcs: 402; not profiled: 20/402 (5.0%) [__legitimize_path.isra.0, __remove_shared_vm_struct.isra.0, __slab_alloc.isra.0, _get_random_bytes.part.0, acct_arg_size.isra.0, alloc_new_pud.isra.0, can_vma_merge_after.isra.0, check_nnp_nosuid.isra.0, count.constprop.0, delayed_uprobe_remove.part.0, do_mas_align_munmap.constprop.0, free_pages.part.0, free_unref_page_prepare.part.0, get_task_policy.part.0, get_vma_policy.part.0, kmem_cache_free_bulk.part.0, link_path_walk.part.0, mm_init.isra.0, move_page_tables.part.0, preallocate_pmds.constprop.0]
+    unqlite-0.txt: total funcs: 413; not profiled: 27/413 (6.5%) [__free_slab, __legitimize_path.isra.0, __remove_shared_vm_struct.isra.0, __slab_alloc.isra.0, _get_random_bytes.part.0, acct_arg_size.isra.0, alloc_new_pud.isra.0, can_vma_merge_after.isra.0, check_nnp_nosuid.isra.0, count.constprop.0, d_same_name, delayed_uprobe_remove.part.0, discard_slab, do_mas_align_munmap.constprop.0, free_pages.part.0, free_slab, free_unref_page_prepare.part.0, get_task_policy.part.0, get_vma_policy.part.0, handle_dots, kmem_cache_free_bulk.part.0, link_path_walk.part.0, mm_init.isra.0, move_page_tables.part.0, preallocate_pmds.constprop.0, rebalance_domains, run_rebalance_domains]
+61:wait4
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: 44; not profiled: 3/44 (6.8%) [enter_lazy_tlb, save_fpregs_to_fpstate, xfd_validate_state]
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+62:kill
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+72:fcntl
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 6; not profiled: 0/6 (0.0%) []
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: 6; not profiled: 0/6 (0.0%) []
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+73:flock
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+74:fsync
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+75:fdatasync
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+76:truncate
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+77:ftruncate
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+78:getdents
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+79:getcwd
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+80:chdir
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+81:fchdir
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+82:rename
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+83:mkdir
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+84:rmdir
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+85:creat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+86:link
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+87:unlink
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+88:symlink
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+89:readlink
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+90:chmod
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+91:fchmod
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+92:chown
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+93:fchown
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+94:lchown
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+95:umask
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+96:gettimeofday
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+97:getrlimit
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+98:getrusage
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+99:sysinfo
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 6; not profiled: 0/6 (0.0%) []
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+100:times
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+101:ptrace
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+102:getuid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: 1; not profiled: 1/1 (100.0%) [__do_sys_getuid]
+    unqlite-0.txt: total funcs: NA; 
+103:syslog
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+104:getgid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+105:setuid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+106:setgid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+107:geteuid
+    cp-0.txt: total funcs: 1; not profiled: 1/1 (100.0%) [__do_sys_geteuid]
+    curl-0.txt: total funcs: 1; not profiled: 1/1 (100.0%) [__do_sys_geteuid]
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+108:getegid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+109:setpgid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+110:getppid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+111:getpgrp
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: 2; not profiled: 2/2 (100.0%) [__do_sys_getpgrp, pid_vnr]
+    unqlite-0.txt: total funcs: NA; 
+113:setreuid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+114:setregid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+115:getgroups
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+116:setgroups
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+117:setresuid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+118:getresuid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+119:setresgid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+120:getresgid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+121:getpgid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+122:setfsuid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+123:setfsgid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+124:getsid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+125:capget
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+126:capset
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+128:rt_sigtimedwait
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+129:rt_sigqueueinfo
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+130:rt_sigsuspend
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+131:sigaltstack
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+135:personality
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+136:ustat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+137:statfs
+    cp-0.txt: total funcs: 61; not profiled: 10/61 (16.4%) [__legitimize_path.isra.0, __traverse_mounts, kernfs_dop_revalidate, kernfs_iop_permission, kernfs_refresh_inode, link_path_walk.part.0, lookup_mnt, path_lookupat.isra.0, set_nlink, simple_statfs]
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: 61; not profiled: 10/61 (16.4%) [__legitimize_path.isra.0, __traverse_mounts, kernfs_dop_revalidate, kernfs_iop_permission, kernfs_refresh_inode, link_path_walk.part.0, lookup_mnt, path_lookupat.isra.0, set_nlink, simple_statfs]
+    tar-0.txt: total funcs: 61; not profiled: 10/61 (16.4%) [__legitimize_path.isra.0, __traverse_mounts, kernfs_dop_revalidate, kernfs_iop_permission, kernfs_refresh_inode, link_path_walk.part.0, lookup_mnt, path_lookupat.isra.0, set_nlink, simple_statfs]
+    wget-0.txt: total funcs: 39; not profiled: 4/39 (10.3%) [__legitimize_path.isra.0, handle_dots, link_path_walk.part.0, path_lookupat.isra.0]
+    unqlite-0.txt: total funcs: NA; 
+138:fstatfs
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+139:sysfs
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+140:getpriority
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+141:setpriority
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+142:sched_setparam
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+143:sched_getparam
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+144:sched_setscheduler
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+145:sched_getscheduler
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+146:sched_get_priority_max
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+147:sched_get_priority_min
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+148:sched_rr_get_interval
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+149:mlock
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+150:munlock
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+151:mlockall
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+152:munlockall
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+155:pivot_root
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+157:prctl
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+158:arch_prctl
+    cp-0.txt: total funcs: 3; not profiled: 0/3 (0.0%) []
+    curl-0.txt: total funcs: 3; not profiled: 0/3 (0.0%) []
+    ls-0.txt: total funcs: 3; not profiled: 0/3 (0.0%) []
+    tar-0.txt: total funcs: 3; not profiled: 0/3 (0.0%) []
+    wget-0.txt: total funcs: 3; not profiled: 0/3 (0.0%) []
+    unqlite-0.txt: total funcs: 3; not profiled: 0/3 (0.0%) []
+159:adjtimex
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+161:chroot
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+162:sync
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+163:acct
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+165:mount
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+167:swapon
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+168:swapoff
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+169:reboot
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+170:sethostname
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+172:iopl
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+173:ioperm
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+176:delete_module
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+179:quotactl
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+186:gettid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+187:readahead
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+188:setxattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+190:fsetxattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+191:getxattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: 57; not profiled: 9/57 (15.8%) [__legitimize_path.isra.0, ext4_get_acl, get_acl, get_cached_acl, handle_dots, link_path_walk.part.0, path_lookupat.isra.0, posix_acl_xattr_get, set_root]
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+192:lgetxattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: 65; not profiled: 7/65 (10.8%) [__legitimize_path.isra.0, __slab_free, handle_dots, link_path_walk.part.0, path_lookupat.isra.0, put_cpu_partial, set_root]
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+193:fgetxattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+194:listxattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+195:llistxattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+196:flistxattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+197:removexattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+198:lremovexattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+199:fremovexattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+200:tkill
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+202:futex
+    cp-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    curl-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    ls-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    tar-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    wget-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    unqlite-0.txt: total funcs: NA; 
+203:sched_setaffinity
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+204:sched_getaffinity
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+206:io_setup
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+207:io_destroy
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+208:io_getevents
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+209:io_submit
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+210:io_cancel
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+213:epoll_create
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+216:remap_file_pages
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+218:set_tid_address
+    cp-0.txt: total funcs: 2; not profiled: 0/2 (0.0%) []
+    curl-0.txt: total funcs: 2; not profiled: 0/2 (0.0%) []
+    ls-0.txt: total funcs: 2; not profiled: 0/2 (0.0%) []
+    tar-0.txt: total funcs: 2; not profiled: 0/2 (0.0%) []
+    wget-0.txt: total funcs: 2; not profiled: 0/2 (0.0%) []
+    unqlite-0.txt: total funcs: 2; not profiled: 0/2 (0.0%) []
+222:timer_create
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+223:timer_settime
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+224:timer_gettime
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+225:timer_getoverrun
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+226:timer_delete
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+227:clock_settime
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+228:clock_gettime
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+229:clock_getres
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+230:clock_nanosleep
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+231:exit_group
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+232:epoll_wait
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+233:epoll_ctl
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+234:tgkill
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+240:mq_open
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+241:mq_unlink
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+242:mq_timedsend
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+243:mq_timedreceive
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+244:mq_notify
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+247:waitid
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+248:add_key
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+249:request_key
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+250:keyctl
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+257:openat
+    cp-0.txt: total funcs: 205; not profiled: 9/205 (4.4%) [cap_capable, capable_wrt_inode_uidgid, cred_has_capability, ext4_inode_attach_jinode.part.0, ext4_inode_csum.isra.0, find_inode_bit.isra.0, ns_capable_common, security_capable, selinux_capable]
+    curl-0.txt: total funcs: 219; not profiled: 11/219 (5.0%) [cap_capable, capable_wrt_inode_uidgid, cred_has_capability, d_lru_add, ext4_inode_attach_jinode.part.0, ext4_inode_csum.isra.0, find_inode_bit.isra.0, list_lru_add, ns_capable_common, security_capable, selinux_capable]
+    ls-0.txt: total funcs: 82; not profiled: 0/82 (0.0%) []
+    tar-0.txt: total funcs: 97; not profiled: 0/97 (0.0%) []
+    wget-0.txt: total funcs: 212; not profiled: 9/212 (4.2%) [cap_capable, capable_wrt_inode_uidgid, cred_has_capability, ext4_inode_attach_jinode.part.0, ext4_inode_csum.isra.0, find_inode_bit.isra.0, ns_capable_common, security_capable, selinux_capable]
+    unqlite-0.txt: total funcs: 72; not profiled: 0/72 (0.0%) []
+258:mkdirat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+259:mknodat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+260:fchownat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+261:futimesat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+262:newfstatat
+    cp-0.txt: total funcs: 79; not profiled: 1/79 (1.3%) [__d_free]
+    curl-0.txt: total funcs: 51; not profiled: 1/51 (2.0%) [__lookup_mnt]
+    ls-0.txt: total funcs: 51; not profiled: 1/51 (2.0%) [__lookup_mnt]
+    tar-0.txt: total funcs: 51; not profiled: 1/51 (2.0%) [__lookup_mnt]
+    wget-0.txt: total funcs: 86; not profiled: 7/86 (8.1%) [__lookup_mnt, atime_needs_update, current_time, security_inode_follow_link, selinux_inode_follow_link, shmem_getattr, timestamp_truncate]
+    unqlite-0.txt: total funcs: 37; not profiled: 0/37 (0.0%) []
+263:unlinkat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+264:renameat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+265:linkat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+266:symlinkat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+267:readlinkat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+268:fchmodat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+271:ppoll
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+272:unshare
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+273:set_robust_list
+    cp-0.txt: total funcs: 1; not profiled: 0/1 (0.0%) []
+    curl-0.txt: total funcs: 1; not profiled: 0/1 (0.0%) []
+    ls-0.txt: total funcs: 1; not profiled: 0/1 (0.0%) []
+    tar-0.txt: total funcs: 1; not profiled: 0/1 (0.0%) []
+    wget-0.txt: total funcs: 1; not profiled: 0/1 (0.0%) []
+    unqlite-0.txt: total funcs: 1; not profiled: 0/1 (0.0%) []
+274:get_robust_list
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+275:splice
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+276:tee
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+277:sync_file_range
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+278:vmsplice
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+280:utimensat
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: 89; not profiled: 15/89 (16.9%) [__fsnotify_parent, __legitimize_path.isra.0, add_transaction_credits, chksum_update, crypto_shash_update, ext4_inode_csum.isra.0, jbd2__journal_start, jbd2_journal_dirty_metadata, jbd2_journal_get_write_access, jbd2_journal_stop, jbd2_write_access_granted, link_path_walk.part.0, path_lookupat.isra.0, start_this_handle, stop_this_handle]
+    unqlite-0.txt: total funcs: NA; 
+281:epoll_pwait
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+285:fallocate
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+288:accept4
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+289:signalfd4
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+290:eventfd2
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+291:epoll_create1
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+292:dup3
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+293:pipe2
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: 47; not profiled: 0/47 (0.0%) []
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: 49; not profiled: 0/49 (0.0%) []
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+295:preadv
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+296:pwritev
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+297:rt_tgsigqueueinfo
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+298:perf_event_open
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+299:recvmmsg
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+303:name_to_handle_at
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+304:open_by_handle_at
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+305:clock_adjtime
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+306:syncfs
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+307:sendmmsg
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+308:setns
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+312:kcmp
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+314:sched_setattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+315:sched_getattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+316:renameat2
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+317:seccomp
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+318:getrandom
+    cp-0.txt: total funcs: 6; not profiled: 1/6 (16.7%) [crng_reseed_interval.part.0]
+    curl-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    ls-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    tar-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    wget-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+    unqlite-0.txt: total funcs: 5; not profiled: 0/5 (0.0%) []
+319:memfd_create
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+323:userfaultfd
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+324:membarrier
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+325:mlock2
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+326:copy_file_range
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+327:preadv2
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+328:pwritev2
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+332:statx
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: 124; not profiled: 69/124 (55.6%) [PageHeadHuge, ___slab_alloc, __alloc_pages, __brelse, __d_rehash, __ext4_check_dir_entry, __ext4_ext_check, __ext4_find_entry, __ext4_get_inode_loc, __ext4_get_inode_loc_noinmem, __ext4_iget, __filemap_get_folio, __getblk_gfp, __init_rwsem, __init_waitqueue_head, __legitimize_path.isra.0, __slab_alloc.isra.0, __wake_up_bit, alloc_inode, alloc_pages, chksum_update, crypto_shash_update, d_flags_for_inode, d_lru_add, d_splice_alias, ext4_alloc_inode, ext4_bread_batch, ext4_es_init_tree, ext4_es_lookup_extent, ext4_ext_check_inode, ext4_fc_init_inode, ext4_get_group_desc, ext4_getblk, ext4_init_pending_tree, ext4_inode_csum.isra.0, ext4_inode_table, ext4_search_dir, ext4_set_aops, ext4_set_inode_flags, find_inode_fast.isra.0, fixup_red_left, folio_mark_accessed, generic_set_encrypted_ci_d_ops, get_page_from_freelist, get_task_policy.part.0, inode_doinit_with_dentry, inode_init_always, inode_sb_list_add, inode_set_flags, is_bad_inode, link_path_walk.part.0, list_lru_add, mark_page_accessed, mempolicy_slab_node, mod_node_page_state, new_slab, pagecache_get_page, path_lookupat.isra.0, policy_node, policy_nodemask, prep_new_page, security_d_instantiate, security_inode_alloc, selinux_d_instantiate, selinux_inode_alloc_security, set_nlink, setup_object_debug, should_fail_alloc_page, wake_up_bit]
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+424:pidfd_send_signal
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+428:open_tree
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+429:move_mount
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+430:fsopen
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+431:fsconfig
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+432:fsmount
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+433:fspick
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+434:pidfd_open
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+435:clone3
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+436:close_range
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+437:openat2
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+438:pidfd_getfd
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+439:faccessat2
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 
+442:mount_setattr
+    cp-0.txt: total funcs: NA; 
+    curl-0.txt: total funcs: NA; 
+    ls-0.txt: total funcs: NA; 
+    tar-0.txt: total funcs: NA; 
+    wget-0.txt: total funcs: NA; 
+    unqlite-0.txt: total funcs: NA; 

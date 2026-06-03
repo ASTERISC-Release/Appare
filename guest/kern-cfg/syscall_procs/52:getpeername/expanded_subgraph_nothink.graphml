@@ -1,0 +1,456 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d3" for="edge" attr.name="inferred" attr.type="boolean" />
+  <key id="d2" for="edge" attr.name="indirect" attr.type="boolean" />
+  <key id="d1" for="node" attr.name="has_indirect" attr.type="boolean" />
+  <key id="d0" for="node" attr.name="profiled" attr.type="boolean" />
+  <graph edgedefault="directed">
+    <node id="__bad_area_nosemaphore">
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_socket_getsockname">
+      <data key="d0">True</data>
+    </node>
+    <node id="inet_getname">
+      <data key="d0">True</data>
+    </node>
+    <node id="unix_getname">
+      <data key="d0">True</data>
+    </node>
+    <node id="search_exception_tables">
+      <data key="d0">True</data>
+    </node>
+    <node id="default_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="kernelmode_fixup_or_oops">
+      <data key="d0">True</data>
+    </node>
+    <node id="__local_bh_enable_ip">
+      <data key="d0">True</data>
+    </node>
+    <node id="__sys_getpeername">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="find_vma">
+      <data key="d0">True</data>
+    </node>
+    <node id="unix_peer_get">
+      <data key="d0">True</data>
+    </node>
+    <node id="__cond_resched">
+      <data key="d0">True</data>
+    </node>
+    <node id="security_socket_getpeername">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="__wake_up">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="autoremove_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="move_addr_to_user">
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_socket_getpeername">
+      <data key="d0">True</data>
+    </node>
+    <node id="release_sock">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="__x64_sys_getpeername">
+      <data key="d0">True</data>
+    </node>
+    <node id="tcp_release_cb">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="select_task_rq_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="fixup_exception">
+      <data key="d0">True</data>
+    </node>
+    <node id="__fdget">
+      <data key="d0">True</data>
+    </node>
+    <node id="up_read">
+      <data key="d0">True</data>
+    </node>
+    <node id="bad_area">
+      <data key="d0">True</data>
+    </node>
+    <node id="search_module_extables" />
+    <node id="mod_find" />
+    <node id="fpu_reset_from_exception_fixup" />
+    <node id="restore_fpregs_from_fpstate" />
+    <node id="avc_has_perm" />
+    <node id="is_prefetch" />
+    <node id="page_fault_oops" />
+    <node id="__die" />
+    <node id="dump_pagetable" />
+    <node id="get_stack_info_noinstr" />
+    <node id="lookup_address_in_pgd" />
+    <node id="oops_begin" />
+    <node id="oops_end" />
+    <node id="_copy_to_user" />
+    <node id="__fget_files" />
+    <node id="fput" />
+    <node id="unhandled_signal" />
+    <node id="inet6_getname" />
+    <node id="netlink_getname" />
+    <node id="packet_getname" />
+    <node id="packet_getname_spkt" />
+    <node id="__ipv6_addr_type" />
+    <node id="strscpy" />
+    <node id="tcp_tsq_write" />
+    <node id="tcp_v4_mtu_reduced" />
+    <node id="tcp_v6_mtu_reduced" />
+    <node id="tcp_current_mss" />
+    <node id="tcp_write_xmit" />
+    <node id="tcp_xmit_retransmit_queue" />
+    <node id="dst_blackhole_mtu" />
+    <node id="inet_csk_update_pmtu" />
+    <node id="ipv4_mtu" />
+    <node id="tcp_simple_retransmit" />
+    <node id="tcp_sync_mss" />
+    <node id="xfrm_mtu" />
+    <node id="inet6_csk_update_pmtu" />
+    <node id="tcp_mtu_to_mss" />
+    <node id="__bitmap_weight" />
+    <node id="_find_first_bit" />
+    <node id="_find_next_and_bit" />
+    <node id="_find_next_bit" />
+    <node id="ip4_datagram_release_cb" />
+    <node id="ip6_datagram_release_cb" />
+    <node id="dst_release" />
+    <node id="ip_route_output_flow" />
+    <node id="ipv4_dst_check" />
+    <node id="security_sk_classify_flow" />
+    <node id="xfrm_dst_check" />
+    <node id="ip6_datagram_dst_update" />
+    <node id="aio_poll_wake" />
+    <node id="io_poll_wake" />
+    <node id="io_wake_function" />
+    <node id="kyber_domain_wake" />
+    <node id="p9_pollwake" />
+    <node id="percpu_rwsem_wake_function" />
+    <node id="pollwake" />
+    <node id="receiver_wake_function" />
+    <node id="wake_page_function" />
+    <node id="woken_wake_function" />
+    <node id="iocb_put" />
+    <node id="queue_work_on" />
+    <node id="__io_req_task_work_add" />
+    <node id="io_pollfree_wake" />
+    <node id="sbitmap_del_wait_queue" />
+    <node id="wake_up_state" />
+    <node id="__schedule" />
+    <node id="__delayacct_blkio_start" />
+    <node id="dequeue_task_dl" />
+    <node id="dequeue_task_fair" />
+    <node id="dequeue_task_rt" />
+    <node id="enter_lazy_tlb" />
+    <node id="finish_task_switch" />
+    <node id="perf_event_task_sched_out" />
+    <node id="pick_next_task_fair" />
+    <node id="set_next_task_dl" />
+    <node id="set_next_task_fair" />
+    <node id="set_next_task_rt" />
+    <node id="mt_find" />
+    <node id="mas_next_entry" />
+    <edge source="__bad_area_nosemaphore" target="kernelmode_fixup_or_oops">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__bad_area_nosemaphore" target="unhandled_signal">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="selinux_socket_getsockname" target="avc_has_perm">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="search_exception_tables" target="search_module_extables">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kernelmode_fixup_or_oops" target="fixup_exception">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kernelmode_fixup_or_oops" target="is_prefetch">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kernelmode_fixup_or_oops" target="page_fault_oops">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__sys_getpeername" target="__fdget">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sys_getpeername" target="inet_getname">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__sys_getpeername" target="move_addr_to_user">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sys_getpeername" target="security_socket_getpeername">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sys_getpeername" target="unix_getname">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__sys_getpeername" target="inet6_getname">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__sys_getpeername" target="netlink_getname">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__sys_getpeername" target="packet_getname">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__sys_getpeername" target="packet_getname_spkt">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="find_vma" target="mt_find">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__cond_resched" target="__schedule">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_socket_getpeername" target="selinux_socket_getpeername">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="security_socket_getpeername" target="selinux_socket_getsockname">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="autoremove_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="default_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="aio_poll_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_poll_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="kyber_domain_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="p9_pollwake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="percpu_rwsem_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="pollwake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="receiver_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="wake_page_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="woken_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="autoremove_wake_function" target="default_wake_function">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="move_addr_to_user" target="_copy_to_user">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="release_sock" target="tcp_release_cb">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="release_sock" target="ip4_datagram_release_cb">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="release_sock" target="ip6_datagram_release_cb">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__x64_sys_getpeername" target="__sys_getpeername">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="tcp_release_cb" target="tcp_tsq_write">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_release_cb" target="tcp_v4_mtu_reduced">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_release_cb" target="tcp_v6_mtu_reduced">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="__bitmap_weight">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_first_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_next_and_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_next_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="fixup_exception" target="search_exception_tables">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="fixup_exception" target="fpu_reset_from_exception_fixup">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__fdget" target="__fget_files">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="bad_area" target="__bad_area_nosemaphore">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="bad_area" target="up_read">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="search_module_extables" target="mod_find">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="fpu_reset_from_exception_fixup" target="restore_fpregs_from_fpstate">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="__die">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="dump_pagetable">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="get_stack_info_noinstr">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="lookup_address_in_pgd">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="oops_begin">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="oops_end">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__fget_files" target="fput">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inet6_getname" target="__ipv6_addr_type">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="packet_getname_spkt" target="strscpy">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_tsq_write" target="tcp_current_mss">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_tsq_write" target="tcp_write_xmit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_tsq_write" target="tcp_xmit_retransmit_queue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_v4_mtu_reduced" target="dst_blackhole_mtu">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_v4_mtu_reduced" target="inet_csk_update_pmtu">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_v4_mtu_reduced" target="ipv4_mtu">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_v4_mtu_reduced" target="tcp_simple_retransmit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_v4_mtu_reduced" target="tcp_sync_mss">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_v4_mtu_reduced" target="xfrm_mtu">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_v6_mtu_reduced" target="inet6_csk_update_pmtu">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_v6_mtu_reduced" target="tcp_mtu_to_mss">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ip4_datagram_release_cb" target="dst_release">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ip4_datagram_release_cb" target="ip_route_output_flow">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ip4_datagram_release_cb" target="ipv4_dst_check">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ip4_datagram_release_cb" target="security_sk_classify_flow">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ip4_datagram_release_cb" target="xfrm_dst_check">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ip6_datagram_release_cb" target="ip6_datagram_dst_update">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="iocb_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="queue_work_on">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_poll_wake" target="__io_req_task_work_add">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_poll_wake" target="io_pollfree_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kyber_domain_wake" target="sbitmap_del_wait_queue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="wake_page_function" target="wake_up_state">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="__delayacct_blkio_start">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="dequeue_task_dl">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="dequeue_task_fair">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="dequeue_task_rt">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="enter_lazy_tlb">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="finish_task_switch">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="perf_event_task_sched_out">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="pick_next_task_fair">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="set_next_task_dl">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="set_next_task_fair">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="set_next_task_rt">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="mt_find" target="mas_next_entry">
+      <data key="d3">True</data>
+    </edge>
+  </graph>
+</graphml>

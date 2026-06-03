@@ -1,0 +1,3297 @@
+Subgraph has 2973 nodes and 3042 edges.
+Markdown tree representation:
+- policy_nodemask <profiled>
+- sync_mm_rss <profiled>
+- update_dl_rq_load_avg <profiled>
+- filemap_fdatawrite_wbc <profiled>
+  - inode_to_bdi <profiled>
+    - I_BDEV
+- skb_copy_datagram_iter <profiled>
+  - __skb_datagram_iter <profiled>
+    - simple_copy_to_iter <profiled>
+- cpus_share_cache <profiled>
+- ext4_fc_track_range <profiled>
+- ext4_es_insert_extent <profiled>
+  - __es_insert_extent <profiled>
+    - ext4_es_free_extent <profiled>
+    - kmem_cache_alloc <profiled>
+      - should_failslab <profiled>
+  - __es_remove_extent <profiled>
+    - count_rsvd
+- enqueue_task_fair <profiled>
+  - enqueue_entity
+- ext4_ext_insert_extent <profiled>
+  - __brelse <profiled>
+  - __ext4_handle_dirty_metadata <profiled>
+    - jbd2_journal_dirty_metadata <profiled>
+      - __jbd2_journal_file_buffer <profiled>
+        - __jbd2_journal_temp_unlink_buffer <profiled>
+          - mark_buffer_dirty
+            - page_mapping
+        - jbd2_journal_grab_journal_head <profiled>
+    - __ext4_error_inode
+    - inode_needs_sync
+    - mark_buffer_dirty_inode
+    - sync_dirty_buffer
+      - __sync_dirty_buffer
+  - __ext4_journal_get_write_access <profiled>
+    - jbd2_journal_get_write_access <profiled>
+      - do_get_write_access <profiled>
+        - jbd2_journal_cancel_revoke <profiled>
+        - jiffies_to_msecs <profiled>
+        - out_of_line_wait_on_bit
+          - __wait_on_bit
+      - jbd2_journal_add_journal_head <profiled>
+        - kmem_cache_alloc <profiled>
+          - should_failslab <profiled>
+      - jbd2_journal_put_journal_head <profiled>
+    - jbd2_journal_set_triggers
+  - __getblk_gfp <profiled>
+    - grow_dev_page
+      - alloc_buffer_head
+      - init_page_buffers
+      - try_to_free_buffers
+  - __kmalloc <profiled>
+    - __kmem_cache_alloc_node <profiled>
+    - __kmalloc_large_node
+  - ext4_ext_correct_indexes <profiled>
+  - ext4_find_extent <profiled>
+  - __ext4_journal_get_create_access
+    - jbd2_journal_get_create_access
+  - ext4_ext_try_to_merge
+    - ext4_ext_try_to_merge_right
+- ext4_mb_mark_diskspace_used <profiled>
+  - __brelse <profiled>
+  - __ext4_handle_dirty_metadata <profiled>
+    - jbd2_journal_dirty_metadata <profiled>
+      - __jbd2_journal_file_buffer <profiled>
+        - __jbd2_journal_temp_unlink_buffer <profiled>
+          - mark_buffer_dirty
+            - page_mapping
+        - jbd2_journal_grab_journal_head <profiled>
+    - __ext4_error_inode
+    - inode_needs_sync
+    - mark_buffer_dirty_inode
+    - sync_dirty_buffer
+      - __sync_dirty_buffer
+  - __ext4_journal_get_write_access <profiled>
+    - jbd2_journal_get_write_access <profiled>
+      - do_get_write_access <profiled>
+        - jbd2_journal_cancel_revoke <profiled>
+        - jiffies_to_msecs <profiled>
+        - out_of_line_wait_on_bit
+          - __wait_on_bit
+      - jbd2_journal_add_journal_head <profiled>
+        - kmem_cache_alloc <profiled>
+          - should_failslab <profiled>
+      - jbd2_journal_put_journal_head <profiled>
+    - jbd2_journal_set_triggers
+  - ext4_free_group_clusters <profiled>
+  - ext4_free_group_clusters_set <profiled>
+  - ext4_get_group_desc <profiled>
+  - ext4_group_desc_csum_set <profiled>
+    - ext4_group_desc_csum <profiled>
+      - crypto_shash_update <profiled>
+        - chksum_update <profiled>
+        - crypto_sha256_update
+          - sha256_update
+        - crypto_sha512_update
+        - ghash_update
+          - gf128mul_4k_lle
+        - md5_update
+          - md5_transform
+      - crc16
+- netif_skb_features <profiled>
+  - skb_network_protocol <profiled>
+  - passthru_features_check
+  - rtl8169_features_check
+- tcp_retransmit_skb <profiled>
+  - __tcp_retransmit_skb <profiled>
+    - inet_sk_rebuild_header <profiled>
+      - __sk_dst_check <profiled>
+        - ipv4_dst_check <profiled>
+        - dst_blackhole_check
+        - ip6_dst_check
+        - xfrm_dst_check
+      - ip_route_output_key_hash
+    - tcp_current_mss <profiled>
+      - ipv4_mtu <profiled>
+      - tcp_sync_mss
+      - tcp_v4_md5_lookup
+      - tcp_v6_md5_lookup
+        - __tcp_md5_do_lookup
+    - tcp_rate_skb_sent <profiled>
+    - __pskb_copy_fclone
+      - skb_zerocopy_clone
+    - __skb_unclone_keeptruesize
+    - inet6_sk_rebuild_header
+      - fl6_update_dst
+      - ip6_dst_lookup_flow
+    - tcp_adjust_pcount
+    - tcp_fragment
+      - skb_split
+      - tcp_stream_alloc_skb
+    - tcp_trim_head
+      - __pskb_trim_head
+- wake_up_process <profiled>
+- blkcg_iolatency_throttle <profiled>
+  - __wake_up <profiled>
+    - autoremove_wake_function <profiled>
+      - default_wake_function <profiled>
+    - ep_autoremove_wake_function <profiled>
+    - ep_poll_callback <profiled>
+    - aio_poll_wake
+      - iocb_put
+    - child_wait_callback
+    - i915_sw_fence_wake
+    - io_wake_function
+    - iocg_wake_fn
+    - p9_pollwake
+    - percpu_rwsem_wake_function
+    - receiver_wake_function
+    - synchronous_wake_function
+    - unix_dgram_peer_wake_relay
+    - wake_bit_function
+    - wake_page_function
+      - wake_up_state
+    - woken_wake_function
+- ___slab_alloc <profiled>
+  - alloc_debug_processing
+  - deactivate_slab
+  - get_partial_node
+  - slab_out_of_memory
+- generic_exec_single <profiled>
+  - page_frag_free <profiled>
+    - free_unref_page
+      - __free_one_page
+      - free_pcp_prepare
+      - free_unref_page_commit
+  - apply_microcode_local
+    - apply_microcode_amd
+    - apply_microcode_intel
+    - x86_family
+  - flush_tlb_func
+  - nfs4_delegreturn_release
+    - nfs_refresh_inode
+- alloc_pages <profiled>
+  - __alloc_pages <profiled>
+    - get_page_from_freelist <profiled>
+      - __cpuset_node_allowed
+      - __next_zones_zonelist
+      - rmqueue
+        - rmqueue_pcplist
+      - zone_watermark_ok
+    - __alloc_pages_slowpath
+      - compaction_zonelist_suitable
+      - cpuset_nodemask_valid_mems_allowed
+      - out_of_memory
+      - try_to_free_pages
+      - wake_all_kswapds
+      - warn_alloc
+- __mark_inode_dirty <profiled>
+  - ext4_dirty_inode <profiled>
+    - __ext4_journal_start_sb <profiled>
+      - jbd2__journal_start <profiled>
+        - kmem_cache_alloc <profiled>
+          - should_failslab <profiled>
+        - start_this_handle <profiled>
+          - finish_wait <profiled>
+          - __jbd2_log_wait_for_space
+            - __jbd2_update_log_tail
+            - jbd2_journal_abort
+            - jbd2_log_do_checkpoint
+    - __ext4_journal_stop <profiled>
+      - jbd2_journal_stop <profiled>
+        - stop_this_handle <profiled>
+        - jbd2_log_start_commit
+        - jbd2_log_wait_commit
+          - init_wait_entry
+          - prepare_to_wait_event
+        - schedule_hrtimeout
+      - __ext4_std_error
+    - __ext4_mark_inode_dirty <profiled>
+      - ext4_mark_iloc_dirty <profiled>
+        - __brelse <profiled>
+        - __ext4_handle_dirty_metadata <profiled>
+          - jbd2_journal_dirty_metadata <profiled>
+            - __jbd2_journal_file_buffer <profiled>
+              - __jbd2_journal_temp_unlink_buffer <profiled>
+                - mark_buffer_dirty
+                  - page_mapping
+              - jbd2_journal_grab_journal_head <profiled>
+          - __ext4_error_inode
+          - inode_needs_sync
+          - mark_buffer_dirty_inode
+          - sync_dirty_buffer
+            - __sync_dirty_buffer
+        - __ext4_journal_get_write_access <profiled>
+          - jbd2_journal_get_write_access <profiled>
+            - do_get_write_access <profiled>
+              - jbd2_journal_cancel_revoke <profiled>
+              - jiffies_to_msecs <profiled>
+              - out_of_line_wait_on_bit
+                - __wait_on_bit
+            - jbd2_journal_add_journal_head <profiled>
+            - jbd2_journal_put_journal_head <profiled>
+          - jbd2_journal_set_triggers
+        - ext4_fc_track_inode <profiled>
+          - ext4_inode_journal_mode <profiled>
+        - ext4_fill_raw_inode <profiled>
+          - ext4_inode_csum
+      - ext4_reserve_inode_write <profiled>
+        - __ext4_get_inode_loc <profiled>
+          - __getblk_gfp <profiled>
+            - grow_dev_page
+              - alloc_buffer_head
+              - init_page_buffers
+              - try_to_free_buffers
+          - blk_finish_plug <profiled>
+          - blk_start_plug <profiled>
+          - ext4_get_group_desc <profiled>
+          - ext4_inode_table <profiled>
+          - __wait_on_buffer
+          - ext4_inode_bitmap
+          - ext4_itable_unused_count
+          - ext4_read_bh_nowait
+          - ext4_sb_breadahead_unmovable
+      - up_write <profiled>
+      - __ext4_expand_extra_isize
+        - dquot_initialize_needed
+        - ext4_expand_extra_isize_ea
+  - inode_to_bdi <profiled>
+    - I_BDEV
+  - wb_wakeup_delayed
+- mix_interrupt_randomness <profiled>
+  - blake2s_update <profiled>
+  - _credit_init_bits
+    - crng_reseed
+    - execute_in_process_context
+- task_sched_runtime <profiled>
+  - update_curr_fair <profiled>
+- update_rt_rq_load_avg <profiled>
+- get_random_u32 <profiled>
+- skb_release_data <profiled>
+  - page_frag_free <profiled>
+    - free_unref_page
+      - __free_one_page
+      - free_pcp_prepare
+      - free_unref_page_commit
+- ext4_mb_use_preallocated <profiled>
+  - ext4_get_group_no_and_offset <profiled>
+  - ext4_mb_use_inode_pa
+- schedule <profiled>
+  - __blk_flush_plug <profiled>
+    - blk_mq_flush_plug_list <profiled>
+      - virtio_queue_rqs
+        - virtblk_prep_rq
+    - blk_mq_free_plug_rqs
+      - blk_mq_free_request
+- sock_recvmsg <profiled>
+  - inet_recvmsg <profiled>
+    - tcp_recvmsg <profiled>
+      - put_cmsg
+      - tcp_recv_timestamp
+        - put_cmsg_scm_timestamping
+        - put_cmsg_scm_timestamping64
+    - udp_recvmsg
+      - __sk_queue_drop_skb
+      - __skb_checksum_complete
+      - __skb_recv_udp
+      - __sock_recv_cmsgs
+      - ip_recv_error
+      - skb_consume_udp
+      - skb_copy_and_csum_datagram_msg
+  - security_socket_recvmsg <profiled>
+    - selinux_socket_recvmsg <profiled>
+      - avc_has_perm <profiled>
+- __cond_resched <profiled>
+  - __schedule
+    - __delayacct_blkio_start
+    - dequeue_task_dl
+    - dequeue_task_rt
+    - enter_lazy_tlb
+    - perf_event_task_sched_out
+    - set_next_task_dl
+- __alloc_skb <profiled>
+  - __kmalloc_node_track_caller <profiled>
+    - __kmem_cache_alloc_node <profiled>
+      - should_failslab <profiled>
+  - kmem_cache_alloc_node <profiled>
+  - ksize <profiled>
+    - __ksize <profiled>
+- nf_hook_slow <profiled>
+  - selinux_ip_output <profiled>
+    - netlbl_enabled <profiled>
+    - selinux_netlbl_skbuff_setsid
+      - netlbl_skbuff_setattr
+      - security_netlbl_sid_to_secattr
+  - selinux_ip_postroute <profiled>
+    - avc_has_perm <profiled>
+    - sel_netif_sid
+      - security_netif_sid
+    - sel_netnode_sid
+      - security_node_sid
+    - selinux_netlbl_skbuff_getsid
+      - netlbl_skbuff_getattr
+      - security_netlbl_secattr_to_sid
+    - selinux_parse_skb
+      - ipv6_skip_exthdr
+  - accept_all
+  - ipv4_confirm
+    - __nf_conntrack_confirm
+    - nf_confirm
+  - ipv4_conntrack_defrag
+  - ipv4_conntrack_in
+    - nf_conntrack_in
+  - ipv4_conntrack_local
+  - ipv6_confirm
+  - ipv6_conntrack_in
+  - ipv6_conntrack_local
+  - ipv6_defrag
+    - nf_ct_frag6_gather
+  - nf_nat_ipv4_pre_routing
+  - nf_queue
+  - selinux_ip_forward
+    - selinux_netlbl_err
+- tcp_cleanup_rbuf <profiled>
+  - __tcp_cleanup_rbuf <profiled>
+    - __tcp_select_window <profiled>
+    - tcp_send_ack <profiled>
+      - __tcp_send_ack
+- run_rebalance_domains <profiled>
+  - rebalance_domains <profiled>
+    - __msecs_to_jiffies <profiled>
+    - load_balance
+      - __bitmap_and
+      - __bitmap_subset
+      - detach_tasks
+      - need_active_balance
+      - stop_one_cpu_nowait
+- __note_gp_changes <profiled>
+- mark_page_accessed <profiled>
+  - folio_mark_accessed <profiled>
+    - folio_activate
+    - workingset_activation
+- filemap_write_and_wait_range <profiled>
+  - __filemap_fdatawait_range <profiled>
+    - __pagevec_release <profiled>
+      - lru_add_drain <profiled>
+        - lru_add_drain_cpu <profiled>
+          - folio_batch_move_lru <profiled>
+            - lru_add_fn <profiled>
+              - __mod_node_page_state <profiled>
+              - __mod_zone_page_state <profiled>
+              - folio_mapping <profiled>
+            - release_pages <profiled>
+              - PageHeadHuge <profiled>
+              - free_unref_page_list <profiled>
+              - mod_zone_page_state <profiled>
+            - lru_deactivate_file_fn
+            - lru_lazyfree_fn
+            - lru_move_tail_fn
+    - pagevec_lookup_range_tag <profiled>
+      - find_get_pages_range_tag <profiled>
+        - xas_find_marked
+    - wait_on_page_writeback <profiled>
+      - folio_wait_writeback <profiled>
+        - folio_wait_bit <profiled>
+          - folio_wait_bit_common
+            - __delayacct_thrashing_end
+            - __delayacct_thrashing_start
+  - do_writepages <profiled>
+    - blk_finish_plug <profiled>
+    - blk_start_plug <profiled>
+    - ext4_writepages <profiled>
+      - __ext4_journal_stop <profiled>
+        - jbd2_journal_stop <profiled>
+          - stop_this_handle <profiled>
+          - jbd2_log_start_commit
+          - jbd2_log_wait_commit
+            - init_wait_entry
+            - prepare_to_wait_event
+          - schedule_hrtimeout
+        - __ext4_std_error
+      - clear_page_dirty_for_io <profiled>
+        - folio_clear_dirty_for_io <profiled>
+          - folio_mkclean <profiled>
+            - folio_mapped <profiled>
+            - rmap_walk_anon
+              - anon_vma_interval_tree_iter_first
+              - anon_vma_interval_tree_iter_next
+              - folio_anon_vma
+              - invalid_migration_vma
+              - invalid_mkclean_vma
+              - page_mkclean_one
+              - remove_migration_pte
+              - try_to_migrate_one
+              - try_to_unmap_one
+            - rmap_walk_file
+              - vma_interval_tree_iter_first
+              - vma_interval_tree_iter_next
+          - inode_to_bdi <profiled>
+            - I_BDEV
+          - mod_node_page_state <profiled>
+      - down_write <profiled>
+        - __down_write_common
+      - ext4_alloc_io_end_vec <profiled>
+        - kmem_cache_alloc <profiled>
+          - should_failslab <profiled>
+      - ext4_bio_write_page <profiled>
+        - __folio_start_writeback <profiled>
+          - sb_mark_inode_writeback <profiled>
+          - xas_clear_mark
+          - xas_load
+          - xas_set_mark
+        - bio_add_page <profiled>
+        - bio_alloc_bioset <profiled>
+          - bio_associate_blkg <profiled>
+            - bio_associate_blkg_from_css <profiled>
+              - blkg_release
+            - kthread_blkcg <profiled>
+          - mempool_alloc <profiled>
+            - __ksize <profiled>
+            - finish_wait <profiled>
+            - io_schedule_timeout
+            - prepare_to_wait
+          - mempool_free
+        - set_page_writeback <profiled>
+        - end_page_writeback
+          - folio_end_writeback
+        - zero_user_segments
+      - ext4_init_io_end <profiled>
+      - ext4_inode_journal_mode <profiled>
+      - ext4_io_submit <profiled>
+      - ext4_io_submit_init <profiled>
+      - ext4_last_io_end_vec <profiled>
+      - ext4_put_io_end <profiled>
+        - ext4_release_io_end <profiled>
+          - ext4_finish_bio
+            - __filemap_set_wb_err
+            - errseq_set
+        - ext4_convert_unwritten_io_end_vec
+          - __ext4_journal_start_reserved
+      - ext4_put_io_end_defer <profiled>
+        - queue_work_on <profiled>
+      - filemap_get_folios <profiled>
+      - mpage_prepare_extent_to_map <profiled>
+        - mpage_process_page_bufs <profiled>
+        - __ext4_warning_inode
+      - mpage_release_unused_pages <profiled>
+        - up_write <profiled>
+      - tag_pages_for_writeback <profiled>
+        - xas_pause
+      - __ext4_msg
+      - ext4_destroy_inline_data
+      - generic_writepages
+        - write_cache_pages
+      - jbd2_journal_force_commit_nested
+        - __jbd2_journal_force_commit
+    - __wb_update_bandwidth
+    - blkdev_writepages
+    - fat_writepages
+      - mpage_writepages
+    - nfs_writepages
+      - nfs_pageio_complete
+      - nfs_pageio_init
+    - reclaim_throttle
+      - jiffies_to_usecs
+- __local_bh_enable_ip <profiled>
+- proc_task_name <profiled>
+  - __get_task_comm <profiled>
+    - strscpy_pad
+      - strscpy
+  - seq_printf <profiled>
+- skb_csum_hwoffload_help <profiled>
+- bvec_alloc <profiled>
+  - kmem_cache_alloc <profiled>
+    - should_failslab <profiled>
+  - mempool_alloc <profiled>
+    - __ksize <profiled>
+    - finish_wait <profiled>
+    - io_schedule_timeout
+    - prepare_to_wait
+- pfifo_fast_dequeue <profiled>
+- find_vma <profiled>
+  - mt_find
+    - mas_next_entry
+- __x64_sys_read <profiled>
+  - ksys_read <profiled>
+    - __fdget_pos <profiled>
+      - __fget_files
+    - fput <profiled>
+    - vfs_read <profiled>
+      - __fsnotify_parent <profiled>
+        - __fsnotify_update_child_dentry_flags
+        - dget_parent
+        - release_dentry_name_snapshot
+        - take_dentry_name_snapshot
+      - __get_task_ioprio <profiled>
+      - ext4_file_read_iter <profiled>
+        - down_read <profiled>
+          - __down_read_common
+        - ext4_dio_alignment <profiled>
+          - ext4_inode_journal_mode <profiled>
+        - generic_file_read_iter <profiled>
+          - filemap_read <profiled>
+            - filemap_get_read_batch <profiled>
+              - __xas_next
+            - folio_add_lru <profiled>
+              - folio_batch_move_lru <profiled>
+                - lru_add_fn <profiled>
+                  - __mod_node_page_state <profiled>
+                  - __mod_zone_page_state <profiled>
+                  - folio_mapping <profiled>
+                - release_pages <profiled>
+                  - PageHeadHuge <profiled>
+                  - free_unref_page_list <profiled>
+                  - mod_zone_page_state <profiled>
+                - lru_deactivate_file_fn
+                - lru_lazyfree_fn
+                - lru_move_tail_fn
+            - folio_mark_accessed <profiled>
+              - folio_activate
+              - workingset_activation
+            - touch_atime <profiled>
+              - __mnt_drop_write <profiled>
+              - __mnt_want_write <profiled>
+              - atime_needs_update <profiled>
+                - current_time <profiled>
+              - __percpu_down_read
+                - percpu_rwsem_wait
+            - up_read <profiled>
+            - page_cache_sync_ra
+              - blk_cgroup_congested
+              - ondemand_readahead
+        - iomap_dio_rw <profiled>
+          - __iomap_dio_rw <profiled>
+            - blk_finish_plug <profiled>
+            - blk_start_plug <profiled>
+            - iomap_dio_bio_iter <profiled>
+              - bio_alloc_bioset <profiled>
+                - bio_associate_blkg <profiled>
+                  - bio_associate_blkg_from_css <profiled>
+                    - blkg_release
+                  - kthread_blkcg <profiled>
+                - kmem_cache_alloc <profiled>
+                  - should_failslab <profiled>
+                - mempool_alloc <profiled>
+                  - __ksize <profiled>
+                  - finish_wait <profiled>
+                  - io_schedule_timeout
+                  - prepare_to_wait
+                - mempool_free
+              - bio_iov_iter_get_pages
+                - __bio_iov_iter_get_pages
+                - iov_iter_advance
+              - bio_put
+              - bio_set_pages_dirty
+              - iomap_dio_zero
+              - iov_iter_is_aligned
+              - iov_iter_npages
+              - iov_iter_revert
+                - generic_pipe_buf_release
+                - page_cache_pipe_buf_release
+            - iomap_iter <profiled>
+              - ext4_iomap_begin <profiled>
+                - __ext4_journal_stop <profiled>
+                  - jbd2_journal_stop <profiled>
+                    - stop_this_handle <profiled>
+                    - jbd2_log_start_commit
+                    - jbd2_log_wait_commit
+                      - init_wait_entry
+                      - prepare_to_wait_event
+                    - schedule_hrtimeout
+                  - __ext4_std_error
+                - ext4_set_iomap
+              - ext4_iomap_end <profiled>
+              - ext4_iomap_begin_report
+                - ext4_es_find_extent_range
+                - ext4_inline_data_iomap
+              - ext4_iomap_overwrite_begin
+            - kmalloc_trace <profiled>
+              - __kmem_cache_alloc_node <profiled>
+            - _copy_from_iter
+            - blk_io_schedule
+          - iomap_dio_complete <profiled>
+            - wake_up_bit <profiled>
+            - ext4_dio_write_end_io
+              - ext4_convert_unwritten_extents
+            - invalidate_inode_pages2_range
+              - __filemap_remove_folio
+              - clear_shadow_entry
+              - filemap_release_folio
+              - find_get_entries
+              - folio_batch_remove_exceptionals
+              - nfs_launder_folio
+              - unmap_mapping_folio
+            - vfs_fsync_range
+              - ext4_sync_file
+              - fat_file_fsync
+              - nfs_file_fsync
+              - noop_fsync
+              - v9fs_file_fsync
+              - v9fs_file_fsync_dotl
+      - fsnotify <profiled>
+        - dnotify_handle_event
+        - fsnotify_compare_groups
+        - inotify_handle_inode_event
+          - fsnotify_destroy_event
+          - fsnotify_insert_event
+          - strcpy
+      - generic_read_dir <profiled>
+      - kernfs_fop_read_iter <profiled>
+        - __kmalloc <profiled>
+          - __kmalloc_large_node
+        - kernfs_get_active <profiled>
+        - kernfs_put_active <profiled>
+        - seq_read_iter <profiled>
+          - kernfs_seq_next <profiled>
+            - kernfs_seq_stop <profiled>
+              - seq_puts <profiled>
+              - single_stop <profiled>
+            - single_next <profiled>
+            - ac6_seq_next
+            - c_next
+              - seq_list_next
+            - cgroup_pidlist_next
+            - cgroup_procs_next
+            - dev_seq_next
+            - devinfo_next
+            - devinfo_seq_next
+            - disk_seqf_next
+            - ext4_mb_seq_groups_next
+            - ext4_mb_seq_structs_summary_next
+            - fib_route_seq_next
+            - if6_seq_next
+            - igmp6_mc_seq_next
+            - igmp6_mcf_seq_next
+            - igmp_mc_seq_next
+            - input_devices_seq_next
+            - input_handlers_seq_next
+            - int_seq_next
+            - ip6fl_seq_next
+            - jbd2_seq_info_next
+            - kprobe_blacklist_seq_next
+            - kprobe_seq_next
+            - m_next
+            - md_seq_next
+            - memtype_seq_next
+            - misc_seq_next
+            - mr_mfc_seq_next
+            - mr_vif_seq_next
+            - neigh_stat_seq_next
+            - nfs_server_list_next
+            - nfs_volume_list_next
+            - packet_seq_next
+            - pci_seq_next
+              - pci_get_device
+            - proc_key_users_next
+            - proc_keys_next
+            - proto_seq_next
+            - queue_requeue_list_next
+            - r_next
+            - rt_cache_seq_next
+            - rt_cpu_seq_next
+            - s_next
+            - schedstat_next
+            - scsi_seq_next
+            - sel_avc_stats_seq_next
+            - seq_next
+            - slab_debugfs_next
+            - slab_next
+            - softnet_seq_next
+            - svc_pool_stats_next
+            - t_next
+            - tcp_seq_next
+            - tty_ldiscs_seq_next
+            - udp_seq_next
+              - udp_get_first
+            - vmstat_next
+            - wakeup_sources_stats_seq_next
+            - xt_table_seq_next
+            - xt_target_seq_next
+              - xt_mttg_seq_next
+          - kernfs_seq_show <profiled>
+            - meminfo_proc_show <profiled>
+              - arch_report_meminfo <profiled>
+                - seq_printf <profiled>
+              - hugetlb_report_meminfo <profiled>
+              - pcpu_nr_pages <profiled>
+              - seq_put_decimal_ull_width <profiled>
+                - num_to_str
+                  - put_dec
+              - seq_write <profiled>
+              - si_mem_available <profiled>
+                - first_online_pgdat <profiled>
+                - next_zone <profiled>
+              - si_meminfo <profiled>
+              - si_swapinfo <profiled>
+              - vm_commit_limit <profiled>
+                - hugetlb_total_pages <profiled>
+              - vm_memory_committed <profiled>
+                - __percpu_counter_sum
+              - vmalloc_nr_pages <profiled>
+            - proc_single_show <profiled>
+              - get_pid_task <profiled>
+              - proc_tgid_stat <profiled>
+                - do_task_stat <profiled>
+                  - __get_task_comm <profiled>
+                    - strscpy_pad
+                      - strscpy
+                  - __task_pid_nr_ns <profiled>
+                  - get_task_mm <profiled>
+                  - mmput <profiled>
+                    - __mmput
+                      - __mmdrop
+                      - exit_aio
+                      - exit_mmap
+                      - module_put
+                  - pid_nr_ns <profiled>
+                  - ptrace_may_access <profiled>
+                    - __ptrace_may_access <profiled>
+                      - security_ptrace_access_check
+                        - cap_ptrace_access_check
+                        - selinux_ptrace_access_check
+                  - seq_put_decimal_ll <profiled>
+                  - seq_put_decimal_ull <profiled>
+                  - seq_putc <profiled>
+                  - task_prio <profiled>
+                  - task_vsize <profiled>
+                  - KSTK_ESP
+                  - put_pid
+                    - put_pid_ns
+                  - put_task_stack
+                  - tty_devnum
+                  - tty_get_pgrp
+              - proc_cgroup_show
+                - kernfs_path_from_node
+              - proc_cpuset_show
+                - cgroup_path_ns
+              - proc_oom_score
+                - oom_badness
+              - proc_pid_arch_status
+              - proc_pid_limits
+              - proc_pid_personality
+              - proc_pid_schedstat
+              - proc_pid_stack
+                - file_ns_capable
+                - stack_trace_save_tsk
+              - proc_pid_statm
+                - task_statm
+              - proc_pid_status
+                - cpuset_task_status_allowed
+                - seq_put_hex_ll
+                - task_mem
+              - proc_pid_syscall
+                - task_current_syscall
+              - proc_pid_wchan
+                - get_wchan
+                - lookup_symbol_name
+              - proc_tgid_io_accounting
+              - proc_tid_io_accounting
+              - proc_tid_stat
+            - sysfs_kf_seq_show <profiled>
+              - dev_attr_show <profiled>
+                - show_cpus_attr <profiled>
+                  - bitmap_print_to_pagebuf
+                    - scnprintf
+                - RP0_freq_mhz_dev_show
+                  - RP0_freq_mhz_show_common
+                - RP1_freq_mhz_dev_show
+                  - RP1_freq_mhz_show_common
+                - RPn_freq_mhz_dev_show
+                  - RPn_freq_mhz_show_common
+                - __cstate_core_event_show
+                - __uncore_ch_mask2_show
+                - __uncore_ch_mask_show
+                - __uncore_chmask_show
+                - __uncore_cmask5_show
+                - __uncore_cmask8_show
+                - __uncore_coreid_show
+                - __uncore_count_mode_show
+                - __uncore_counter_show
+                - __uncore_dsp_show
+                - __uncore_enallcores_show
+                - __uncore_enallslices_show
+                - __uncore_event12_show
+                - __uncore_event14_show
+                - __uncore_event14v2_show
+                - __uncore_event2_show
+                - __uncore_event5_show
+                - __uncore_event8_show
+                - __uncore_event_ext_show
+                - __uncore_event_show
+                - __uncore_fc_mask2_show
+                - __uncore_fc_mask_show
+                - __uncore_filter_all_op_show
+                - __uncore_filter_band0_show
+                - __uncore_filter_band1_show
+                - __uncore_filter_band2_show
+                - __uncore_filter_band3_show
+                - __uncore_filter_c6_show
+                - __uncore_filter_cfg_en_show
+                - __uncore_filter_cid_show
+                - __uncore_filter_isoc_show
+                - __uncore_filter_link2_show
+                - __uncore_filter_link3_show
+                - __uncore_filter_loc_show
+                - __uncore_filter_local_show
+                - __uncore_filter_mask_show
+                - __uncore_filter_match_show
+                - __uncore_filter_nc_show
+                - __uncore_filter_nid2_show
+                - __uncore_filter_nid_show
+                - __uncore_filter_nm_show
+                - __uncore_filter_nnm_show
+                - __uncore_filter_opc2_show
+                - __uncore_filter_opc3_show
+                - __uncore_filter_opc_0_show
+                - __uncore_filter_opc_1_show
+                - __uncore_filter_opc_show
+                - __uncore_filter_rem_show
+                - __uncore_filter_state3_show
+                - __uncore_filter_state4_show
+                - __uncore_filter_state5_show
+                - __uncore_filter_state_show
+                - __uncore_filter_tid2_show
+                - __uncore_filter_tid3_show
+                - __uncore_filter_tid4_show
+                - __uncore_filter_tid5_show
+                - __uncore_filter_tid_show
+                - __uncore_flag_mode_show
+                - __uncore_inc_sel_show
+                - __uncore_inv_show
+                - __uncore_iperf_cfg_show
+                - __uncore_iss_show
+                - __uncore_map_show
+                - __uncore_mask0_show
+                - __uncore_mask1_show
+                - __uncore_mask_dnid_show
+                - __uncore_mask_mc_show
+                - __uncore_mask_rds_show
+                - __uncore_mask_rnid30_show
+                - __uncore_mask_rnid4_show
+                - __uncore_mask_show
+                - __uncore_mask_vnw_show
+                - __uncore_match0_show
+                - __uncore_match1_show
+                - __uncore_match_dnid_show
+                - __uncore_match_mc_show
+                - __uncore_match_opc_show
+                - __uncore_match_rnid30_show
+                - __uncore_match_rnid4_show
+                - __uncore_match_show
+                - __uncore_match_vnw_show
+                - __uncore_occ_edge_det_show
+                - __uncore_occ_invert_show
+                - __uncore_occ_sel_show
+                - __uncore_pgt_show
+                - __uncore_pld_show
+                - __uncore_qlx_cfg_show
+                - __uncore_qor_show
+                - __uncore_set_flag_sel_show
+                - __uncore_sliceid_show
+                - __uncore_slicemask_show
+                - __uncore_storage_mode_show
+                - __uncore_thr_show
+                - __uncore_threadmask2_show
+                - __uncore_threadmask8_show
+                - __uncore_thresh5_show
+                - __uncore_thresh6_show
+                - __uncore_thresh8_show
+                - __uncore_thresh9_show
+                - __uncore_thresh_show
+                - __uncore_threshold_show
+                - __uncore_tid_en2_show
+                - __uncore_tid_en_show
+                - __uncore_umask12_show
+                - __uncore_umask8_show
+                - __uncore_umask_ext2_show
+                - __uncore_umask_ext3_show
+                - __uncore_umask_ext_show
+                - __uncore_umask_show
+                - __uncore_use_occ_ctr_show
+                - __uncore_wrap_mode_show
+                - __uncore_xbr_match_show
+                - __uncore_xbr_mm_cfg_show
+                - _iommu_cpumask_show
+                - _iommu_event_show
+                  - sprintf
+                - acpi_battery_alarm_show
+                - acpi_index_show
+                  - dsm_get_label
+                - act_freq_mhz_dev_show
+                  - act_freq_mhz_show_common
+                - active_count_show
+                - active_duration_show
+                - active_show
+                - active_time_ms_show
+                - actual_brightness_show
+                  - acpi_video_get_brightness
+                  - intel_backlight_device_get_brightness
+                - address_show
+                - addresses_show
+                - adr_show
+                - ahci_read_em_buffer
+                - ahci_show_em_supported
+                - ahci_show_host_cap2
+                - ahci_show_host_caps
+                - ahci_show_host_version
+                - ahci_show_port_cmd
+                - alias_show
+                  - uncore_get_alias_name
+                - allocation_policy_show
+                - amd_iommu_show_cap
+                - amd_iommu_show_features
+                - amd_uncore_attr_show_cpumask
+                - any_show
+                - app_tag_own_show
+                - ari_enabled_show
+                - assert_show
+                - ata_ncq_prio_enable_show
+                  - ata_scsi_find_dev
+                - ata_ncq_prio_supported_show
+                - ata_scsi_activity_show
+                  - ahci_activity_show
+                - ata_scsi_em_message_show
+                - ata_scsi_em_message_type_show
+                - ata_scsi_lpm_show
+                - ata_scsi_park_show
+                - atkbd_do_show_extra
+                - atkbd_do_show_force_release
+                - atkbd_do_show_function_row_physmap
+                - atkbd_do_show_scroll
+                - atkbd_do_show_set
+                - atkbd_do_show_softraw
+                - atkbd_do_show_softrepeat
+                - authorized_default_show
+                - authorized_show
+                - auto_remove_on_show
+                - autosuspend_delay_ms_show
+                - autosuspend_show
+                - available_cpufv_show
+                - available_policies_show
+                - avoid_reset_quirk_show
+                - bAlternateSetting_show
+                - bConfigurationValue_show
+                - bDeviceClass_show
+                - bDeviceProtocol_show
+                - bDeviceSubClass_show
+                - bEndpointAddress_show
+                - bInterfaceClass_show
+                - bInterfaceNumber_show
+                - bInterfaceProtocol_show
+                - bInterfaceSubClass_show
+                - bInterval_show
+                - bMaxPacketSize0_show
+                - bMaxPower_show
+                - bNumConfigurations_show
+                - bNumEndpoints_show
+                - bNumInterfaces_show
+                - bcdDevice_show
+                - bl_power_show
+                - boost_freq_mhz_dev_show
+                  - boost_freq_mhz_show_common
+                - boot_vga_show
+                  - vga_default_device
+                - branches_show
+                - brightness_show
+                - broadcast_show
+                - broken_parity_status_show
+                - busnum_show
+                - bytes_transferred_show
+                - cache_disable_0_show
+                  - pci_read_config_dword
+                - cache_disable_1_show
+                - cache_type_show
+                - camera_show
+                - cap_show
+                - card_id_show
+                - cardr_show
+                - carrier_changes_show
+                - carrier_down_count_show
+                - carrier_show
+                - carrier_up_count_show
+                - cccr_show
+                - chip_name_show
+                - class_show
+                - clear_show
+                - clkpm_show
+                - close_delay_show
+                - closing_wait_show
+                - cluster_id_show
+                - cnt_ctl_show
+                - coherency_line_size_show
+                - color_show
+                - companion_show
+                - configuration_show
+                - connect_type_show
+                - connected_duration_show
+                - consistent_dma_mask_bits_show
+                - console_show
+                - control_show
+                - core_id_show
+                - cpu_show_itlb_multihit
+                - cpu_show_l1tf
+                - cpu_show_mds
+                - cpu_show_meltdown
+                - cpu_show_mmio_stale_data
+                - cpu_show_retbleed
+                - cpu_show_spec_store_bypass
+                - cpu_show_spectre_v1
+                - cpu_show_spectre_v2
+                - cpu_show_srbds
+                - cpu_show_tsx_async_abort
+                - cpuaffinity_show
+                - cpufv_disabled_show
+                - cpufv_show
+                - cpulistaffinity_show
+                - cpumask_show
+                - crash_notes_show
+                  - per_cpu_ptr_to_phys
+                - crash_notes_size_show
+                - csource_show
+                - cstate_get_attr_cpumask
+                - cur_freq_mhz_dev_show
+                  - cur_freq_mhz_show_common
+                - cur_state_show
+                  - fan_get_cur_state
+                  - processor_get_cur_state
+                  - ps_get_cur_charge_cntl_limit
+                  - video_get_cur_state
+                - current_device_show
+                - current_link_speed_show
+                  - pci_speed_string
+                  - pcie_capability_read_word
+                - current_link_width_show
+                - custom_divisor_show
+                - d3cold_allowed_show
+                - dev_id_show
+                - dev_port_show
+                - dev_show
+                - device_show_bool
+                - device_show_int
+                - device_show_ulong
+                - devid_show
+                - devnum_show
+                - devpath_show
+                - die_id_show
+                - direction_show
+                - disable_show
+                  - usb_autopm_get_interface
+                  - usb_autopm_put_interface
+                  - usb_hub_port_status
+                  - usb_hub_to_struct_hub
+                  - usb_port_is_power_on
+                - disk_alignment_offset_show
+                  - bdev_alignment_offset
+                - disk_capability_show
+                - disk_discard_alignment_show
+                - disk_events_async_show
+                - disk_events_poll_msecs_show
+                - disk_events_show
+                - disk_ext_range_show
+                - disk_hidden_show
+                - disk_range_show
+                - disk_removable_show
+                - disk_ro_show
+                - diskseq_show
+                - dma_mask_bits_show
+                - dock_show
+                - docked_show
+                - domains_supported_show
+                - domains_used_show
+                  - __bitmap_weight
+                - domid_mask_show
+                - dormant_show
+                - dpms_show
+                  - drm_get_dpms_name
+                - driver_override_show
+                - driver_pin_configs_show
+                  - sysfs_emit_at
+                - ds4_show_poll_interval
+                - duplex_show
+                  - __ethtool_get_link_ksettings
+                - ecap_show
+                - echo_show
+                - edge_show
+                - enable_c02_show
+                - enable_show
+                - enabled_show
+                - energy_perf_bias_show
+                  - rdmsrl_on_cpu
+                - event_show
+                - events_ht_sysfs_show
+                - events_hybrid_sysfs_show
+                  - strchr
+                - events_sysfs_show
+                  - amd_event_sysfs_show
+                  - amd_pmu_event_map
+                  - intel_event_sysfs_show
+                  - intel_pmu_event_map
+                  - knc_pmu_event_map
+                  - p4_pmu_event_map
+                  - p6_pmu_event_map
+                  - strnlen
+                  - zhaoxin_pmu_event_map
+                - expensive_show
+                - expire_count_show
+                - extra_show
+                - extts_fifo_show
+                - fail_show
+                - fan1_input_show
+                - features_show
+                - firmware_id_show
+                - flags_show
+                - freeze_on_smi_show
+                - function_show
+                - get_attr_rdpmc
+                - gro_flush_timeout_show
+                - group_show
+                - guid_show
+                - hard_show
+                - horizontal_position_show
+                - hwmon_attr_show
+                  - power_supply_hwmon_read
+                - hwmon_attr_show_string
+                  - power_supply_hwmon_read_string
+                - i915_pmu_event_show
+                - i915_pmu_format_show
+                - iad_bFirstInterface_show
+                - iad_bInterfaceCount_show
+                - idVendor_show
+                - id_show
+                - ieee1284_id_show
+                - ifalias_show
+                  - dev_get_alias
+                - iflink_show
+                  - dev_get_iflink
+                - in_tx_cp_show
+                - in_tx_show
+                - in_use_show
+                - index_show
+                  - find_smbios_instance_string
+                - inhibited_show
+                - init_pin_configs_show
+                - input_dev_get_poll_interval
+                - input_dev_get_poll_max
+                - input_dev_get_poll_min
+                - input_dev_show_cap_abs
+                  - input_print_bitmap
+                - input_dev_show_cap_ev
+                - input_dev_show_cap_ff
+                - input_dev_show_cap_led
+                - input_dev_show_cap_msc
+                - input_dev_show_cap_rel
+                - input_dev_show_cap_snd
+                - input_dev_show_cap_sw
+                - input_dev_show_id_bustype
+                - input_dev_show_id_product
+                - input_dev_show_id_vendor
+                - input_dev_show_modalias
+                  - input_print_modalias
+                - input_dev_show_name
+                - input_dev_show_phys
+                - input_dev_show_properties
+                - input_dev_show_uniq
+                - instance_count_show
+                - intel_hybrid_get_attr_cpus
+                - interface_authorized_default_show
+                - interface_authorized_show
+                - interface_show
+                - interval_show
+                  - usb_decode_interval
+                - io_type_show
+                - iomem_base_show
+                - iomem_reg_shift_show
+                - l0s_aspm_show
+                - l1_1_aspm_show
+                - l1_1_pcipm_show
+                - l1_2_aspm_show
+                - l1_2_pcipm_show
+                - l1_aspm_show
+                - label_show
+                - last_change_ms_show
+                - ldlat_show
+                - level_show
+                - lg4ff_alternate_modes_show
+                - lg4ff_combine_show
+                - lg4ff_range_show
+                - lg4ff_real_id_show
+                - lid_show
+                - line_show
+                - link_mode_show
+                - local_cpulist_show
+                - local_cpus_show
+                - location_show
+                - ltm_capable_show
+                - macaddress_show
+                - manf_id_show
+                - manufacturer_show
+                - max_active_show
+                - max_brightness_show
+                - max_freq_mhz_dev_show
+                - max_link_speed_show
+                  - pcie_get_speed_cap
+                - max_link_width_show
+                  - pcie_get_width_cap
+                - max_medium_access_timeouts_show
+                - max_precise_show
+                - max_sectors_show
+                - max_state_show
+                - max_time_ms_show
+                - max_time_show
+                - max_user_freq_show
+                - maxchild_show
+                - mdio_bus_device_stat_field_show
+                - mdio_bus_stat_field_show
+                - media_rc6_residency_ms_dev_show
+                - memcpy_count_show
+                - mfg_show
+                - min_freq_mhz_dev_show
+                  - min_freq_mhz_show_common
+                - min_ratio_show
+                - modalias_show
+                - mode_show
+                - modelname_show
+                - modes_show
+                - msi_bus_show
+                - msi_mode_show
+                - mtc_period_show
+                - mtu_show
+                - n_ext_ts_show
+                - n_per_out_show
+                - n_pins_show
+                - name_assign_type_show
+                - name_show
+                - node_read_distance
+                  - __node_distance
+                - node_read_meminfo
+                  - hugetlb_report_node_meminfo
+                  - node_page_state
+                  - node_page_state_pages
+                  - si_meminfo_node
+                  - sum_zone_node_page_state
+                - node_read_numastat
+                  - fold_vm_numa_events
+                  - sum_zone_numa_event_state
+                - node_read_vmstat
+                - nodelist_show
+                - notify_id_show
+                - nr_addr_filters_show
+                - numa_node_show
+                - number_of_sets_show
+                - number_show
+                - object_id_show
+                - offcore_rsp_show
+                - offset_show
+                - online_show
+                - operstate_show
+                - options_show
+                  - pnp_option_priority_name
+                  - pnp_printf
+                - over_current_count_show
+                - p9_mount_tag_show
+                - panel_show
+                - part_alignment_offset_show
+                - part_discard_alignment_show
+                  - bdev_discard_alignment
+                - part_inflight_show
+                  - blk_mq_in_flight_rw
+                - part_partition_show
+                - part_ro_show
+                - part_size_show
+                - part_start_show
+                - part_stat_show
+                  - blk_mq_in_flight
+                  - part_stat_read_all
+                - pasid_mask_show
+                - pasid_show
+                - path_show
+                  - acpi_get_name
+                - pccard_show_card_pm_state
+                - pccard_show_resource
+                - pccard_show_type
+                - pccard_show_vcc
+                - pccard_show_voltage
+                - pccard_show_vpp
+                - pcm_class_show
+                - per_cpu_show
+                - perf_event_mux_interval_ms_show
+                - perf_event_sysfs_show
+                - persist_show
+                - persistent_show
+                - pf_show
+                - phy_dev_flags_show
+                - phy_has_fixups_show
+                - phy_standalone_show
+                - phys_port_id_show
+                  - dev_get_phys_port_id
+                - phys_port_name_show
+                  - dev_get_phys_port_name
+                - phys_switch_id_show
+                  - dev_get_port_parent_id
+                - physical_line_partition_show
+                - physical_package_id_show
+                - pm_qos_latency_tolerance_us_show
+                  - dev_pm_qos_get_user_latency_tolerance
+                - pm_qos_no_power_off_show
+                - pm_qos_resume_latency_us_show
+                - pm_state_show
+                - pmu_name_show
+                - pools_show
+                - port_show
+                - power_off_acct_show
+                  - snd_hda_update_power_acct
+                - power_on_acct_show
+                - power_state_show
+                - power_supply_show_property
+                  - power_supply_get_property
+                - pps_show
+                - prevent_suspend_time_ms_show
+                - print_cpu_modalias
+                - print_cpus_isolated
+                  - __bitmap_andnot
+                - print_cpus_kernel_max
+                - print_cpus_offline
+                - prod_id1_show
+                - prod_id2_show
+                - prod_id3_show
+                - prod_id4_show
+                - product_show
+                - protection_mode_show
+                - protection_type_show
+                - proto_show
+                - provisioning_mode_show
+                - psmouse_attr_show_helper
+                  - ps2pp_attr_show_smartscroll
+                  - psmouse_attr_show_protocol
+                  - psmouse_show_int_attr
+                  - synaptics_show_disable_gesture
+                  - trackpoint_show_int_attr
+                - pt_cap_show
+                - pt_timing_attr_show
+                - ptp_pin_show
+                - pwm1_enable_show
+                - pwm1_show
+                - pwr_evt_show
+                - quirks_show
+                - rand_en_show
+                - range_show
+                - rapl_get_attr_cpumask
+                - rc6_enable_dev_show
+                  - intel_gt_sysfs_get_drvdata
+                - rc6_residency_ms_dev_show
+                  - rc6_residency_ms_show_common
+                - rc6p_residency_ms_dev_show
+                  - rc6p_residency_ms_show_common
+                - rc6pp_residency_ms_dev_show
+                  - rc6pp_residency_ms_show_common
+                - read_ahead_kb_show
+                - real_power_state_show
+                  - acpi_device_get_power
+                - remapped_nvme_show
+                - removable_show
+                - reset_method_show
+                - resource0_resize_show
+                - resource1_resize_show
+                - resource2_resize_show
+                - resource3_resize_show
+                - resource4_resize_show
+                - resource_in_use_show
+                - resource_show
+                - resources_show
+                  - pnp_resource_type
+                  - pnp_resource_type_name
+                - revision_id_show
+                - revision_show
+                - rng_available_show
+                  - strlcat
+                - rng_current_show
+                - rng_quality_show
+                - rng_selected_show
+                - runtime_active_time_show
+                  - pm_runtime_active_time
+                - runtime_pm_show
+                - runtime_status_show
+                - runtime_suspended_time_show
+                  - pm_runtime_suspended_time
+                - rx_bytes_show
+                  - dev_get_stats
+                - rx_compressed_show
+                - rx_crc_errors_show
+                - rx_dropped_show
+                - rx_errors_show
+                - rx_fifo_errors_show
+                - rx_frame_errors_show
+                - rx_lanes_show
+                - rx_length_errors_show
+                - rx_missed_errors_show
+                - rx_over_errors_show
+                - rx_packets_show
+                - rx_trig_bytes_show
+                - scale_show
+                - sdev_show_blacklist
+                - sdev_show_evt_capacity_change_reported
+                - sdev_show_evt_inquiry_change_reported
+                - sdev_show_evt_media_change
+                - sdev_show_modalias
+                - sdev_show_model
+                - sdev_show_queue_depth
+                - sdev_show_queue_ramp_up_period
+                - sdev_show_scsi_level
+                - sdev_show_timeout
+                - sdev_show_vendor
+                - secondary_bus_number_show
+                  - pci_read_config_byte
+                - serial_show
+                - serio_show_bind_mode
+                - serio_show_description
+                - setable_show
+                - shared_cpu_list_show
+                - shared_cpu_map_show
+                - show_activate_slack
+                - show_activation_height
+                - show_activation_width
+                - show_ata_dev_class
+                - show_ata_dev_dma_mode
+                  - get_ata_xfer_names
+                - show_ata_dev_ering
+                  - ata_ering_map
+                - show_ata_dev_gscr
+                - show_ata_dev_id
+                - show_ata_dev_pio_mode
+                - show_ata_dev_spdn_cnt
+                - show_ata_dev_trim
+                - show_ata_dev_xfer_mode
+                - show_ata_link_hw_sata_spd_limit
+                  - sata_spd_string
+                - show_ata_link_sata_spd
+                - show_ata_link_sata_spd_limit
+                - show_ata_port_nr_pmp_links
+                - show_ata_port_port_no
+                - show_available_governors
+                - show_bank
+                - show_bind
+                - show_cmd_per_lun
+                - show_cons_active
+                  - hvc_console_device
+                  - uart_console_device
+                  - vt_console_device
+                - show_current_driver
+                - show_current_governor
+                - show_deactivate_slack
+                - show_fan_speed
+                - show_fine_grain_control
+                - show_host_busy
+                  - scsi_host_busy
+                - show_io_db
+                - show_iostat_iodone_cnt
+                - show_iostat_ioerr_cnt
+                - show_iostat_iorequest_cnt
+                - show_iostat_iotmo_cnt
+                - show_log_height
+                - show_log_width
+                - show_mem_db
+                - show_min_height
+                - show_min_width
+                - show_name
+                - show_node_state
+                - show_nr_hw_queues
+                - show_phys_height
+                - show_phys_width
+                - show_port_name
+                - show_shost_active_mode
+                - show_shost_eh_deadline
+                - show_shost_state
+                - show_shost_supported_mode
+                - show_spi_host_hba_id
+                - show_spi_host_signalling
+                - show_spi_host_width
+                - show_spi_transport_hold_mcs
+                - show_spi_transport_max_iu
+                - show_spi_transport_max_qas
+                - show_spi_transport_min_period
+                - show_spi_transport_pcomp_en
+                - show_spi_transport_period
+                - show_spi_transport_qas
+                - show_spi_transport_rd_strm
+                - show_spi_transport_rti
+                - show_spi_transport_wr_flow
+                - show_state
+                - show_state_field
+                - show_sysctl_tfa
+                - show_tty_active
+                - show_unique_id
+                - show_yenta_registers
+                - size_show
+                - skx_iio_mapping_show
+                - slope_show
+                - smbios_label_show
+                - soft_show
+                - sony_show_firmware_version
+                - sony_show_hardware_version
+                - speed_show
+                - stable_pages_required_show
+                - state_show
+                - state_synced_show
+                - states_show
+                - status_show
+                - subcaches_show
+                  - amd_get_subcaches
+                - subordinate_bus_number_show
+                - subsystem_device_show
+                - subsystem_vendor_show
+                - sun_show
+                - supports_autosuspend_show
+                - sustainable_power_show
+                - sync_state_only_show
+                - sys_dmi_field_show
+                  - dmi_get_system_info
+                - sys_dmi_modalias_show
+                - target_show
+                - temp_crit_show
+                - temp_input_show
+                - temp_show
+                - testing_show
+                - tg3_show_temp
+                  - tg3_ape_scratchpad_read
+                - therm_throt_device_show_core_power_limit_count
+                - therm_throt_device_show_core_throttle_count
+                - therm_throt_device_show_core_throttle_max_time_ms
+                - therm_throt_device_show_core_throttle_total_time_ms
+                - therm_throt_device_show_package_power_limit_count
+                - therm_throt_device_show_package_throttle_count
+                - therm_throt_device_show_package_throttle_max_time_ms
+                - therm_throt_device_show_package_throttle_total_time_ms
+                - thin_provisioning_show
+                - threaded_show
+                - time_show
+                - total_time_ms_show
+                - trip_point_hyst_show
+                - trip_point_temp_show
+                  - thermal_get_trip_temp
+                - trip_point_type_show
+                  - thermal_get_trip_type
+                - truinst_show
+                - tsc_show
+                - tx_aborted_errors_show
+                - tx_carrier_errors_show
+                - tx_dropped_show
+                - tx_errors_show
+                - tx_fifo_errors_show
+                - tx_heartbeat_errors_show
+                - tx_lanes_show
+                - tx_packets_show
+                - tx_queue_len_show
+                - tx_window_errors_show
+                - type_show
+                - uartclk_show
+                - uevent_show
+                - uframe_periodic_max_show
+                - uid_show
+                - umask_show
+                - uncore_event_show
+                - uncore_get_attr_cpumask
+                - urbnum_show
+                - usb2_hardware_lpm_show
+                - usb2_lpm_besl_show
+                - usb2_lpm_l1_timeout_show
+                - usb3_hardware_lpm_u1_show
+                - usb3_hardware_lpm_u2_show
+                - usb3_lpm_permit_show
+                - vendor_id_show
+                - vendor_name_show
+                - version_show
+                - vertical_position_show
+                - vlv_rpe_freq_mhz_dev_show
+                  - vlv_rpe_freq_mhz_show_common
+                - wMaxPacketSize_show
+                - waiting_for_supplier_show
+                - wakealarm_show
+                  - rtc_read_alarm
+                - wakeup_abort_count_show
+                - wakeup_active_count_show
+                - wakeup_active_show
+                - wakeup_count_show
+                  - pm_get_wakeup_count
+                - wakeup_expire_count_show
+                - wakeup_last_time_ms_show
+                - wakeup_max_time_ms_show
+                - wakeup_show
+                - wakeup_total_time_ms_show
+                - ways_of_associativity_show
+                - weight_show
+                - whole_disk_show
+                - wq_cpumask_show
+                - wq_nice_show
+                - wq_numa_show
+                - wq_pool_ids_show
+                - wq_unbound_cpumask_show
+                - write_policy_show
+                - xmit_fifo_size_show
+                - zeroing_mode_show
+                - zoned_cap_show
+              - acpi_data_node_attr_show
+                - data_node_show_path
+              - blk_ia_range_sysfs_show
+                - blk_ia_range_nr_sectors_show
+                - blk_ia_range_sector_show
+              - blk_mq_hw_sysfs_show
+                - blk_mq_hw_sysfs_cpus_show
+                - blk_mq_hw_sysfs_nr_reserved_tags_show
+                - blk_mq_hw_sysfs_nr_tags_show
+              - bus_attr_show
+                - drivers_autoprobe_show
+                - resource_alignment_show
+              - class_attr_show
+                - show_class_attr_string
+              - dm_attr_show
+                - dm_attr_name_show
+                - dm_attr_rq_based_seq_io_merge_deadline_show
+                - dm_attr_suspended_show
+                - dm_attr_use_blk_mq_show
+                - dm_attr_uuid_show
+                - dm_get_from_kobject
+                - dm_put
+              - drv_attr_show
+                - bind_mode_show
+                - new_id_show
+                - remove_id_show
+              - elv_attr_show
+                - deadline_fifo_batch_show
+                - deadline_front_merges_show
+                - deadline_prio_aging_expire_show
+                - deadline_writes_starved_show
+                - kyber_write_lat_show
+              - esre_attr_show
+                - fw_class_show
+                - fw_type_show
+                - fw_version_show
+                - last_attempt_status_show
+                - last_attempt_version_show
+                - lowest_supported_fw_version_show
+              - ext4_attr_show
+              - governor_show
+              - iommu_group_attr_show
+                - iommu_group_show_name
+                - iommu_group_show_resv_regions
+                - iommu_group_show_type
+              - kobj_attr_show
+                - RP0_freq_mhz_show
+                - RP1_freq_mhz_show
+                - RPn_freq_mhz_show
+                - act_freq_mhz_show
+                - actions_show
+                - all_caps_show
+                - caps_show
+                - config_table_show
+                - counter_show
+                - cpu_show
+                - cur_freq_mhz_show
+                - default_max_freq_mhz_show
+                - default_min_freq_mhz_show
+                - delegate_show
+                - demote_size_show
+                - disk_show
+                - failed_suspend_late_show
+                - failed_suspend_show
+                - force_remove_show
+                - force_show
+                - free_hugepages_show
+                - freq_factor_scale_show
+                - fscaps_show
+                - fw_platform_size_show
+                - fw_resource_count_max_show
+                - fw_resource_count_show
+                - fw_resource_version_show
+                - fw_vendor_show
+                - heartbeat_show
+                - image_size_show
+                - inst_show
+                - kexec_crash_loaded_show
+                - kexec_crash_size_show
+                - kexec_loaded_show
+                - last_failed_dev_show
+                - last_failed_errno_show
+                - last_failed_step_show
+                - max_freq_mhz_show
+                - max_spin_show
+                - media_RP0_freq_mhz_show
+                - media_RPn_freq_mhz_show
+                - media_freq_factor_show
+                - media_rc6_residency_ms_show
+                - mem_sleep_show
+                - min_freq_mhz_show
+                - mmio_show
+                - nfs_netns_identifier_show
+                - nr_hugepages_mempolicy_show
+                - nr_hugepages_show
+                - nr_overcommit_hugepages_show
+                - numa_demotion_enabled_show
+                - oops_count_show
+                - per_cpu_count_show
+                - pm_async_show
+                - pm_debug_messages_show
+                - pm_freeze_timeout_show
+                - pm_print_times_show
+                - pm_profile_show
+                - pm_test_show
+                - pm_trace_dev_match_show
+                - pm_trace_show
+                - profiling_show
+                - punit_req_freq_mhz_show
+                - rc6_enable_show
+                - rc6_residency_ms_show
+                - rc6p_residency_ms_show
+                - rc6pp_residency_ms_show
+                - reserved_size_show
+                - resume_offset_show
+                - resume_show
+                - resv_hugepages_show
+                - rpc_sysfs_xprt_dstaddr_show
+                - rpc_sysfs_xprt_info_show
+                - rpc_sysfs_xprt_srcaddr_show
+                - rpc_sysfs_xprt_state_show
+                - rpc_sysfs_xprt_switch_info_show
+                - show_boost
+                - show_dynamic_id
+                - show_energy_efficiency
+                - show_feedback_ctrs
+                - show_highest_perf
+                - show_hwp_dynamic_boost
+                - show_lowest_freq
+                - show_max_perf_pct
+                - show_min_perf_pct
+                - show_no_turbo
+                - show_num_pstates
+                - show_reference_perf
+                - show_status
+                - show_turbo_pct
+                - surplus_hugepages_show
+                - sync_on_suspend_show
+                - systab_show
+                - throttle_reason_bool_show
+                - timeslice_show
+                - uevent_seqnum_show
+                - vlv_rpe_freq_mhz_show
+                - vma_ra_enabled_show
+                - vmcoreinfo_show
+                - warn_count_show
+              - map_attr_show
+                - num_pages_show
+                - phys_addr_show
+                - virt_addr_show
+              - md_attr_show
+                - can_clear_show
+                - chunk_size_show
+                - consistency_policy_show
+                - fail_last_dev_show
+                - last_sync_action_show
+                - max_corrected_read_errors_show
+                - metadata_show
+                - raid_disks_show
+                - reshape_direction_show
+                - resync_start_show
+                - serialize_policy_show
+                - sync_completed_show
+                - timeout_show
+              - memmap_attr_show
+                - start_show
+              - module_attr_show
+                - __modver_version_show
+                - param_attr_show
+                - show_coresize
+                - show_initsize
+                - show_initstate
+                - show_modinfo_srcversion
+                - show_modinfo_version
+                - show_refcnt
+                - show_taint
+              - netdev_queue_attr_show
+                - bql_show_hold_time
+                - bql_show_inflight
+                - bql_show_limit_max
+                - bql_show_limit_min
+                - traffic_class_show
+                - tx_maxrate_show
+                - tx_timeout_show
+                - xps_cpus_show
+                - xps_rxqs_show
+              - pci_slot_attr_show
+                - address_read_file
+                - attention_read_file
+                - cur_speed_read_file
+                - latch_read_file
+                - max_speed_read_file
+                - power_read_file
+                - presence_read_file
+              - rdev_attr_show
+                - bb_show
+                - errors_show
+                - new_offset_show
+                - ppl_sector_show
+                - ppl_size_show
+                - recovery_start_show
+              - rx_queue_attr_show
+                - mergeable_rx_buffer_size_show
+                - show_rps_dev_flow_table_cnt
+                - show_rps_map
+              - show
+              - slab_attr_show
+                - aliases_show
+                - align_show
+                - cache_dma_show
+                - cpu_partial_show
+                - cpu_slabs_show
+                - ctor_show
+                - hwcache_align_show
+                - min_partial_show
+                - object_size_show
+                - objects_partial_show
+                - objects_show
+                - objs_per_slab_show
+                - order_show
+                - partial_show
+                - poison_show
+                - reclaim_account_show
+                - red_zone_show
+                - remote_node_defrag_ratio_show
+                - sanity_checks_show
+                - shrink_show
+                - slab_size_show
+                - slabs_cpu_partial_show
+                - slabs_show
+                - store_user_show
+                - total_objects_show
+                - trace_show
+                - usersize_show
+                - validate_show
+              - widget_attr_show
+                - amp_in_caps_show
+                - amp_out_caps_show
+                - connections_show
+                - gpio_caps_show
+                - pcm_caps_show
+                - pcm_formats_show
+                - pin_caps_show
+                - pin_cfg_show
+                - power_caps_show
+            - ac6_seq_show
+            - acpi_button_state_seq_show
+            - arp_seq_show
+            - bdi_debug_stats_show
+              - wb_calc_thresh
+            - blk_mq_debugfs_rq_show
+              - __blk_mq_debugfs_rq_show
+            - blkcg_print_stat
+              - cgroup_rstat_flush
+              - ioc_pd_stat
+            - c_show
+              - crypto_acomp_show
+              - crypto_aead_show
+              - crypto_ahash_show
+              - crypto_akcipher_show
+              - crypto_rng_show
+              - crypto_shash_show
+              - crypto_skcipher_show
+            - cgroup_controllers_show
+            - cgroup_css_links_read
+            - cgroup_events_show
+            - cgroup_freeze_show
+            - cgroup_masks_read
+            - cgroup_max_depth_show
+            - cgroup_max_descendants_show
+            - cgroup_pidlist_show
+            - cgroup_procs_show
+            - cgroup_release_agent_show
+            - cgroup_sane_behavior_show
+            - cgroup_stat_show
+            - cgroup_subsys_states_read
+            - cgroup_subtree_control_show
+            - cgroup_type_show
+            - cmdline_proc_show
+            - cn_proc_show
+            - comm_show
+            - component_devices_show
+            - connector_show
+              - drm_get_connector_force_name
+            - cpu_stat_show
+              - cpu_extra_stat_show
+            - cpuset_common_seq_show
+            - crc_control_show
+              - intel_crtc_get_crc_sources
+              - intel_crtc_verify_crc_source
+            - cur_wm_latency_show
+              - wm_latency_show
+            - current_css_set_read
+            - debugfs_regset32_show
+            - default_affinity_show
+            - deferred_devs_show
+            - dev_mc_seq_show
+            - dev_seq_show
+            - devcgroup_seq_show
+            - devinfo_seq_show
+            - devinfo_show
+              - blkdev_show
+              - chrdev_show
+            - diskstats_show
+            - dma_buf_debug_show
+              - dma_resv_describe
+            - dmaengine_summary_show
+            - drm_client_debugfs_internal_clients
+              - drm_printf
+            - drm_clients_info
+              - drm_is_current_master
+              - pid_task
+              - pid_vnr
+            - drm_gem_name_info
+              - idr_for_each
+            - drm_name_info
+            - drm_state_info
+              - __drm_state_dump
+            - drpc_show
+              - intel_runtime_pm_get
+              - intel_runtime_pm_put_unchecked
+            - engines_show
+              - intel_engine_dump
+            - execdomains_proc_show
+            - ext4_fc_info_show
+            - ext4_mb_seq_groups_show
+              - ext4_mb_unload_buddy
+            - ext4_mb_seq_structs_summary_show
+            - ext4_seq_es_shrinker_info_show
+            - ext4_seq_mb_stats_show
+            - ext4_seq_options_show
+              - _ext4_show_options
+            - fib_route_seq_show
+              - seq_pad
+            - fib_trie_seq_show
+            - filesystems_proc_show
+            - freezer_read
+              - css_next_descendant_post
+              - update_if_frozen
+            - fw_domains_show
+            - guc_info_show
+              - drm_puts
+              - intel_guc_ads_print_policy_info
+              - intel_guc_ct_print_info
+              - intel_guc_load_status
+              - intel_guc_log_info
+              - intel_guc_submission_print_info
+            - guc_load_err_log_dump_show
+              - intel_guc_log_dump
+            - guc_log_dump_show
+            - guc_registered_contexts_show
+              - intel_guc_submission_print_context_info
+            - guc_slpc_info_show
+              - intel_guc_slpc_print_info
+            - hid_debug_rdesc_show
+              - down_interruptible
+              - hid_dump_device
+              - hid_resolv_usage
+              - up
+            - huc_info_show
+              - intel_huc_load_status
+            - hugetlb_cgroup_read_numa_stat
+              - css_next_descendant_pre
+            - hugetlb_cgroup_read_u64_max
+            - hugetlb_events_local_show
+            - i915_capabilities
+              - i915_params_dump
+              - i915_print_iommu_status
+              - intel_device_info_print
+              - intel_driver_caps_print
+              - intel_gt_info_print
+            - i915_current_bpc_show
+            - i915_ddb_info
+            - i915_displayport_test_active_show
+              - drm_connector_list_iter_begin
+              - drm_connector_list_iter_end
+              - drm_connector_list_iter_next
+            - i915_displayport_test_data_show
+            - i915_displayport_test_type_show
+            - i915_dp_mst_info
+              - drm_dp_mst_dump_topology
+              - intel_dp_mst_source_support
+            - i915_drrs_status
+              - intel_drrs_is_active
+              - intel_drrs_type_str
+              - intel_panel_drrs_type
+            - i915_dsc_bpc_show
+            - i915_dsc_fec_support_show
+              - drm_modeset_acquire_fini
+              - drm_modeset_acquire_init
+              - drm_modeset_backoff
+              - intel_dp_is_edp
+            - i915_edp_psr_status
+              - intel_psr_status
+            - i915_engine_info
+              - intel_gt_get_awake_time
+              - intel_gt_show_timelines
+            - i915_frequency_info
+              - intel_gt_pm_frequency_dump
+            - i915_frontbuffer_tracking
+            - i915_gem_framebuffer_info
+              - i915_debugfs_describe_obj
+            - i915_gem_object_info
+              - intel_memory_region_debug
+            - i915_hdcp_sink_capability_show
+              - intel_hdcp2_capable
+            - i915_hpd_short_storm_ctl_show
+            - i915_hpd_storm_ctl_show
+              - flush_delayed_work
+              - flush_work
+            - i915_ips_status
+            - i915_lpsp_capability_show
+            - i915_lpsp_status
+            - i915_opregion
+            - i915_panel_show
+            - i915_param_charp_show
+            - i915_param_int_show
+            - i915_param_uint_show
+            - i915_power_domain_info
+              - intel_display_power_debug
+            - i915_psr_sink_status_show
+              - drm_dp_dpcd_read
+            - i915_psr_status_show
+            - i915_rps_boost_info
+              - intel_gpu_freq
+              - intel_rps_read_actual_frequency
+            - i915_runtime_pm_status
+            - i915_shared_dplls_info
+            - i915_sr_status
+              - intel_display_power_get
+            - i915_sseu_status
+              - intel_sseu_status
+            - i915_swizzle_info
+            - i915_vbt
+            - i915_wa_registers
+            - if6_seq_show
+            - igmp6_mc_seq_show
+            - igmp6_mcf_seq_show
+            - igmp_mcf_seq_show
+            - input_devices_seq_show
+              - input_seq_print_bitmap
+              - kobject_get_path
+            - input_handlers_seq_show
+            - intel_dmc_debugfs_status_show
+            - intel_fbc_debugfs_status_show
+              - g4x_fbc_is_compressing
+              - i8xx_fbc_is_compressing
+              - ilk_fbc_is_compressing
+            - ioc_cost_model_show
+              - blkcg_print_blkgs
+            - ioc_qos_show
+            - ioc_weight_show
+            - iolatency_print_limit
+            - ip6fl_seq_show
+            - ipmr_mfc_seq_show
+            - ipmr_vif_seq_show
+            - ipv6_route_seq_show
+            - jbd2_seq_info_show
+            - kprobe_blacklist_seq_show
+              - kallsyms_show_value
+            - llc_show
+            - loadavg_proc_show
+              - get_avenrun
+              - nr_running
+            - m_show
+              - module_flags
+            - md_seq_show
+              - md_bitmap_status
+            - memtype_seq_show
+            - misc_cg_capacity_show
+            - misc_cg_current_show
+            - misc_cg_max_show
+            - misc_events_show
+            - misc_seq_show
+            - mtrr_seq_show
+              - generic_get_mtrr
+            - neigh_stat_seq_show
+            - netstat_seq_show
+              - snmp_fold_field
+            - nfs_server_list_show
+              - rpc_peeraddr2str
+            - nfs_volume_list_show
+            - ntp_servers_show
+            - nvram_proc_read
+              - rtc_cmos_read
+            - output_bpc_show
+            - packet_seq_show
+              - sock_i_ino
+              - sock_i_uid
+            - pagetypeinfo_show
+              - walk_zones_in_node
+            - pids_events_show
+            - pids_max_show
+            - ping_v4_seq_show
+            - ping_v6_seq_show
+              - __ip6_dgram_sock_seq_show
+            - pnp_seq_show
+            - port_debugfs_show
+            - pri_wm_latency_show
+            - proc_dma_show
+            - proc_key_users_show
+            - proc_keys_show
+              - asymmetric_key_describe
+              - dns_resolver_describe
+              - key_task_permission
+              - keyring_describe
+              - request_key_auth_describe
+              - user_describe
+            - prof_cpu_mask_proc_show
+            - proto_seq_show
+            - psched_show
+            - ptype_seq_show
+            - r_show
+            - raw6_seq_show
+            - rbtree_show
+            - rdmacg_resource_read
+            - read_priomap
+            - regmap_access_show
+              - regmap_precious
+              - regmap_readable
+              - regmap_volatile
+              - regmap_writeable
+            - rpc_proc_show
+            - rps_boost_show
+              - intel_uncore_forcewake_get
+              - intel_uncore_forcewake_put
+            - rt6_stats_seq_show
+            - rt_cache_seq_show
+            - rt_cpu_seq_show
+            - rtc_proc_show
+              - cmos_procfs
+            - s_show
+            - sched_partition_show
+            - scsi_seq_show
+              - scsi_device_type
+            - sel_avc_stats_seq_show
+            - seq_show
+              - dma_buf_show_fdinfo
+              - ep_show_fdinfo
+              - eventfd_show_fdinfo
+              - i915_drm_client_fdinfo
+              - inotify_show_fdinfo
+              - io_uring_show_fdinfo
+              - pidfd_show_fdinfo
+              - signalfd_show_fdinfo
+              - sock_show_fdinfo
+              - tty_show_fdinfo
+            - sg_proc_seq_show_devhdr
+            - sg_proc_seq_show_devstrs
+              - idr_find
+            - sg_proc_seq_show_int
+            - sg_proc_seq_show_version
+            - show_console_dev
+            - show_cpuinfo
+            - show_device
+              - pci_dev_driver
+            - show_interrupts
+              - arch_show_interrupts
+            - show_kprobe_addr
+              - kallsyms_lookup
+              - report_probe
+            - show_map
+              - show_map_vma
+            - show_numa_map
+              - __mpol_put
+              - mpol_to_str
+              - seq_file_path
+              - vma_kernel_pagesize
+              - walk_page_vma
+            - show_partition
+            - show_schedstat
+            - show_smap
+              - __show_smap
+            - show_smaps_rollup
+              - show_vma_header_prefix
+            - show_stat
+              - nr_iowait
+            - show_tty_driver
+              - show_tty_range
+            - skl_watermark_ipc_status_show
+            - slab_debugfs_show
+              - stack_depot_fetch
+            - slab_show
+              - get_slabinfo
+              - slabinfo_show_stats
+            - snd_info_seq_show
+              - print_codec_info
+              - snd_card_id_read
+              - snd_card_info_read
+              - snd_info_version_read
+              - snd_minor_info_read
+              - snd_pcm_lib_preallocate_max_proc_read
+              - snd_pcm_lib_preallocate_proc_read
+              - snd_pcm_proc_read
+              - snd_pcm_stream_proc_info_read
+              - snd_pcm_substream_proc_hw_params_read
+              - snd_pcm_substream_proc_info_read
+              - snd_pcm_substream_proc_status_read
+              - snd_pcm_substream_proc_sw_params_read
+              - snd_seq_info_clients_read
+              - snd_seq_info_queues_read
+            - snmp6_seq_show
+              - snmp6_seq_show_icmpv6msg
+              - snmp6_seq_show_item
+            - snmp_seq_show
+            - sockstat_seq_show
+              - sock_prot_inuse_get
+              - socket_seq_show
+              - tcp_orphan_count_sum
+            - softnet_seq_show
+            - spr_wm_latency_show
+            - sseu_status_show
+            - sseu_topology_show
+              - intel_sseu_print_topology
+            - steering_show
+              - intel_gt_mcr_report_steering
+            - suspend_stats_show
+            - svc_pool_stats_show
+            - swap_show
+            - sysvipc_msg_proc_show
+              - ipc_seq_pid_ns
+            - sysvipc_proc_show
+            - sysvipc_sem_proc_show
+            - sysvipc_shm_proc_show
+            - tcp4_seq_show
+            - tcp6_seq_show
+            - timens_offsets_show
+              - proc_timens_show_offsets
+            - tk_debug_sleep_time_show
+            - ttm_pool_debugfs_globals_show
+              - ttm_pool_debugfs_header
+            - ttm_pool_debugfs_shrink_show
+              - ttm_pool_shrinker_scan
+            - ttm_resource_manager_show
+              - ttm_resource_manager_debug
+            - ttm_tt_debugfs_shrink_show
+              - ttm_global_swapout
+            - tty_ldiscs_seq_show
+            - uc_usage_show
+            - udp4_seq_show
+            - udp6_seq_show
+            - unusable_show
+            - uptime_proc_show
+            - version_proc_show
+            - virtio_gpu_debugfs_host_visible_mm
+              - drm_mm_print
+            - virtio_gpu_features
+            - vrr_range_show
+            - wakeup_sources_stats_seq_show
+              - print_wakeup_source_stats
+            - xhci_device_name_show
+            - xhci_endpoint_context_show
+              - xhci_get_ep_ctx
+            - xhci_ring_cycle_show
+            - xhci_ring_dequeue_show
+              - xhci_trb_virt_to_dma
+            - xhci_ring_enqueue_show
+            - xhci_ring_trb_show
+            - xhci_slot_context_show
+              - xhci_get_slot_ctx
+            - xhci_stream_context_array_show
+            - xt_match_seq_show
+            - xt_table_seq_show
+            - xt_target_seq_show
+          - kernfs_seq_start <profiled>
+            - single_start <profiled>
+            - ac6_seq_start
+            - cgroup_pidlist_start
+            - cgroup_procs_start
+              - __cgroup_procs_start
+            - cgroup_threads_start
+            - deadline_dispatch2_start
+              - seq_list_start
+            - devinfo_seq_start
+            - devinfo_start
+            - disk_seqf_start
+              - class_dev_iter_init
+              - class_dev_iter_next
+            - fib_trie_seq_start
+            - input_devices_seq_start
+            - input_handlers_seq_start
+            - ip6fl_seq_start
+            - ipmr_vif_seq_start
+              - mr_vif_seq_idx
+            - ipv6_route_seq_start
+              - ipv6_route_seq_next
+            - jbd2_seq_info_start
+            - kprobe_blacklist_seq_start
+            - kprobe_seq_start
+            - m_start
+            - md_seq_start
+            - memtype_seq_start
+            - misc_seq_start
+            - neigh_stat_seq_start
+            - nfs_server_list_start
+              - seq_list_start_head
+            - nfs_volume_list_start
+            - packet_seq_start
+            - ping_v6_seq_start
+              - ping_seq_start
+            - proc_keys_start
+              - rb_next
+            - r_start
+            - raw_seq_start
+            - s_start
+            - schedstat_start
+            - sel_avc_stats_seq_start
+            - show_partition_start
+            - slab_debugfs_start
+            - slab_start
+            - t_start
+            - tcp_seq_start
+              - established_get_first
+              - listening_get_first
+              - listening_get_next
+              - tcp_get_idx
+            - tty_ldiscs_seq_start
+            - vmstat_start
+              - global_dirty_limits
+            - wakeup_sources_stats_seq_start
+          - cgroup_seqfile_next
+          - cgroup_seqfile_show
+            - cgroup_clone_children_read
+            - cgroup_read_notify_on_release
+            - cpu_shares_read_u64
+            - cpu_weight_nice_read_s64
+            - cpu_weight_read_u64
+            - cpuset_read_s64
+            - cpuset_read_u64
+            - cpuusage_read
+            - cpuusage_sys_read
+            - cpuusage_user_read
+            - current_css_set_refcount_read
+            - debug_taskcount_read
+            - freezer_parent_freezing_read
+            - freezer_self_freezing_read
+            - hugetlb_cgroup_read_u64
+            - pids_current_read
+            - pids_peak_read
+            - read_classid
+            - read_prioidx
+          - cgroup_seqfile_start
+          - traverse
+      - oom_score_adj_read <profiled>
+        - simple_read_from_buffer <profiled>
+          - _copy_to_user
+      - pipe_read <profiled>
+        - anon_pipe_buf_release <profiled>
+        - kill_fasync <profiled>
+        - page_cache_pipe_buf_confirm
+      - proc_reg_read_iter <profiled>
+      - security_file_permission <profiled>
+        - selinux_file_permission <profiled>
+          - avc_has_perm <profiled>
+          - avc_policy_seqno <profiled>
+          - inode_doinit_with_dentry
+            - d_find_alias
+            - d_find_any_alias
+            - inode_doinit_use_xattr
+            - security_genfs_sid
+            - security_transition_sid
+        - fsnotify_perm
+      - seq_read <profiled>
+        - iov_iter_init
+      - sock_read_iter <profiled>
+        - inet_recvmsg <profiled>
+          - tcp_recvmsg <profiled>
+            - put_cmsg
+            - tcp_recv_timestamp
+              - put_cmsg_scm_timestamping
+              - put_cmsg_scm_timestamping64
+          - udp_recvmsg
+            - __sk_queue_drop_skb
+            - __skb_checksum_complete
+            - __skb_recv_udp
+            - __sock_recv_cmsgs
+            - ip_recv_error
+            - skb_consume_udp
+            - skb_copy_and_csum_datagram_msg
+        - security_socket_recvmsg <profiled>
+          - selinux_socket_recvmsg <profiled>
+        - inet6_recvmsg
+        - packet_recvmsg
+          - skb_free_datagram
+          - skb_recv_datagram
+        - sock_common_recvmsg
+        - unix_dgram_recvmsg
+          - __unix_dgram_recvmsg
+        - unix_seqpacket_recvmsg
+        - unix_stream_recvmsg
+          - unix_stream_read_generic
+      - auxv_read
+      - blkdev_read_iter
+      - cache_read_pipefs
+        - cache_read
+      - cpu_latency_qos_read
+      - cpuid_read
+        - wait_for_completion
+      - crtc_crc_read
+      - debug_output
+        - fill_periodic_buffer
+      - debugfs_attr_read
+        - debugfs_file_get
+      - debugfs_read_file_bool
+      - debugfs_read_file_str
+      - devkmsg_read
+        - msg_print_ext_body
+        - prb_read_valid
+      - drm_read
+      - efivarfs_file_read
+        - efivar_entry_get
+        - efivar_entry_size
+      - environ_read
+        - access_remote_vm
+      - evdev_read
+        - input_event_to_user
+      - eventfd_read
+      - fscontext_read
+      - gpu_state_read
+        - i915_gpu_coredump_copy_to_buffer
+      - hid_debug_events_read
+        - __kfifo_to_user
+        - add_wait_queue
+        - remove_wait_queue
+      - hiddev_read
+      - hidraw_read
+      - hugetlbfs_read_iter
+      - hung_up_tty_read
+      - i915_perf_read
+        - i915_oa_read
+      - init_pkru_read_file
+      - inotify_read
+        - fsnotify_peek_first_event
+        - fsnotify_remove_first_event
+        - wait_woken
+      - mem_read
+        - mem_rw
+      - mon_bin_read
+        - mon_bin_wait_event
+      - mon_stat_read
+      - mon_text_read_t
+        - mon_text_read_data
+        - mon_text_read_statset
+        - mon_text_read_wait
+      - mon_text_read_u
+      - mqueue_read_file
+      - msr_read
+        - rdmsr_safe_on_cpu
+      - nfs_file_read
+        - nfs_end_io_read
+        - nfs_start_io_read
+      - nvram_misc_read
+        - pc_nvram_read
+      - oom_adj_read
+      - pagemap_read
+      - perf_read
+      - port_fops_read
+        - fill_readbuf
+      - proc_coredump_filter_read
+      - proc_loginuid_read
+      - proc_pid_attr_read
+        - security_getprocattr
+      - proc_pid_cmdline_read
+      - proc_reg_read
+        - cache_read_procfs
+        - kpagecount_read
+        - kpageflags_read
+        - read_gssp
+      - proc_sessionid_read
+      - proc_sys_read
+        - proc_sys_call_handler
+      - random_read_iter
+        - get_random_bytes_user
+        - wait_for_random_bytes
+      - read_enabled_file_bool
+      - read_file_blob
+      - read_flush_pipefs
+      - read_mem
+        - copy_from_kernel_nofault
+        - unxlate_dev_mem_ptr
+        - valid_phys_addr_range
+        - xlate_dev_mem_ptr
+      - read_null
+      - read_zero
+      - regmap_map_read_file
+        - regmap_read_debugfs
+      - regmap_name_read_file
+      - regmap_range_read_file
+      - regmap_reg_ranges_read_file
+        - regmap_debugfs_get_dump_start
+      - relay_file_read
+        - relay_file_read_consume
+      - rfkill_fop_read
+      - rng_dev_read
+        - schedule_timeout_interruptible
+        - via_rng_data_read
+      - rpc_pipe_read
+      - rtc_dev_read
+      - sel_read_avc_cache_threshold
+        - avc_get_cache_threshold
+      - sel_read_bool
+        - security_get_bool_value
+      - sel_read_checkreqprot
+      - sel_read_class
+      - sel_read_enforce
+      - sel_read_handle_status
+      - sel_read_handle_unknown
+        - security_get_allow_unknown
+        - security_get_reject_unknown
+      - sel_read_mls
+        - security_mls_enabled
+      - sel_read_perm
+      - sel_read_policy
+      - sel_read_policycap
+        - security_policycap_supported
+      - sel_read_policyvers
+      - sel_read_sidtab_hash_stats
+        - security_sidtab_hash_stats
+      - setup_data_read
+      - shmem_file_read_iter
+      - signalfd_read
+        - dequeue_signal
+        - siginfo_layout
+      - simple_attr_read
+        - __intel_gt_debugfs_reset_show
+        - debugfs_atomic_t_get
+        - debugfs_u16_get
+        - debugfs_u32_get
+        - debugfs_u64_get
+        - debugfs_u8_get
+        - debugfs_ulong_get
+        - fake_panic_get
+        - fault_around_bytes_get
+        - guc_log_level_get
+        - i915_edp_psr_debug_get
+        - i915_perf_noa_delay_get
+        - i915_wedged_get
+        - intel_fbc_debugfs_false_color_get
+        - io_tlb_used_get
+      - simple_transaction_read
+      - snapshot_read
+        - snapshot_read_next
+      - snd_ctl_read
+      - snd_disconnect_read
+      - snd_hwdep_read
+      - snd_pcm_read
+        - __snd_pcm_lib_xfer
+      - snd_seq_read
+        - snd_seq_cell_free
+        - snd_seq_expand_var_event
+        - snd_seq_fifo_cell_out
+        - snd_seq_fifo_cell_putback
+      - tlbflush_read_file
+      - u32_array_read
+      - urandom_read_iter
+        - try_to_generate_entropy
+      - usb_device_read
+        - idr_get_next
+        - usb_device_dump
+      - usbdev_read
+      - usblp_read
+        - usblp_submit_read
+      - v9fs_file_read_iter
+        - p9_client_read
+        - p9_client_read_once
+      - v9fs_mmap_file_read_iter
+      - vga_arb_read
+      - wmi_char_read
+- swake_up_one <profiled>
+- ext4_da_update_reserve_space <profiled>
+  - dquot_claim_space_nodirty <profiled>
+    - __inode_add_bytes <profiled>
+    - ext4_get_reserved_space <profiled>
+    - dquot_mark_dquot_dirty
+    - ext4_get_dquots
+  - __dquot_free_space
+    - __inode_sub_bytes
+    - inode_sub_bytes
+    - quota_send_warning
+  - __ext4_warning
+  - ext4_discard_preallocations
+    - ext4_get_group_number
+    - ext4_mb_release_inode_pa
+- next_online_pgdat <profiled>
+- kmem_cache_free <profiled>
+  - __slab_free <profiled>
+    - __unfreeze_partials <profiled>
+      - __cmpxchg_double_slab
+      - __free_slab
+    - cmpxchg_double_slab
+    - free_debug_processing
+- lru_cache_add_inactive_or_unevictable <profiled>
+  - folio_add_lru_vma <profiled>
+    - folio_add_lru <profiled>
+      - folio_batch_move_lru <profiled>
+        - lru_add_fn <profiled>
+          - __mod_node_page_state <profiled>
+          - __mod_zone_page_state <profiled>
+          - folio_mapping <profiled>
+        - release_pages <profiled>
+          - PageHeadHuge <profiled>
+          - free_unref_page_list <profiled>
+          - mod_zone_page_state <profiled>
+        - lru_deactivate_file_fn
+        - lru_lazyfree_fn
+        - lru_move_tail_fn
+- second_overflow <profiled>
+- __tcp_transmit_skb <profiled>
+  - __tcp_select_window <profiled>
+  - cubictcp_cwnd_event <profiled>
+  - ip_queue_xmit <profiled>
+    - __ip_queue_xmit <profiled>
+      - __ip_local_out <profiled>
+      - __sk_dst_check <profiled>
+        - ipv4_dst_check <profiled>
+        - dst_blackhole_check
+        - ip6_dst_check
+        - xfrm_dst_check
+      - ip_finish_output2 <profiled>
+        - local_bh_enable
+        - neigh_blackhole
+        - neigh_direct_output
+        - skb_expand_head
+      - ip_output <profiled>
+      - skb_push <profiled>
+        - skb_under_panic
+          - skb_panic
+      - __ip_select_ident
+        - get_random_bytes
+        - siphash_3u32
+      - dst_output
+      - ip_finish_output
+        - ip_fragment
+      - ip_options_build
+        - inet_current_timestamp
+        - ip_rt_get_source
+      - sk_setup_caps
+      - xfrm4_output
+  - skb_clone <profiled>
+    - __skb_clone <profiled>
+      - __copy_skb_header <profiled>
+    - kmem_cache_alloc <profiled>
+      - should_failslab <profiled>
+  - sock_rfree <profiled>
+    - __sk_mem_reduce_allocated <profiled>
+      - tcp_leave_memory_pressure
+  - tcp_options_write <profiled>
+  - tcp_rate_skb_sent <profiled>
+  - tcp_v4_send_check <profiled>
+  - inet6_csk_xmit
+    - inet6_csk_route_socket
+    - ip6_xmit
+  - tcp_enter_cwr
+  - tcp_syn_options
+    - ip6_default_advmss
+    - ipv4_default_advmss
+  - tcp_v4_md5_hash_skb
+    - ahash_def_finup
+    - crypto_ahash_final
+    - shash_async_digest
+    - shash_async_final
+    - shash_async_finup
+    - tcp_get_md5sig_pool
+    - tcp_md5_hash_key
+    - tcp_md5_hash_skb_data
+  - tcp_v6_md5_hash_skb
+  - tcp_v6_send_check
+- bad_area_access_error <profiled>
+  - __bad_area_nosemaphore <profiled>
+    - kernelmode_fixup_or_oops <profiled>
+      - fixup_exception <profiled>
+        - search_exception_tables <profiled>
+          - search_module_extables
+            - mod_find
+      - force_sig_fault
+      - page_fault_oops
+        - __die
+        - get_stack_info_noinstr
+        - oops_begin
+        - oops_end
+        - oops_may_print
+  - up_read <profiled>
+- release_sock <profiled>
+  - tcp_release_cb <profiled>
+    - tcp_tsq_write
+      - tcp_write_xmit
+      - tcp_xmit_retransmit_queue
+    - tcp_v4_mtu_reduced
+      - inet_csk_update_pmtu
+      - tcp_simple_retransmit
+    - tcp_v6_mtu_reduced
+      - inet6_csk_update_pmtu
+      - tcp_mtu_to_mss
+  - ip4_datagram_release_cb
+    - ip_route_output_flow
+  - ip6_datagram_release_cb
+    - ip6_datagram_dst_update
+- sd_init_command <profiled>
+  - mempool_alloc <profiled>
+    - __ksize <profiled>
+    - finish_wait <profiled>
+    - io_schedule_timeout
+    - prepare_to_wait
+  - scsi_alloc_sgtables <profiled>
+    - __blk_rq_map_sg <profiled>
+    - ata_scsi_dma_need_drain
+      - atapi_cmd_type
+    - sg_alloc_table_chained
+      - __sg_alloc_table
+      - __sg_free_table
+      - sg_init_table
+  - sd_setup_write_same10_cmnd
+  - sd_setup_write_same16_cmnd
+- skb_release_head_state <profiled>
+  - sock_rfree <profiled>
+    - __sk_mem_reduce_allocated <profiled>
+      - tcp_leave_memory_pressure
+  - __skb_ext_put
+- i_callback <profiled>
+  - sock_free_inode <profiled>
+  - autofs_evict_inode
+  - bdev_free_inode
+    - bdi_put
+    - blk_free_ext_minor
+  - bm_evict_inode
+  - debugfs_free_inode
+  - dquot_drop
+    - dqput
+  - ext4_destroy_inode
+  - ext4_free_in_core_inode
+  - fat_free_inode
+  - hugetlbfs_free_inode
+  - isofs_free_inode
+  - mqueue_free_inode
+  - nfs4_evict_inode
+    - nfs_inode_evict_delegation
+  - nfs_evict_inode
+  - nfs_free_inode
+  - proc_free_inode
+  - selinux_inode_free_security
+  - shmem_destroy_inode
+    - mpol_free_shared_policy
+  - shmem_free_in_core_inode
+  - v9fs_evict_inode
+    - filemap_fdatawrite
+  - v9fs_free_inode
+- __wake_up_bit <profiled>
+  - __wake_up <profiled>
+    - autoremove_wake_function <profiled>
+      - default_wake_function <profiled>
+    - ep_autoremove_wake_function <profiled>
+    - ep_poll_callback <profiled>
+    - aio_poll_wake
+      - iocb_put
+    - child_wait_callback
+    - i915_sw_fence_wake
+    - io_wake_function
+    - iocg_wake_fn
+    - p9_pollwake
+    - percpu_rwsem_wake_function
+    - receiver_wake_function
+    - synchronous_wake_function
+    - unix_dgram_peer_wake_relay
+    - wake_bit_function
+    - wake_page_function
+      - wake_up_state
+    - woken_wake_function
+- pagecache_get_page <profiled>
+  - PageHeadHuge <profiled>
+  - __filemap_get_folio <profiled>
+    - folio_add_lru <profiled>
+      - folio_batch_move_lru <profiled>
+        - lru_add_fn <profiled>
+          - __mod_node_page_state <profiled>
+          - __mod_zone_page_state <profiled>
+          - folio_mapping <profiled>
+        - release_pages <profiled>
+          - free_unref_page_list <profiled>
+          - mod_zone_page_state <profiled>
+        - lru_deactivate_file_fn
+        - lru_lazyfree_fn
+        - lru_move_tail_fn
+    - folio_mark_accessed <profiled>
+      - folio_activate
+      - workingset_activation
+    - inode_to_bdi <profiled>
+      - I_BDEV
+    - folio_wait_stable
+- housekeeping_cpumask <profiled>
+- pick_next_task_fair <profiled>
+  - pick_next_entity <profiled>
+  - put_prev_entity <profiled>
+    - __update_stats_wait_start
+    - update_load_avg
+      - attach_entity_load_avg
+      - detach_entity_load_avg
+  - put_prev_task_fair <profiled>
+  - set_next_entity <profiled>
+  - put_prev_task_stop
+- pfifo_fast_enqueue <profiled>
+- ext4_get_inode_loc <profiled>
+  - __ext4_get_inode_loc <profiled>
+    - __brelse <profiled>
+    - __getblk_gfp <profiled>
+      - grow_dev_page
+        - alloc_buffer_head
+        - init_page_buffers
+        - try_to_free_buffers
+    - blk_finish_plug <profiled>
+    - blk_start_plug <profiled>
+    - ext4_fill_raw_inode <profiled>
+      - ext4_inode_csum
+    - ext4_get_group_desc <profiled>
+    - ext4_inode_table <profiled>
+    - __wait_on_buffer
+    - ext4_inode_bitmap
+    - ext4_itable_unused_count
+    - ext4_read_bh_nowait
+    - ext4_sb_breadahead_unmovable
+- mix_pool_bytes <profiled>
+  - blake2s_update <profiled>
+- __pte_alloc <profiled>
+  - mod_node_page_state <profiled>
+  - pte_alloc_one <profiled>
+- seq_vprintf <profiled>
+- rw_verify_area <profiled>
+  - security_file_permission <profiled>
+    - selinux_file_permission <profiled>
+      - avc_has_perm <profiled>
+      - avc_policy_seqno <profiled>
+      - inode_doinit_with_dentry
+        - d_find_alias
+        - d_find_any_alias
+        - inode_doinit_use_xattr
+        - security_genfs_sid
+        - security_transition_sid
+    - fsnotify_perm
+- select_task_rq_fair <profiled>
+- page_add_new_anon_rmap <profiled>
+  - __mod_node_page_state <profiled>
+  - __page_set_anon_rmap <profiled>
+- handle_mm_fault <profiled>
+  - __handle_mm_fault <profiled>
+    - do_wp_page <profiled>
+      - lru_add_drain <profiled>
+        - lru_add_drain_cpu <profiled>
+          - folio_batch_move_lru <profiled>
+            - lru_add_fn <profiled>
+              - __mod_node_page_state <profiled>
+              - __mod_zone_page_state <profiled>
+              - folio_mapping <profiled>
+            - release_pages <profiled>
+              - PageHeadHuge <profiled>
+              - free_unref_page_list <profiled>
+              - mod_zone_page_state <profiled>
+            - lru_deactivate_file_fn
+            - lru_lazyfree_fn
+            - lru_move_tail_fn
+      - page_move_anon_rmap <profiled>
+      - ptep_set_access_flags <profiled>
+      - vm_normal_page <profiled>
+        - print_bad_pte
+          - dump_page
+      - folio_free_swap
+        - delete_from_swap_cache
+        - pm_suspended_storage
+      - wp_page_copy
+        - __anon_vma_prepare
+        - __delayacct_wpcopy_end
+        - __delayacct_wpcopy_start
+        - __mmu_notifier_invalidate_range
+        - __mmu_notifier_invalidate_range_end
+        - free_swap_cache
+        - page_remove_rmap
+        - ptep_clear_flush
+      - wp_page_shared
+        - ext4_page_mkwrite
+        - fault_dirty_shared_page
+        - filemap_page_mkwrite
+        - kernfs_vma_page_mkwrite
+        - nfs_vm_page_mkwrite
+        - v9fs_vm_page_mkwrite
+    - mod_node_page_state <profiled>
+    - __p4d_alloc
+    - __pmd_alloc
+    - __pud_alloc
+    - do_anonymous_page
+    - do_shared_fault
+      - filemap_fault
+      - finish_fault
+      - kernfs_vma_fault
+      - mmap_vmcore_fault
+      - shm_fault
+      - shmem_fault
+      - snd_pcm_mmap_data_fault
+      - vm_fault_ttm
+    - do_swap_page
+      - __swap_count
+      - get_shadow_from_swap_cache
+      - get_swap_device
+      - migration_entry_wait
+      - page_add_anon_rmap
+      - swap_cache_get_folio
+      - swap_free
+      - swap_readpage
+      - swapin_readahead
+  - hugetlb_fault
+    - huge_pte_alloc
+    - hugetlb_no_page
+    - hugetlb_wp
+    - migration_entry_wait_huge
+- timestamp_truncate <profiled>
+- ___bpf_prog_run <profiled>
+  - __bpf_call_base
+  - __bpf_prog_run_args512
+  - bpf_get_cgroup_classid
+  - bpf_get_cgroup_classid_curr
+  - bpf_get_netns_cookie_sk_msg
+  - bpf_get_netns_cookie_sock_addr
+  - bpf_get_raw_cpu_id
+  - bpf_get_route_realm
+  - bpf_get_socket_cookie
+    - __sock_gen_cookie
+  - bpf_get_socket_cookie_sock_ops
+  - bpf_get_socket_uid
+  - bpf_l3_csum_replace
+  - bpf_probe_read_kernel
+  - bpf_redirect
+  - bpf_set_hash
+  - bpf_sk_ancestor_cgroup_id
+  - bpf_sk_getsockopt
+    - __bpf_getsockopt
+  - bpf_sk_lookup_tcp
+    - bpf_sk_lookup
+  - bpf_sk_lookup_udp
+  - bpf_skb_ancestor_cgroup_id
+  - bpf_skb_cgroup_id
+  - bpf_skb_change_head
+  - bpf_skb_change_proto
+  - bpf_skb_fib_lookup
+    - bpf_ipv4_fib_lookup
+    - bpf_ipv6_fib_lookup
+    - is_skb_forwardable
+  - bpf_skb_get_tunnel_key
+  - bpf_skb_get_tunnel_opt
+  - bpf_skb_get_xfrm_state
+  - bpf_skb_load_helper_8
+    - bpf_internal_load_pointer_neg_helper
+  - bpf_skb_load_helper_8_no_cache
+  - bpf_skb_set_tunnel_key
+  - bpf_skb_set_tunnel_opt
+  - bpf_skc_lookup_tcp
+    - __bpf_skc_lookup
+  - bpf_skc_to_tcp_sock
+  - bpf_sock_from_file
+  - bpf_sock_ops_cb_flags_set
+  - bpf_sock_ops_load_hdr_opt
+  - bpf_xdp_adjust_tail
+  - bpf_xdp_event_output
+  - bpf_xdp_fib_lookup
+  - bpf_xdp_sk_lookup_tcp
+  - bpf_xdp_sk_lookup_udp
+  - bpf_xdp_skc_lookup_tcp
+  - sk_skb_change_head
+- kthread_is_per_cpu <profiled>
+- kvmalloc_node <profiled>
+  - __kmalloc_node <profiled>
+    - __kmem_cache_alloc_node <profiled>
+      - should_failslab <profiled>
+  - __vmalloc_node_range
+    - __get_vm_area_node
+    - remove_vm_area
+- vma_alloc_folio <profiled>
+  - __folio_alloc <profiled>
+  - alloc_page_interleave
+- blk_add_rq_to_plug <profiled>
+- finish_task_switch <profiled>
+  - ___perf_sw_event
+    - perf_swevent_event
+  - __perf_event_task_sched_in
+    - ctx_sched_in
+    - perf_pmu_nop_void
+    - x86_pmu_sched_task
+  - task_dead_fair
+- mempool_alloc_slab <profiled>
+  - kmem_cache_alloc <profiled>
+    - should_failslab <profiled>
+- mb_set_bits <profiled>
+- resched_curr <profiled>
+  - native_smp_send_reschedule
+- bio_init <profiled>
+  - bio_associate_blkg <profiled>
+    - bio_associate_blkg_from_css <profiled>
+      - blkg_release
+    - kthread_blkcg <profiled>
+- kmalloc_slab <profiled>
+- ext4_mb_initialize_context <profiled>
+  - ext4_get_group_no_and_offset <profiled>
+- pmd_install <profiled>
+- submit_bio <profiled>
+  - submit_bio_noacct <profiled>
+    - blk_cgroup_bio_start <profiled>
+    - submit_bio_noacct_nocheck <profiled>
+      - blk_mq_submit_bio <profiled>
+        - __blk_mq_alloc_requests <profiled>
+          - blk_mq_get_tag <profiled>
+            - __blk_mq_get_tag <profiled>
+              - __sbitmap_queue_get
+                - sbitmap_get
+              - sbitmap_queue_get_shallow
+                - sbitmap_get_shallow
+            - io_schedule <profiled>
+            - sbitmap_finish_wait
+            - sbitmap_prepare_to_wait
+              - prepare_to_wait_exclusive
+            - sbitmap_queue_wake_up
+          - blk_mq_rq_ctx_init
+            - dd_prepare_request
+            - kyber_prepare_request
+          - dd_limit_depth
+          - kyber_limit_depth
+          - msleep
+        - __blk_mq_try_issue_directly <profiled>
+          - scsi_mq_get_budget <profiled>
+            - blk_mq_delay_run_hw_queues
+            - sbitmap_weight
+          - scsi_mq_set_rq_budget_token <profiled>
+          - scsi_queue_rq <profiled>
+            - blk_mq_start_request <profiled>
+              - __rq_qos_issue
+            - scsi_alloc_sgtables <profiled>
+              - __blk_rq_map_sg <profiled>
+              - ata_scsi_dma_need_drain
+                - atapi_cmd_type
+              - sg_alloc_table_chained
+                - __sg_alloc_table
+                - __sg_free_table
+                - sg_init_table
+            - virtscsi_queuecommand <profiled>
+              - blk_mq_unique_tag <profiled>
+              - virtscsi_add_cmd <profiled>
+                - virtqueue_add_sgs <profiled>
+                  - sg_next
+                  - virtqueue_add
+                - virtqueue_kick_prepare <profiled>
+                - virtqueue_notify <profiled>
+                  - vp_notify <profiled>
+                    - iowrite16
+              - virtscsi_complete_cmd
+                - scmd_printk
+                - scsi_done
+            - ata_scsi_queuecmd
+              - __ata_scsi_queuecmd
+            - scsi_dec_host_busy
+          - __blk_mq_get_driver_tag
+          - blk_mq_sched_insert_request
+            - __blk_mq_insert_request
+            - blk_mq_request_bypass_insert
+            - dd_insert_requests
+            - kyber_insert_requests
+          - loop_queue_rq
+            - bio_blkcg_css
+          - scsi_mq_put_budget
+        - __get_task_ioprio <profiled>
+        - __rq_qos_throttle <profiled>
+        - __rq_qos_track <profiled>
+        - blk_attempt_plug_merge <profiled>
+        - blk_mq_sched_bio_merge <profiled>
+          - blk_bio_list_merge
+            - blk_attempt_bio_merge
+          - dd_bio_merge
+            - blk_mq_sched_try_merge
+          - kyber_bio_merge
+        - blkcg_set_ioprio <profiled>
+        - blk_insert_flush
+          - blk_flush_complete_seq
+      - dm_submit_bio
+        - __map_bio
+        - dm_table_find_target
+        - init_clone_info
+      - md_submit_bio
+        - md_handle_request
+  - __blkcg_punt_bio_submit
+- ip_local_out <profiled>
+  - __ip_local_out <profiled>
+  - ip_finish_output2 <profiled>
+    - local_bh_enable
+    - neigh_blackhole
+    - neigh_direct_output
+    - skb_expand_head
+  - ip_output <profiled>
+  - __xfrm4_output
+    - xfrm_output
+- ext4_ext_search_right <profiled>
+- filemap_check_errors <profiled>
+- should_fail_alloc_page <profiled>
+- ext4_inode_csum_set <profiled>
+- scsi_init_command <profiled>
+- tcp_fastopen_active_detect_blackhole <profiled>
+- kfree <profiled>
+  - __kmem_cache_free <profiled>
+    - __slab_free <profiled>
+      - __unfreeze_partials <profiled>
+        - __cmpxchg_double_slab
+        - __free_slab
+      - cmpxchg_double_slab
+      - free_debug_processing
+  - mod_node_page_state <profiled>
+  - __free_pages
+- tcp_rcv_space_adjust <profiled>
+  - tcp_mstamp_refresh <profiled>
+- __bio_add_page <profiled>
+- calc_wheel_index <profiled>
+- ext4_es_lookup_extent <profiled>
+- __get_vma_policy <profiled>
+  - kernfs_vma_get_policy
+  - shm_get_policy
+  - shmem_get_policy
+    - mpol_shared_policy_lookup
+- set_task_cpu <profiled>
+  - migrate_task_rq_fair <profiled>
+  - set_task_rq_fair <profiled>
+  - migrate_task_rq_dl
+- neigh_resolve_output <profiled>
+  - eth_header <profiled>
+    - skb_push <profiled>
+      - skb_under_panic
+        - skb_panic
+  - __neigh_event_send
+    - arp_solicit
+    - ndisc_solicit
+  - eth_header_cache
+- dequeue_task_fair <profiled>
+  - dequeue_entity
+- io_schedule_prepare <profiled>
+- ip_send_check <profiled>
+- skb_attempt_defer_free <profiled>
+  - smp_call_function_single_async <profiled>
+- tcp_mark_skb_lost <profiled>
+- tcp_enter_loss <profiled>
+  - cubictcp_cwnd_event <profiled>
+  - cubictcp_recalc_ssthresh <profiled>
+  - tcp_set_ca_state <profiled>
+    - cubictcp_state <profiled>
+  - tcp_reno_ssthresh
+- jbd2_transaction_committed <profiled>
+- __dev_queue_xmit <profiled>
+  - __qdisc_run <profiled>
+    - __netif_schedule <profiled>
+    - sch_direct_xmit <profiled>
+      - dev_hard_start_xmit <profiled>
+        - dev_queue_xmit_nit <profiled>
+          - packet_rcv <profiled>
+            - __bpf_prog_run32 <profiled>
+            - migrate_disable <profiled>
+            - migrate_enable <profiled>
+            - skb_clone <profiled>
+              - __skb_clone <profiled>
+                - __copy_skb_header <profiled>
+              - kmem_cache_alloc <profiled>
+                - should_failslab <profiled>
+            - skb_push <profiled>
+              - skb_under_panic
+                - skb_panic
+            - sock_rfree <profiled>
+              - __sk_mem_reduce_allocated <profiled>
+                - tcp_leave_memory_pressure
+            - ___pskb_trim
+            - __bpf_prog_run224
+            - __bpf_prog_run320
+            - __bpf_prog_run384
+            - dst_release
+              - net_ratelimit
+            - eth_header_parse
+            - skb_pull
+            - sock_def_readable
+              - __wake_up_sync_key
+              - sock_wake_async
+            - tpacket_destruct_skb
+              - sock_wfree
+          - net_test_loopback_validate
+          - packet_rcv_fanout
+            - fanout_demux_bpf
+            - ip_check_defrag
+          - packet_rcv_spkt
+          - tpacket_rcv
+        - e1000_xmit_frame <profiled>
+          - __skb_pad <profiled>
+            - pskb_expand_head
+              - gfp_pfmemalloc_allowed
+          - dma_map_page_attrs <profiled>
+            - is_swiotlb_active <profiled>
+            - swiotlb_map <profiled>
+              - swiotlb_tbl_map_single <profiled>
+                - swiotlb_bounce <profiled>
+                - _dev_warn
+              - swiotlb_tbl_unmap_single
+            - iommu_dma_map_page
+              - __iommu_dma_map
+              - iommu_get_dma_domain
+          - is_vmalloc_addr <profiled>
+          - queue_work_on <profiled>
+          - __dev_kfree_skb_any
+          - e1000e_update_tdt_wa
+          - skb_tstamp_tx
+            - __skb_tstamp_tx
+        - e100_xmit_frame
+          - e100_exec_cb
+          - e100_exec_cmd
+          - netdev_printk
+        - ieee80211_subif_start_xmit
+          - __ieee80211_subif_start_xmit
+        - ieee80211_subif_start_xmit_8023
+          - ieee80211_lookup_ra_sta
+        - loopback_xmit
+          - __netif_rx
+          - eth_type_trans
+        - nv_start_xmit
+        - nv_start_xmit_optimized
+        - rtl8139_start_xmit
+          - iowrite32
+          - skb_copy_and_csum_dev
+        - rtl8169_start_xmit
+          - rtl8169_tx_map
+        - sit_tunnel_xmit
+          - ip_tunnel_xmit
+          - iptunnel_xmit
+        - sky2_xmit_frame
+        - start_xmit
+          - __napi_schedule
+          - free_old_xmit_skbs
+          - napi_schedule_prep
+          - virtqueue_add_outbuf
+          - virtqueue_disable_cb
+        - tg3_start_xmit
+          - netif_tx_wake_queue
+          - tg3_tso_bug
+          - tg3_tx_frag_set
+          - tg3_tx_skb_unmap
+          - tg3_write32
+          - tg3_write32_tx_mbox
+          - tg3_write_indirect_mbox
+      - validate_xmit_skb_list <profiled>
+        - validate_xmit_skb
+          - skb_checksum_help
+    - noop_dequeue
+  - netdev_core_pick_tx <profiled>
+    - ieee80211_monitor_select_queue
+      - ieee80211_hdrlen
+      - ieee80211_parse_tx_radiotap
+      - ieee80211_select_queue_80211
+    - ieee80211_netdev_select_queue
+      - ieee80211_select_queue
+    - net_failover_select_queue
+    - netdev_pick_tx
+  - __qdisc_calculate_pkt_len
+  - noop_enqueue
+  - skb_do_redirect
+    - __bpf_redirect
+    - neigh_output
+  - tcf_classify
+    - cls_cgroup_classify
+- __tcp_v4_send_check <profiled>

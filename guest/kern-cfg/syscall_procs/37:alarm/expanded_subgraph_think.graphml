@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d3" for="edge" attr.name="indirect" attr.type="boolean" />
+  <key id="d2" for="edge" attr.name="inferred" attr.type="boolean" />
+  <key id="d1" for="node" attr.name="has_indirect" attr.type="boolean" />
+  <key id="d0" for="node" attr.name="profiled" attr.type="boolean" />
+  <graph edgedefault="directed">
+    <node id="select_task_rq_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="wake_up_process">
+      <data key="d0">True</data>
+    </node>
+    <node id="autoremove_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="__note_gp_changes">
+      <data key="d0">True</data>
+    </node>
+    <node id="resched_curr">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="kthread_is_per_cpu">
+      <data key="d0">True</data>
+    </node>
+    <node id="default_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="cpus_share_cache">
+      <data key="d0">True</data>
+    </node>
+    <node id="__x64_sys_alarm">
+      <data key="d0">True</data>
+    </node>
+    <node id="ns_to_timespec64">
+      <data key="d0">True</data>
+    </node>
+    <node id="__wake_up">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="enqueue_task_fair">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="enqueue_entity" />
+    <node id="reweight_entity" />
+    <node id="update_load_avg" />
+    <node id="__update_stats_enqueue_sleeper" />
+    <node id="rb_insert_color" />
+    <node id="attach_entity_load_avg" />
+    <node id="detach_entity_load_avg" />
+    <node id="aio_poll_wake" />
+    <node id="cwt_wakefn" />
+    <node id="ep_poll_callback" />
+    <node id="i915_sw_fence_wake" />
+    <node id="io_poll_wake" />
+    <node id="kyber_domain_wake" />
+    <node id="p9_pollwake" />
+    <node id="percpu_rwsem_wake_function" />
+    <node id="iocb_put" />
+    <node id="queue_work_on" />
+    <node id="sbitmap_del_wait_queue" />
+    <node id="native_smp_send_reschedule" />
+    <node id="__warn_printk" />
+    <node id="_find_first_bit" />
+    <node id="_find_next_and_bit" />
+    <node id="_find_next_bit" />
+    <node id="wake_affine" />
+    <edge source="select_task_rq_fair" target="_find_first_bit">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_next_and_bit">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_next_bit">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="wake_affine">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="autoremove_wake_function" target="default_wake_function">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="resched_curr" target="native_smp_send_reschedule">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="autoremove_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="default_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="aio_poll_wake">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="cwt_wakefn">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="ep_poll_callback">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="i915_sw_fence_wake">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_poll_wake">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="kyber_domain_wake">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="p9_pollwake">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="percpu_rwsem_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="enqueue_task_fair" target="enqueue_entity">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="enqueue_task_fair" target="reweight_entity">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="enqueue_task_fair" target="update_load_avg">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="enqueue_entity" target="__update_stats_enqueue_sleeper">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="enqueue_entity" target="rb_insert_color">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="update_load_avg" target="attach_entity_load_avg">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="update_load_avg" target="detach_entity_load_avg">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="iocb_put">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="queue_work_on">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="kyber_domain_wake" target="sbitmap_del_wait_queue">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="native_smp_send_reschedule" target="__warn_printk">
+      <data key="d2">True</data>
+    </edge>
+  </graph>
+</graphml>

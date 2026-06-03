@@ -1,0 +1,1 @@
+/home/spencer/deeplog-kern/local-qemu/qemu-8.1.0/.gdbinit

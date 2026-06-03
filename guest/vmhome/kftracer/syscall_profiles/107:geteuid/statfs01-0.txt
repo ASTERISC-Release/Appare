@@ -1,0 +1,5 @@
+__audit_syscall_entry
+__audit_syscall_exit
+__do_sys_geteuid
+ktime_get_coarse_real_ts64
+syscall_exit_work

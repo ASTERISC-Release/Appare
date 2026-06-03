@@ -1,0 +1,165 @@
+Subgraph has 144 nodes and 196 edges.
+Markdown tree representation:
+- __x64_sys_dup2 <profiled>
+  - ksys_dup3 <profiled>
+    - do_dup2 <profiled>
+    - expand_files <profiled>
+      - alloc_fdtable <profiled>
+        - kmalloc_trace <profiled>
+          - __kmem_cache_alloc_node <profiled>
+            - should_failslab <profiled>
+        - kvfree
+          - is_vmalloc_addr
+      - finish_wait
+      - init_wait_entry
+      - prepare_to_wait_event
+- __cond_resched <profiled>
+  - __schedule
+    - __delayacct_blkio_start
+    - __schedule_bug
+      - dump_stack
+    - balance_dl
+      - pull_dl_task
+        - _find_next_bit
+        - refcount_warn_saturate
+    - balance_fair
+    - balance_push
+      - kthread_is_per_cpu <profiled>
+    - balance_rt
+      - pull_rt_task
+    - balance_stop
+    - dequeue_task_dl
+    - dequeue_task_fair
+    - dequeue_task_rt
+    - dequeue_task_stop
+    - enqueue_task_fair <profiled>
+    - enqueue_task_rt
+    - enqueue_task_stop
+    - enter_lazy_tlb
+    - finish_task_switch
+      - push_dl_tasks
+      - push_rt_tasks
+    - perf_event_task_sched_out
+    - pick_next_task_fair
+      - put_prev_task_dl
+      - put_prev_task_fair
+      - put_prev_task_rt
+      - put_prev_task_stop
+    - profile_hits
+    - set_cpus_allowed_common
+      - __bitmap_weight
+    - set_cpus_allowed_dl
+      - __bitmap_intersects
+      - _find_next_and_bit
+    - set_next_task_dl
+    - set_next_task_fair
+    - set_next_task_rt
+    - set_next_task_stop
+- swake_up_one <profiled>
+- filp_close <profiled>
+  - dnotify_flush <profiled>
+    - fsnotify_detach_mark
+    - fsnotify_find_mark
+      - refcount_warn_saturate
+    - fsnotify_free_mark
+      - inotify_freeing_mark
+    - fsnotify_recalc_mask
+      - __fsnotify_recalc_mask
+      - __fsnotify_update_child_dentry_flags
+  - fput <profiled>
+    - llist_add_batch
+    - queue_delayed_work_on
+      - __queue_delayed_work
+  - mqueue_flush_file
+    - netlink_sendskb
+    - put_pid
+  - nfs4_file_flush
+    - errseq_check
+    - errseq_sample
+    - filemap_fdatawrite
+    - nfs4_delegation_flush_on_close
+    - nfs_wb_all
+  - nfs_file_flush
+- __wake_up <profiled>
+  - aio_poll_wake
+    - iocb_put
+      - fput <profiled>
+        - llist_add_batch
+        - queue_delayed_work_on
+          - __queue_delayed_work
+      - refcount_warn_saturate
+    - queue_work_on <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - barrier_wake
+    - i915_sw_fence_complete
+  - blk_mq_dispatch_wake
+    - blk_mq_run_hw_queue
+  - child_wait_callback
+  - cwt_wakefn
+  - do_rps_boost
+    - drm_crtc_vblank_put
+    - intel_rps_boost
+  - ep_autoremove_wake_function
+  - ep_poll_callback
+    - __pm_stay_awake
+    - sock_from_file
+  - i915_sw_fence_wake
+  - io_async_buf_func
+    - io_req_task_queue
+      - __io_req_task_work_add
+  - io_poll_wake
+    - io_pollfree_wake
+  - io_wake_function
+  - io_wqe_hash_wake
+    - io_wqe_activate_free_worker
+  - iocg_wake_fn
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - p9_pollwake
+  - percpu_rwsem_wake_function
+  - pollwake
+  - receiver_wake_function
+  - rq_qos_wake_function
+    - iolat_acquire_inflight
+  - synchronous_wake_function
+  - unix_dgram_peer_wake_relay
+  - var_wake_function
+  - wake_bit_function
+  - wake_page_function
+    - wake_up_state
+  - woken_wake_function
+- wake_up_process <profiled>
+- kmalloc_slab <profiled>
+- kvmalloc_node <profiled>
+  - __kmalloc_node <profiled>
+    - __kmalloc_large_node
+      - dump_stack
+      - mod_node_page_state
+    - __kmem_cache_alloc_node <profiled>
+      - should_failslab <profiled>
+  - __vmalloc_node_range
+    - __alloc_pages_bulk
+    - __bitmap_weight
+    - __get_vm_area_node
+    - __vmap_pages_range_noflush
+    - alloc_pages_bulk_array_mempolicy
+      - __bitmap_intersects
+      - _find_first_bit
+      - _find_next_bit
+    - llist_add_batch
+    - queue_work_on <profiled>
+    - remove_vm_area
+    - schedule_timeout_uninterruptible
+    - split_page
+    - warn_alloc
+- select_task_rq_fair <profiled>
+  - __bitmap_and
+  - __bitmap_intersects
+  - __bitmap_weight
+  - _find_first_bit
+  - _find_next_and_bit
+  - _find_next_bit
+  - wake_affine
+    - cpus_share_cache <profiled>
+- __note_gp_changes <profiled>

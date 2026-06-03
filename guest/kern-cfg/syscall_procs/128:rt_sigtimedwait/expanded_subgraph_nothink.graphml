@@ -1,0 +1,463 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d3" for="edge" attr.name="inferred" attr.type="boolean" />
+  <key id="d2" for="edge" attr.name="indirect" attr.type="boolean" />
+  <key id="d1" for="node" attr.name="has_indirect" attr.type="boolean" />
+  <key id="d0" for="node" attr.name="profiled" attr.type="boolean" />
+  <graph edgedefault="directed">
+    <node id="default_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="update_rt_rq_load_avg">
+      <data key="d0">True</data>
+    </node>
+    <node id="recalc_sigpending">
+      <data key="d0">True</data>
+    </node>
+    <node id="dec_rlimit_put_ucounts">
+      <data key="d0">True</data>
+    </node>
+    <node id="__x64_sys_rt_sigtimedwait">
+      <data key="d0">True</data>
+    </node>
+    <node id="finish_task_switch">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="bad_area">
+      <data key="d0">True</data>
+    </node>
+    <node id="put_prev_task_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="fixup_exception">
+      <data key="d0">True</data>
+    </node>
+    <node id="get_timespec64">
+      <data key="d0">True</data>
+    </node>
+    <node id="__slab_free">
+      <data key="d0">True</data>
+    </node>
+    <node id="__dequeue_signal">
+      <data key="d0">True</data>
+    </node>
+    <node id="update_dl_rq_load_avg">
+      <data key="d0">True</data>
+    </node>
+    <node id="housekeeping_cpumask">
+      <data key="d0">True</data>
+    </node>
+    <node id="up_read">
+      <data key="d0">True</data>
+    </node>
+    <node id="pick_next_task_fair">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="put_prev_entity">
+      <data key="d0">True</data>
+    </node>
+    <node id="autoremove_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="dequeue_task_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="find_vma">
+      <data key="d0">True</data>
+    </node>
+    <node id="__cond_resched">
+      <data key="d0">True</data>
+    </node>
+    <node id="rebalance_domains">
+      <data key="d0">True</data>
+    </node>
+    <node id="select_task_rq_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="dequeue_signal">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="__msecs_to_jiffies">
+      <data key="d0">True</data>
+    </node>
+    <node id="put_ucounts">
+      <data key="d0">True</data>
+    </node>
+    <node id="kernelmode_fixup_or_oops">
+      <data key="d0">True</data>
+    </node>
+    <node id="run_rebalance_domains">
+      <data key="d0">True</data>
+    </node>
+    <node id="schedule_hrtimeout_range">
+      <data key="d0">True</data>
+    </node>
+    <node id="kmem_cache_free">
+      <data key="d0">True</data>
+    </node>
+    <node id="schedule">
+      <data key="d0">True</data>
+    </node>
+    <node id="load_balance">
+      <data key="d0">True</data>
+    </node>
+    <node id="search_exception_tables">
+      <data key="d0">True</data>
+    </node>
+    <node id="__bad_area_nosemaphore">
+      <data key="d0">True</data>
+    </node>
+    <node id="copy_siginfo_to_user">
+      <data key="d0">True</data>
+    </node>
+    <node id="__wake_up">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="search_module_extables" />
+    <node id="mod_find" />
+    <node id="__bitmap_and" />
+    <node id="arch_asym_cpu_priority" />
+    <node id="detach_tasks" />
+    <node id="need_active_balance" />
+    <node id="stop_one_cpu_nowait" />
+    <node id="can_migrate_task" />
+    <node id="cpu_stop_queue_work" />
+    <node id="__update_stats_wait_start" />
+    <node id="rb_insert_color" />
+    <node id="update_load_avg" />
+    <node id="attach_entity_load_avg" />
+    <node id="detach_entity_load_avg" />
+    <node id="force_sig_fault" />
+    <node id="is_prefetch" />
+    <node id="page_fault_oops" />
+    <node id="__die" />
+    <node id="is_vmalloc_addr" />
+    <node id="lookup_address_in_pgd" />
+    <node id="oops_begin" />
+    <node id="oops_end" />
+    <node id="oops_may_print" />
+    <node id="__free_slab" />
+    <node id="cmpxchg_double_slab" />
+    <node id="free_debug_processing" />
+    <node id="slab_pad_check" />
+    <node id="rwsem_mark_wake" />
+    <node id="wake_q_add" />
+    <node id="wake_q_add_safe" />
+    <node id="unhandled_signal" />
+    <node id="_copy_from_user" />
+    <node id="aio_poll_wake" />
+    <node id="i915_sw_fence_wake" />
+    <node id="io_poll_wake" />
+    <node id="io_wqe_hash_wake" />
+    <node id="iocg_wake_fn" />
+    <node id="kyber_domain_wake" />
+    <node id="pollwake" />
+    <node id="synchronous_wake_function" />
+    <node id="wake_page_function" />
+    <node id="iocb_put" />
+    <node id="queue_work_on" />
+    <node id="__io_req_task_work_add" />
+    <node id="io_pollfree_wake" />
+    <node id="io_wqe_activate_free_worker" />
+    <node id="sbitmap_del_wait_queue" />
+    <node id="wake_up_state" />
+    <node id="_copy_to_user" />
+    <node id="__schedule" />
+    <node id="__delayacct_blkio_start" />
+    <node id="__schedule_bug" />
+    <node id="perf_event_task_sched_out" />
+    <node id="_find_first_bit" />
+    <node id="mt_find" />
+    <node id="mas_next_entry" />
+    <node id="dequeue_entity" />
+    <node id="rb_erase" />
+    <node id="rb_next" />
+    <node id="pick_next_entity" />
+    <node id="set_next_entity" />
+    <node id="___perf_sw_event" />
+    <node id="__mmdrop" />
+    <node id="__perf_event_task_sched_in" />
+    <node id="put_task_stack" />
+    <node id="task_dead_fair" />
+    <node id="perf_swevent_event" />
+    <node id="__mmu_notifier_subscriptions_destroy" />
+    <node id="pgd_free" />
+    <node id="perf_pmu_nop_void" />
+    <node id="x86_pmu_sched_task" />
+    <node id="do_sigtimedwait" />
+    <edge source="__x64_sys_rt_sigtimedwait" target="get_timespec64">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__x64_sys_rt_sigtimedwait" target="do_sigtimedwait">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="finish_task_switch" target="___perf_sw_event">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="finish_task_switch" target="__mmdrop">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="finish_task_switch" target="__perf_event_task_sched_in">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="finish_task_switch" target="put_task_stack">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="finish_task_switch" target="task_dead_fair">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="bad_area" target="__bad_area_nosemaphore">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="bad_area" target="up_read">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="put_prev_task_fair" target="put_prev_entity">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="fixup_exception" target="search_exception_tables">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="get_timespec64" target="_copy_from_user">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__slab_free" target="__free_slab">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__slab_free" target="cmpxchg_double_slab">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__slab_free" target="free_debug_processing">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__dequeue_signal" target="dec_rlimit_put_ucounts">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="up_read" target="rwsem_mark_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="pick_next_task_fair" target="put_prev_entity">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="pick_next_task_fair" target="put_prev_task_fair">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="pick_next_task_fair" target="pick_next_entity">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="pick_next_task_fair" target="set_next_entity">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="put_prev_entity" target="__update_stats_wait_start">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="put_prev_entity" target="rb_insert_color">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="put_prev_entity" target="update_load_avg">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="autoremove_wake_function" target="default_wake_function">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="dequeue_task_fair" target="dequeue_entity">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="find_vma" target="mt_find">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="rebalance_domains" target="__msecs_to_jiffies">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="rebalance_domains" target="load_balance">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_first_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="dequeue_signal" target="__dequeue_signal">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kernelmode_fixup_or_oops" target="fixup_exception">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kernelmode_fixup_or_oops" target="force_sig_fault">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kernelmode_fixup_or_oops" target="is_prefetch">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kernelmode_fixup_or_oops" target="page_fault_oops">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="run_rebalance_domains" target="rebalance_domains">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kmem_cache_free" target="__slab_free">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="schedule" target="__schedule">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="load_balance" target="__bitmap_and">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="load_balance" target="arch_asym_cpu_priority">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="load_balance" target="detach_tasks">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="load_balance" target="need_active_balance">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="load_balance" target="stop_one_cpu_nowait">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="search_exception_tables" target="search_module_extables">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__bad_area_nosemaphore" target="kernelmode_fixup_or_oops">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__bad_area_nosemaphore" target="unhandled_signal">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="copy_siginfo_to_user" target="_copy_to_user">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="autoremove_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="default_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="aio_poll_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="i915_sw_fence_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_poll_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_wqe_hash_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="iocg_wake_fn">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="kyber_domain_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="pollwake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="synchronous_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="wake_page_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="search_module_extables" target="mod_find">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="detach_tasks" target="can_migrate_task">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="stop_one_cpu_nowait" target="cpu_stop_queue_work">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="update_load_avg" target="attach_entity_load_avg">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="update_load_avg" target="detach_entity_load_avg">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="__die">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="is_vmalloc_addr">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="lookup_address_in_pgd">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="oops_begin">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="oops_end">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="oops_may_print">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__free_slab" target="slab_pad_check">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="rwsem_mark_wake" target="wake_q_add">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="rwsem_mark_wake" target="wake_q_add_safe">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="iocb_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="queue_work_on">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_poll_wake" target="__io_req_task_work_add">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_poll_wake" target="io_pollfree_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_wqe_hash_wake" target="io_wqe_activate_free_worker">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kyber_domain_wake" target="sbitmap_del_wait_queue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="wake_page_function" target="wake_up_state">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="__delayacct_blkio_start">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="__schedule_bug">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="perf_event_task_sched_out">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="mt_find" target="mas_next_entry">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="dequeue_entity" target="rb_erase">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="dequeue_entity" target="rb_next">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="___perf_sw_event" target="perf_swevent_event">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__mmdrop" target="__mmu_notifier_subscriptions_destroy">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__mmdrop" target="pgd_free">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__perf_event_task_sched_in" target="perf_pmu_nop_void">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__perf_event_task_sched_in" target="x86_pmu_sched_task">
+      <data key="d3">True</data>
+    </edge>
+  </graph>
+</graphml>

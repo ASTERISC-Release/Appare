@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d2" for="edge" attr.name="inferred" attr.type="boolean" />
+  <key id="d1" for="edge" attr.name="indirect" attr.type="boolean" />
+  <key id="d0" for="node" attr.name="profiled" attr.type="boolean" />
+  <graph edgedefault="directed">
+    <node id="__x64_sys_getpgid">
+      <data key="d0">True</data>
+    </node>
+    <node id="find_task_by_vpid">
+      <data key="d0">True</data>
+    </node>
+    <node id="idr_find" />
+    <node id="radix_tree_lookup" />
+    <node id="pid_vnr" />
+    <node id="security_task_getpgid" />
+    <node id="selinux_task_getpgid" />
+    <edge source="__x64_sys_getpgid" target="find_task_by_vpid">
+      <data key="d1">False</data>
+    </edge>
+    <edge source="__x64_sys_getpgid" target="pid_vnr">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__x64_sys_getpgid" target="security_task_getpgid">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="find_task_by_vpid" target="idr_find">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="idr_find" target="radix_tree_lookup">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="security_task_getpgid" target="selinux_task_getpgid">
+      <data key="d2">True</data>
+    </edge>
+  </graph>
+</graphml>

@@ -1,0 +1,10 @@
+__audit_syscall_entry
+__audit_syscall_exit
+__x64_sys_getrandom
+chacha_block_generic
+chacha_permute
+crng_fast_key_erasure
+crng_make_state
+get_random_bytes_user
+ktime_get_coarse_real_ts64
+syscall_exit_work

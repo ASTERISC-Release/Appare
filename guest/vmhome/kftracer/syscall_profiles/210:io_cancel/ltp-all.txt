@@ -1,0 +1,14 @@
+__bad_area
+__bad_area_nosemaphore
+__cond_resched
+__rcu_read_lock
+__rcu_read_unlock
+__x64_sys_io_cancel
+bad_area
+down_read_trylock
+ex_handler_uaccess
+find_vma
+fixup_exception
+kernelmode_fixup_or_oops
+search_exception_tables
+up_read

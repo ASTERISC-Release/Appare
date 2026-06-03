@@ -1,0 +1,14 @@
+Profiled functions: 12 nodes and 4 edges.
+Profiled (filtered) functions:
+__task_pid_nr_ns
+generic_exec_single
+find_task_by_vpid
+__x64_sys_getpid
+housekeeping_cpumask
+rebalance_domains
+update_dl_rq_load_avg
+run_rebalance_domains
+smp_call_function_single_async
+update_rt_rq_load_avg
+__msecs_to_jiffies
+__x64_sys_getpgid

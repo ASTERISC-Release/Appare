@@ -1,0 +1,14 @@
+Subgraph has 12 nodes and 11 edges.
+Markdown tree representation:
+- __x64_sys_arch_prctl
+  - do_arch_prctl_64
+    - __wrgsbase_inactive
+      - wrmsrl
+    - x86_fsbase_read_task
+    - x86_gsbase_read_task
+      - __rdgsbase_inactive
+        - native_read_msr
+  - do_arch_prctl_common
+    - fpu_xstate_prctl
+      - __xstate_request_perm
+        - get_sigframe_size

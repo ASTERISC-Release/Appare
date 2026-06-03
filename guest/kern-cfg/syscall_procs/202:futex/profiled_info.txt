@@ -1,0 +1,16 @@
+Profiled functions: 14 nodes and 8 edges.
+Profiled (filtered) functions:
+__note_gp_changes
+get_futex_key
+futex_wake
+futex_wake_mark
+futex_hash
+sock_free_inode
+select_task_rq_fair
+__futex_unqueue
+wake_up_q
+i_callback
+kmem_cache_free
+__x64_sys_futex
+do_futex
+wake_q_add_safe

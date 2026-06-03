@@ -1,0 +1,5 @@
+__audit_syscall_entry
+__audit_syscall_exit
+__x64_sys_rseq
+ktime_get_coarse_real_ts64
+syscall_exit_work

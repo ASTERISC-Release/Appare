@@ -1,0 +1,2212 @@
+Subgraph has 1493 nodes and 1718 edges.
+Markdown tree representation:
+- __cond_resched <profiled>
+- pagecache_get_page <profiled>
+  - PageHeadHuge <profiled>
+  - __filemap_get_folio <profiled>
+    - __filemap_add_folio <profiled>
+      - __mod_node_page_state <profiled>
+      - xa_get_order
+        - xas_load
+      - xa_load
+      - xas_find_conflict
+      - xas_nomem
+      - xas_split
+      - xas_split_alloc
+    - filemap_alloc_folio <profiled>
+      - folio_alloc <profiled>
+      - cpuset_mem_spread_node
+    - folio_add_lru <profiled>
+      - folio_batch_move_lru <profiled>
+        - lru_add_fn <profiled>
+          - __mod_zone_page_state <profiled>
+          - folio_mapping <profiled>
+        - release_pages <profiled>
+          - free_unref_page_list <profiled>
+            - free_pcppages_bulk <profiled>
+              - __free_one_page
+        - folio_activate_fn
+        - lru_deactivate_file_fn
+          - folio_mapped
+        - lru_lazyfree_fn
+        - lru_move_tail_fn
+    - folio_mark_accessed <profiled>
+      - folio_activate <profiled>
+      - workingset_activation <profiled>
+    - folio_wait_bit_common
+      - __delayacct_thrashing_end
+    - folio_wait_stable
+- switch_ldt <profiled>
+  - load_mm_ldt
+- kfree_skb_reason <profiled>
+  - __kfree_skb <profiled>
+    - skb_release_data <profiled>
+      - page_frag_free <profiled>
+        - free_unref_page <profiled>
+          - free_pcp_prepare <profiled>
+          - free_unref_page_commit <profiled>
+            - free_pcppages_bulk <profiled>
+              - __free_one_page
+    - skb_release_head_state <profiled>
+      - dst_release <profiled>
+        - __warn_printk
+      - sock_edemux <profiled>
+        - sock_gen_put <profiled>
+          - inet_twsk_free <profiled>
+            - module_put <profiled>
+            - tcp_twsk_destructor <profiled>
+          - tcp_v4_reqsk_destructor <profiled>
+      - sock_wfree <profiled>
+        - __wake_up_sync_key <profiled>
+          - autoremove_wake_function <profiled>
+            - default_wake_function <profiled>
+          - ep_autoremove_wake_function <profiled>
+          - ep_poll_callback <profiled>
+            - __pm_stay_awake
+              - wakeup_source_report_event
+          - wake_bit_function <profiled>
+          - io_poll_wake
+          - pollwake
+          - synchronous_wake_function
+      - __skb_ext_put
+      - ipv4_link_failure
+- vfs_fstatat <profiled>
+  - getname_flags <profiled>
+    - kfree <profiled>
+      - __free_pages <profiled>
+        - free_unref_page <profiled>
+          - free_pcp_prepare <profiled>
+          - free_unref_page_commit <profiled>
+            - free_pcppages_bulk <profiled>
+              - __free_one_page
+      - __kmem_cache_free <profiled>
+        - __slab_free <profiled>
+          - __free_slab <profiled>
+            - mod_node_page_state <profiled>
+            - check_object
+              - check_bytes_and_report
+              - print_trailer
+            - slab_pad_check
+              - memchr_inv
+              - slab_err
+          - __unfreeze_partials <profiled>
+            - __cmpxchg_double_slab
+          - cmpxchg_double_slab
+          - free_debug_processing
+    - kmalloc_trace <profiled>
+      - __kmem_cache_alloc_node <profiled>
+        - should_failslab <profiled>
+    - kmem_cache_alloc <profiled>
+    - kmem_cache_free <profiled>
+    - strncpy_from_user
+  - putname <profiled>
+  - vfs_statx <profiled>
+    - filename_lookup <profiled>
+      - path_lookupat
+        - link_path_walk
+    - path_put <profiled>
+    - security_inode_getattr <profiled>
+      - selinux_inode_getattr <profiled>
+        - avc_has_perm <profiled>
+        - inode_doinit_with_dentry <profiled>
+          - d_find_alias
+          - d_find_any_alias
+          - inode_doinit_use_xattr
+            - security_context_to_sid_default
+          - security_genfs_sid
+            - __security_genfs_sid
+          - security_transition_sid
+            - security_compute_sid
+    - vfs_getattr_nosec <profiled>
+      - ext4_file_getattr <profiled>
+        - ext4_getattr <profiled>
+          - ext4_inode_journal_mode <profiled>
+          - generic_fillattr <profiled>
+      - bad_inode_getattr
+      - empty_dir_getattr
+      - ext4_encrypted_symlink_getattr
+      - fat_getattr
+      - kernfs_iop_getattr
+      - nfs_getattr
+      - nfs_namespace_getattr
+      - pid_getattr
+        - pid_task
+      - proc_getattr
+      - proc_root_getattr
+        - nr_processes
+      - proc_sys_getattr
+      - proc_task_getattr
+      - proc_tgid_net_getattr
+        - get_proc_task_net
+      - shmem_getattr
+      - simple_getattr
+      - v9fs_vfs_getattr
+        - p9_client_stat
+      - v9fs_vfs_getattr_dotl
+        - p9_client_getattr_dotl
+        - v9fs_stat2inode_dotl
+- neigh_resolve_output <profiled>
+  - eth_header <profiled>
+    - skb_push <profiled>
+  - __neigh_event_send
+    - arp_solicit
+    - ndisc_solicit
+  - eth_header_cache
+- __common_interrupt <profiled>
+- pskb_trim_rcsum_slow <profiled>
+- alloc_page_buffers <profiled>
+  - alloc_buffer_head <profiled>
+    - kmem_cache_alloc <profiled>
+      - should_failslab <profiled>
+    - recalc_bh_state <profiled>
+- pick_next_task_fair <profiled>
+  - pick_next_entity <profiled>
+  - put_prev_entity <profiled>
+    - __update_stats_wait_start
+    - update_load_avg
+      - detach_entity_load_avg
+  - put_prev_task_fair <profiled>
+  - set_next_entity <profiled>
+  - update_misfit_status
+- dput <profiled>
+  - __dentry_kill
+    - __d_drop
+    - autofs_dentry_release
+    - debugfs_release_dentry
+    - dentry_unlink_inode
+    - nfs_d_release
+    - ns_prune_dentry
+    - v9fs_dentry_release
+  - retain_dentry
+    - nfs_dentry_delete
+    - pid_delete_dentry
+    - proc_misc_d_delete
+    - proc_sys_delete
+    - v9fs_cached_dentry_delete
+- i_callback <profiled>
+  - inode_sb_list_add <profiled>
+  - sock_free_inode <profiled>
+  - autofs_evict_inode
+  - bm_evict_inode
+  - dquot_free_inode
+    - dquot_mark_dquot_dirty
+    - ext4_get_dquots
+  - efivarfs_evict_inode
+  - nfs4_evict_inode
+    - nfs_inode_evict_delegation
+  - nfs_clear_inode
+  - nfs_evict_inode
+  - proc_evict_inode
+    - pde_put
+    - proc_pid_evict_inode
+    - proc_sys_evict_inode
+  - shmem_evict_inode
+    - __var_waitqueue
+    - init_wait_var_entry
+    - prepare_to_wait_event
+    - shmem_undo_range
+- pfifo_fast_enqueue <profiled>
+- e1000_clean <profiled>
+  - dma_unmap_page_attrs <profiled>
+    - swiotlb_sync_single_for_cpu <profiled>
+      - swiotlb_bounce <profiled>
+    - swiotlb_tbl_unmap_single <profiled>
+    - iommu_dma_unmap_page
+      - __iommu_dma_unmap
+      - iommu_get_dma_domain
+      - iommu_iova_to_phys
+  - napi_complete_done <profiled>
+    - __napi_schedule <profiled>
+    - netif_receive_skb_list_internal <profiled>
+      - __netif_receive_skb_list
+      - enqueue_to_backlog
+      - get_rps_cpu
+    - napi_gro_flush
+  - napi_consume_skb <profiled>
+- virtqueue_poll <profiled>
+- ___bpf_prog_run <profiled>
+  - __bpf_call_base
+  - __bpf_prog_run_args192
+  - __bpf_prog_run_args224
+  - __bpf_prog_run_args448
+  - bpf_get_cgroup_classid
+    - task_cls_state
+  - bpf_get_cgroup_classid_curr
+  - bpf_get_route_realm
+  - bpf_get_socket_cookie
+    - __sock_gen_cookie
+  - bpf_get_socket_cookie_sock_ops
+  - bpf_get_socket_ptr_cookie
+  - bpf_get_socket_uid
+  - bpf_l3_csum_replace
+  - bpf_redirect_neigh
+  - bpf_redirect_peer
+  - bpf_sk_cgroup_id
+  - bpf_sk_lookup_tcp
+    - bpf_sk_lookup
+  - bpf_sk_setsockopt
+    - __bpf_setsockopt
+  - bpf_skb_change_tail
+    - __bpf_skb_change_tail
+  - bpf_skb_check_mtu
+  - bpf_skb_ecn_set_ce
+  - bpf_skb_fib_lookup
+    - bpf_ipv6_fib_lookup
+    - is_skb_forwardable
+  - bpf_skb_get_tunnel_opt
+  - bpf_skb_load_helper_16
+    - bpf_internal_load_pointer_neg_helper
+  - bpf_skb_load_helper_32
+  - bpf_skb_set_tstamp
+  - bpf_skb_set_tunnel_key
+  - bpf_skb_set_tunnel_opt
+  - bpf_skb_vlan_pop
+  - bpf_skb_vlan_push
+    - skb_vlan_push
+  - bpf_skc_lookup_tcp
+    - __bpf_skc_lookup
+  - bpf_skc_to_tcp_sock
+  - bpf_sock_addr_sk_lookup_udp
+  - bpf_xdp_adjust_head
+  - bpf_xdp_adjust_meta
+  - bpf_xdp_redirect_map
+  - bpf_xdp_sk_lookup_udp
+  - sk_skb_change_tail
+- blkcg_iolatency_throttle <profiled>
+  - __wake_up <profiled>
+    - autoremove_wake_function <profiled>
+      - default_wake_function <profiled>
+    - ep_autoremove_wake_function <profiled>
+    - ep_poll_callback <profiled>
+      - __pm_stay_awake
+        - wakeup_source_report_event
+    - wake_bit_function <profiled>
+- ext4_es_insert_extent <profiled>
+  - __es_insert_extent <profiled>
+    - ext4_es_free_extent <profiled>
+    - kmem_cache_alloc <profiled>
+      - should_failslab <profiled>
+  - __es_remove_extent <profiled>
+    - count_rsvd
+- alloc_pages <profiled>
+  - __alloc_pages <profiled>
+    - get_page_from_freelist <profiled>
+      - __cpuset_node_allowed
+      - __next_zones_zonelist
+      - rmqueue
+        - rmqueue_pcplist
+      - zone_watermark_ok
+    - __alloc_pages_slowpath
+      - __alloc_pages_direct_compact
+      - __cpuset_memory_pressure_bump
+      - cpuset_nodemask_valid_mems_allowed
+      - out_of_memory
+      - try_to_free_pages
+      - warn_alloc
+      - zone_reclaimable_pages
+  - alloc_page_interleave
+- pick_next_task_stop <profiled>
+- inet_csk_destroy_sock <profiled>
+  - sk_free <profiled>
+    - __sk_free <profiled>
+      - __sk_destruct <profiled>
+        - cgroup_sk_free <profiled>
+        - cubictcp_init <profiled>
+        - inet_put_port <profiled>
+          - local_bh_enable
+        - inet_sock_destruct <profiled>
+          - __sk_mem_reclaim <profiled>
+            - __sk_mem_reduce_allocated <profiled>
+              - tcp_leave_memory_pressure
+                - jiffies_to_msecs
+          - dst_release <profiled>
+            - __warn_printk
+        - inet_unhash <profiled>
+          - reuseport_stop_listen_sock
+            - reuseport_detach_sock
+        - module_put <profiled>
+        - put_pid <profiled>
+          - put_pid_ns
+            - idr_destroy
+            - proc_free_inum
+        - security_sk_free <profiled>
+          - selinux_sk_free_security <profiled>
+            - selinux_netlbl_sk_security_free <profiled>
+              - do_sync_core <profiled>
+              - page_frag_free <profiled>
+                - free_unref_page <profiled>
+                  - free_pcp_prepare <profiled>
+                  - free_unref_page_commit <profiled>
+                    - free_pcppages_bulk <profiled>
+                      - __free_one_page
+        - sk_stream_kill_queues <profiled>
+          - skb_queue_purge <profiled>
+        - sock_def_readable <profiled>
+          - __wake_up_sync_key <profiled>
+            - autoremove_wake_function <profiled>
+              - default_wake_function <profiled>
+            - ep_autoremove_wake_function <profiled>
+            - ep_poll_callback <profiled>
+              - __pm_stay_awake
+                - wakeup_source_report_event
+            - wake_bit_function <profiled>
+            - io_poll_wake
+            - pollwake
+            - synchronous_wake_function
+          - sock_wake_async
+            - kill_fasync
+        - sock_def_wakeup <profiled>
+        - sock_gen_put <profiled>
+          - inet_twsk_free <profiled>
+            - tcp_twsk_destructor <profiled>
+          - tcp_v4_reqsk_destructor <profiled>
+        - tcp_done <profiled>
+          - inet_sk_state_store <profiled>
+          - reqsk_fastopen_remove
+          - xs_local_state_change
+          - xs_tcp_state_change
+        - tcp_initialize_rcv_mss <profiled>
+        - tcp_mtup_init <profiled>
+        - tcp_v4_destroy_sock <profiled>
+          - skb_rbtree_purge <profiled>
+          - tcp_cleanup_congestion_control <profiled>
+          - tcp_cleanup_ulp <profiled>
+          - tcp_fastopen_active_disable_ofo_check <profiled>
+          - tcp_fastopen_destroy_cipher <profiled>
+          - tcp_free_fastopen_req <profiled>
+          - tcp_write_queue_purge <profiled>
+            - tcp_chrono_stop <profiled>
+          - percpu_counter_add_batch
+        - __put_cred
+        - __put_net
+        - netlink_sock_destruct
+          - ctnetlink_done
+          - ctnetlink_done_list
+          - ctnetlink_exp_done
+          - genl_parallel_done
+          - ioam6_genl_dumpns_done
+          - ioam6_genl_dumpsc_done
+          - seg6_genl_dumphmac_done
+          - xfrm_dump_policy_done
+          - xfrm_dump_sa_done
+        - packet_sock_destruct
+        - raw_destroy
+          - ip_flush_pending_frames
+        - sk_filter_uncharge
+        - sock_def_destruct
+        - udp_destruct_common
+        - udp_destruct_sock
+        - unix_sock_destructor
+      - netlink_has_listeners <profiled>
+      - sock_diag_broadcast_destroy
+- security_inet_csk_clone <profiled>
+  - selinux_inet_csk_clone <profiled>
+    - selinux_netlbl_inet_csk_clone <profiled>
+- submit_bio <profiled>
+  - submit_bio_noacct <profiled>
+    - blk_cgroup_bio_start <profiled>
+    - submit_bio_noacct_nocheck <profiled>
+      - blk_mq_submit_bio <profiled>
+        - __blk_mq_alloc_requests <profiled>
+          - blk_mq_get_tag <profiled>
+            - __blk_mq_get_tag <profiled>
+              - __sbitmap_queue_get
+                - sbitmap_get
+              - sbitmap_queue_get_shallow
+                - sbitmap_get_shallow
+            - io_schedule <profiled>
+            - sbitmap_finish_wait
+            - sbitmap_prepare_to_wait
+              - prepare_to_wait_exclusive
+          - blk_mq_get_tags
+            - __sbitmap_queue_get_batch
+          - blk_mq_rq_ctx_init
+            - dd_prepare_request
+            - kyber_prepare_request
+          - dd_limit_depth
+          - kyber_limit_depth
+          - msleep
+        - __blk_mq_try_issue_directly <profiled>
+          - blk_mq_put_tag <profiled>
+            - sbitmap_queue_clear
+              - sbitmap_queue_wake_up
+          - scsi_mq_get_budget <profiled>
+            - blk_mq_delay_run_hw_queues
+          - scsi_mq_set_rq_budget_token <profiled>
+          - scsi_queue_rq <profiled>
+            - blk_mq_complete_request <profiled>
+              - blk_mq_complete_request_remote <profiled>
+                - cpus_share_cache <profiled>
+                - smp_call_function_single_async <profiled>
+              - scsi_complete <profiled>
+                - scsi_decide_disposition <profiled>
+                  - scsi_handle_queue_ramp_up <profiled>
+                    - scsi_change_queue_depth
+                      - blk_set_queue_depth
+                      - sbitmap_resize
+                  - scsi_check_sense
+                    - scsi_normalize_sense
+                  - sdev_prefix_printk
+                    - scnprintf
+                    - vscnprintf
+                - scsi_finish_command <profiled>
+                  - scsi_device_unbusy <profiled>
+                    - scsi_dec_host_busy <profiled>
+                      - scsi_eh_wakeup
+                        - scsi_host_busy
+                  - scsi_io_completion <profiled>
+                    - scsi_end_request <profiled>
+                      - add_disk_randomness <profiled>
+                      - no_op
+                    - scsi_noretry_cmd
+                - scsi_queue_insert
+            - blk_mq_start_request <profiled>
+              - __rq_qos_issue
+            - scsi_alloc_sgtables <profiled>
+              - __blk_rq_map_sg <profiled>
+              - sg_alloc_table_chained
+                - __sg_alloc_table
+                - __sg_free_table
+                - sg_init_table
+            - virtscsi_queuecommand <profiled>
+              - blk_mq_unique_tag <profiled>
+              - virtscsi_add_cmd <profiled>
+                - virtqueue_add_sgs <profiled>
+                  - sg_next
+                  - virtqueue_add
+                - virtqueue_kick_prepare <profiled>
+                - virtqueue_notify <profiled>
+                  - virtqueue_enable_cb <profiled>
+                  - virtqueue_is_broken <profiled>
+                  - vp_notify <profiled>
+                    - iowrite16
+              - virtscsi_complete_cmd <profiled>
+                - scsi_done <profiled>
+            - ata_scsi_queuecmd
+              - __ata_scsi_queuecmd
+          - __blk_mq_get_driver_tag
+          - blk_mq_sched_insert_request
+            - __blk_mq_insert_request
+            - blk_mq_request_bypass_insert
+            - dd_insert_requests
+            - kyber_insert_requests
+          - scsi_mq_put_budget
+        - __get_task_ioprio <profiled>
+        - __rq_qos_throttle <profiled>
+        - __rq_qos_track <profiled>
+        - blk_attempt_plug_merge <profiled>
+        - blk_mq_sched_bio_merge <profiled>
+          - blk_bio_list_merge
+            - blk_attempt_bio_merge
+          - dd_bio_merge
+            - blk_mq_sched_try_merge
+          - kyber_bio_merge
+        - blkcg_set_ioprio <profiled>
+        - __bio_split_to_limits
+          - bio_chain
+        - blk_insert_flush
+          - blk_flush_complete_seq
+      - md_submit_bio
+        - bio_split_to_limits
+        - md_handle_request
+  - __blkcg_punt_bio_submit
+- __dev_queue_xmit <profiled>
+  - __qdisc_run <profiled>
+    - __netif_schedule <profiled>
+    - sch_direct_xmit <profiled>
+      - dev_hard_start_xmit <profiled>
+        - dev_queue_xmit_nit <profiled>
+          - packet_rcv <profiled>
+            - __bpf_prog_run32 <profiled>
+            - dst_release <profiled>
+              - __warn_printk
+            - migrate_disable <profiled>
+            - migrate_enable <profiled>
+            - skb_clone <profiled>
+              - __skb_clone <profiled>
+                - __copy_skb_header <profiled>
+              - kmem_cache_alloc <profiled>
+                - should_failslab <profiled>
+            - skb_push <profiled>
+            - sock_def_readable <profiled>
+              - __wake_up_sync_key <profiled>
+                - autoremove_wake_function <profiled>
+                  - default_wake_function <profiled>
+                - ep_autoremove_wake_function <profiled>
+                - ep_poll_callback <profiled>
+                  - __pm_stay_awake
+                    - wakeup_source_report_event
+                - wake_bit_function <profiled>
+                - io_poll_wake
+                - pollwake
+                - synchronous_wake_function
+              - sock_wake_async
+                - kill_fasync
+            - ___pskb_trim
+            - eth_header_parse
+          - ipv6_rcv
+            - ip6_rcv_core
+          - match_fanout_group
+          - net_test_loopback_validate
+            - complete
+          - packet_rcv_fanout
+            - fanout_demux_bpf
+          - packet_rcv_spkt
+            - strscpy
+          - tpacket_rcv
+            - ns_to_timespec64
+        - e1000_xmit_frame <profiled>
+          - __skb_pad <profiled>
+            - pskb_expand_head <profiled>
+              - __kmalloc_node_track_caller <profiled>
+                - __kmem_cache_alloc_node <profiled>
+                - __kmalloc_large_node
+              - ksize <profiled>
+                - __ksize <profiled>
+              - page_frag_free <profiled>
+                - free_unref_page <profiled>
+                  - free_pcp_prepare <profiled>
+                  - free_unref_page_commit <profiled>
+                    - free_pcppages_bulk <profiled>
+                      - __free_one_page
+              - gfp_pfmemalloc_allowed
+          - dma_map_page_attrs <profiled>
+            - is_swiotlb_active <profiled>
+            - swiotlb_map <profiled>
+              - swiotlb_tbl_map_single <profiled>
+                - swiotlb_bounce <profiled>
+                - _dev_warn
+              - swiotlb_tbl_unmap_single <profiled>
+            - iommu_dma_map_page
+              - __iommu_dma_map
+          - dma_unmap_page_attrs <profiled>
+            - swiotlb_sync_single_for_cpu <profiled>
+            - iommu_dma_unmap_page
+              - __iommu_dma_unmap
+              - iommu_get_dma_domain
+              - iommu_iova_to_phys
+          - is_vmalloc_addr <profiled>
+          - napi_consume_skb <profiled>
+          - queue_work_on <profiled>
+          - e1000e_update_tdt_wa
+          - skb_tstamp_tx
+        - blackhole_netdev_xmit
+        - e100_xmit_frame
+          - e100_exec_cb
+          - e100_exec_cmd
+          - netdev_printk
+        - ieee80211_monitor_start_xmit
+          - cfg80211_reg_can_beacon
+          - ieee80211_hdrlen
+          - ieee80211_parse_tx_radiotap
+          - ieee80211_select_queue_80211
+        - ieee80211_subif_start_xmit
+          - __ieee80211_subif_start_xmit
+        - net_failover_start_xmit
+        - nv_start_xmit
+        - nv_start_xmit_optimized
+        - rtl8139_start_xmit
+          - iowrite32
+          - skb_copy_and_csum_dev
+        - rtl8169_start_xmit
+          - rtl8169_tx_map
+        - sit_tunnel_xmit
+          - iptunnel_handle_offloads
+        - sky2_xmit_frame
+        - start_xmit
+          - free_old_xmit_skbs
+      - validate_xmit_skb_list <profiled>
+        - validate_xmit_skb
+    - noop_dequeue
+  - netdev_core_pick_tx <profiled>
+    - ieee80211_monitor_select_queue
+    - ieee80211_netdev_select_queue
+      - ieee80211_select_queue
+    - net_failover_select_queue
+    - netdev_pick_tx
+  - __qdisc_calculate_pkt_len
+  - noop_enqueue
+- alloc_inode <profiled>
+  - ext4_alloc_inode <profiled>
+    - ext4_es_init_tree <profiled>
+    - ext4_fc_init_inode <profiled>
+      - __init_waitqueue_head <profiled>
+    - ext4_init_pending_tree <profiled>
+  - inode_init_always <profiled>
+    - __init_rwsem <profiled>
+    - security_inode_alloc <profiled>
+      - kmem_cache_alloc <profiled>
+        - should_failslab <profiled>
+      - selinux_inode_alloc_security <profiled>
+      - integrity_inode_free
+      - selinux_inode_free_security
+  - sock_free_inode <profiled>
+  - bdev_alloc_inode
+  - bdev_free_inode
+    - blk_free_ext_minor
+  - debugfs_free_inode
+  - ext4_destroy_inode
+    - __ext4_msg
+  - ext4_free_in_core_inode
+  - fat_alloc_inode
+  - fat_free_inode
+  - hugetlbfs_alloc_inode
+    - mpol_shared_policy_init
+  - hugetlbfs_destroy_inode
+    - mpol_free_shared_policy
+  - hugetlbfs_free_inode
+  - isofs_alloc_inode
+  - mqueue_alloc_inode
+  - mqueue_free_inode
+  - nfs_alloc_inode
+  - nfs_free_inode
+  - proc_alloc_inode
+  - proc_free_inode
+  - rpc_alloc_inode
+  - shmem_alloc_inode
+  - shmem_destroy_inode
+  - shmem_free_in_core_inode
+  - sock_alloc_inode
+  - v9fs_alloc_inode
+  - v9fs_free_inode
+- bio_alloc_bioset <profiled>
+  - bio_associate_blkg <profiled>
+    - bio_associate_blkg_from_css <profiled>
+      - radix_tree_lookup
+    - kthread_blkcg <profiled>
+  - kmem_cache_alloc <profiled>
+    - should_failslab <profiled>
+  - mempool_alloc <profiled>
+    - __ksize <profiled>
+    - finish_wait <profiled>
+    - prepare_to_wait <profiled>
+    - io_schedule_timeout
+  - mempool_free <profiled>
+  - punt_bios_to_rescuer
+- workingset_update_node <profiled>
+  - __mod_node_page_state <profiled>
+  - list_lru_add <profiled>
+- save_fpregs_to_fpstate <profiled>
+  - xfd_validate_state <profiled>
+- skb_dequeue <profiled>
+- __lookup_slow <profiled>
+  - d_alloc_parallel <profiled>
+    - __d_alloc <profiled>
+      - __kmalloc <profiled>
+        - __kmem_cache_alloc_node <profiled>
+          - should_failslab <profiled>
+      - d_set_d_op <profiled>
+    - add_wait_queue
+  - ext4_lookup <profiled>
+    - __brelse <profiled>
+    - __ext4_find_entry <profiled>
+      - __ext4_check_dir_entry <profiled>
+        - __ext4_error_file
+          - file_path
+      - __wait_on_buffer <profiled>
+        - out_of_line_wait_on_bit <profiled>
+          - __wait_on_bit <profiled>
+            - bit_wait_io <profiled>
+              - io_schedule <profiled>
+            - bit_wait
+      - ext4_bread_batch <profiled>
+      - dx_probe
+        - ext4fs_dirhash
+      - ext4_find_inline_entry
+    - __ext4_iget <profiled>
+      - __ext4_get_inode_loc <profiled>
+        - __getblk_gfp <profiled>
+          - grow_dev_page
+        - ext4_get_group_desc <profiled>
+        - ext4_inode_table <profiled>
+        - ext4_read_bh_nowait <profiled>
+        - blk_finish_plug
+        - blk_start_plug
+        - ext4_fill_raw_inode
+          - ext4_inode_csum
+        - ext4_inode_bitmap
+        - ext4_itable_unused_count
+        - ext4_sb_breadahead_unmovable
+      - crypto_shash_update <profiled>
+        - chksum_update <profiled>
+        - crypto_cbcmac_digest_update
+          - __crypto_xor
+          - crypto_cipher_encrypt_one
+        - crypto_cmac_digest_update
+        - crypto_sha256_update
+          - sha256_update
+        - crypto_sha512_update
+        - ghash_update
+          - gf128mul_4k_lle
+        - null_update
+      - ext4_ext_check_inode <profiled>
+        - __ext4_ext_check <profiled>
+          - __ext4_error_inode
+      - ext4_fc_init_inode <profiled>
+        - __init_waitqueue_head <profiled>
+      - ext4_inode_journal_mode <profiled>
+      - ext4_set_inode_flags <profiled>
+        - inode_set_flags <profiled>
+      - is_bad_inode <profiled>
+      - set_nlink <profiled>
+      - iget_failed
+        - __remove_inode_hash
+      - init_special_inode
+      - make_bad_inode
+    - d_splice_alias <profiled>
+      - security_d_instantiate <profiled>
+        - selinux_d_instantiate <profiled>
+          - inode_doinit_with_dentry <profiled>
+            - d_find_alias
+            - d_find_any_alias
+            - inode_doinit_use_xattr
+              - security_context_to_sid_default
+            - security_genfs_sid
+              - __security_genfs_sid
+            - security_transition_sid
+              - security_compute_sid
+      - up_read <profiled>
+      - __d_add
+    - generic_set_encrypted_ci_d_ops <profiled>
+  - __d_lookup_unhash_wake
+  - autofs_lookup
+    - autofs_new_ino
+  - bad_inode_lookup
+  - empty_dir_lookup
+  - isofs_lookup
+    - __isofs_iget
+    - get_rock_ridge_filename
+    - isofs_bread
+  - kernfs_iop_lookup
+    - kernfs_find_ns
+    - kernfs_get_inode
+  - msdos_lookup
+    - fat_build_inode
+    - fat_scan
+  - nfs_lookup
+    - nfs3_proc_lookup
+    - nfs4_proc_lookup
+    - nfs_alloc_fattr_with_label
+    - nfs_alloc_fhandle
+    - nfs_fhget
+  - proc_attr_dir_lookup
+    - proc_pident_instantiate
+  - proc_lookup
+    - proc_lookup_de
+  - proc_lookupfd
+    - proc_fd_instantiate
+  - proc_lookupfdinfo
+    - proc_pid_make_inode
+  - proc_map_files_lookup
+    - get_task_mm
+  - proc_ns_dir_lookup
+  - proc_root_lookup
+    - proc_pid_lookup
+  - proc_sys_lookup
+    - proc_sys_make_inode
+    - sysctl_follow_link
+  - proc_task_lookup
+    - find_task_by_pid_ns
+    - proc_task_instantiate
+  - proc_tgid_base_lookup
+  - proc_tgid_net_lookup
+  - proc_tid_base_lookup
+  - simple_lookup
+    - d_add
+  - v9fs_vfs_lookup
+    - p9_client_walk
+    - v9fs_fid_add
+    - v9fs_inode_from_fid
+  - vfat_lookup
+    - d_move
+    - fat_search_long
+- select_task_rq_fair <profiled>
+  - wake_affine
+- e1000_intr <profiled>
+  - __napi_schedule <profiled>
+  - napi_schedule_prep <profiled>
+  - queue_work_on <profiled>
+- mntput <profiled>
+  - mntput_no_expire <profiled>
+    - __put_mountpoint
+      - dput_to_list
+    - shrink_dentry_list
+      - list_lru_del
+- cgroup_sk_clone <profiled>
+- housekeeping_cpumask <profiled>
+- mempolicy_slab_node <profiled>
+- __napi_alloc_skb <profiled>
+  - __alloc_skb <profiled>
+    - __kmalloc_node_track_caller <profiled>
+      - __kmem_cache_alloc_node <profiled>
+        - should_failslab <profiled>
+      - __kmalloc_large_node
+    - kmem_cache_alloc_bulk <profiled>
+    - kmem_cache_alloc_node <profiled>
+    - ksize <profiled>
+      - __ksize <profiled>
+  - page_frag_free <profiled>
+    - free_unref_page <profiled>
+      - free_pcp_prepare <profiled>
+      - free_unref_page_commit <profiled>
+        - free_pcppages_bulk <profiled>
+          - __free_one_page
+- writeout_period <profiled>
+  - fprop_new_period
+    - __percpu_counter_sum
+- sd_uninit_command <profiled>
+  - mempool_free <profiled>
+- ext4_getblk <profiled>
+  - __brelse <profiled>
+  - __getblk_gfp <profiled>
+    - grow_dev_page
+  - __ext4_handle_dirty_metadata
+    - inode_needs_sync
+    - jbd2_journal_dirty_metadata
+    - mark_buffer_dirty
+    - mark_buffer_dirty_inode
+    - sync_dirty_buffer
+  - __ext4_journal_get_create_access
+    - jbd2_journal_get_create_access
+    - jbd2_journal_set_triggers
+- ip_send_skb <profiled>
+  - __ip_local_out <profiled>
+  - ip_finish_output2 <profiled>
+    - neigh_direct_output
+    - skb_expand_head
+  - ip_output <profiled>
+- kmalloc_slab <profiled>
+- __x64_sys_newfstatat <profiled>
+  - getname_flags <profiled>
+    - kfree <profiled>
+      - __free_pages <profiled>
+        - free_unref_page <profiled>
+          - free_pcp_prepare <profiled>
+          - free_unref_page_commit <profiled>
+            - free_pcppages_bulk <profiled>
+              - __free_one_page
+      - __kmem_cache_free <profiled>
+        - __slab_free <profiled>
+          - __free_slab <profiled>
+            - mod_node_page_state <profiled>
+            - check_object
+              - check_bytes_and_report
+              - print_trailer
+            - slab_pad_check
+              - memchr_inv
+              - slab_err
+          - __unfreeze_partials <profiled>
+            - __cmpxchg_double_slab
+          - cmpxchg_double_slab
+          - free_debug_processing
+    - kmalloc_trace <profiled>
+      - __kmem_cache_alloc_node <profiled>
+        - should_failslab <profiled>
+    - kmem_cache_alloc <profiled>
+    - kmem_cache_free <profiled>
+    - strncpy_from_user
+  - putname <profiled>
+  - vfs_statx <profiled>
+    - filename_lookup <profiled>
+      - path_lookupat
+        - link_path_walk
+    - path_put <profiled>
+    - security_inode_getattr <profiled>
+      - selinux_inode_getattr <profiled>
+        - avc_has_perm <profiled>
+        - inode_doinit_with_dentry <profiled>
+          - d_find_alias
+          - d_find_any_alias
+          - inode_doinit_use_xattr
+            - security_context_to_sid_default
+          - security_genfs_sid
+            - __security_genfs_sid
+          - security_transition_sid
+            - security_compute_sid
+    - vfs_getattr_nosec <profiled>
+      - ext4_file_getattr <profiled>
+        - ext4_getattr <profiled>
+          - ext4_inode_journal_mode <profiled>
+          - generic_fillattr <profiled>
+      - bad_inode_getattr
+      - empty_dir_getattr
+      - ext4_encrypted_symlink_getattr
+      - fat_getattr
+      - kernfs_iop_getattr
+      - nfs_getattr
+      - nfs_namespace_getattr
+      - pid_getattr
+        - pid_task
+      - proc_getattr
+      - proc_root_getattr
+        - nr_processes
+      - proc_sys_getattr
+      - proc_task_getattr
+      - proc_tgid_net_getattr
+        - get_proc_task_net
+      - shmem_getattr
+      - simple_getattr
+      - v9fs_vfs_getattr
+        - p9_client_stat
+      - v9fs_vfs_getattr_dotl
+        - p9_client_getattr_dotl
+        - v9fs_stat2inode_dotl
+  - _copy_to_user
+- ip_route_input_noref <profiled>
+- enqueue_task_fair <profiled>
+  - enqueue_entity
+    - __update_stats_enqueue_sleeper
+- __tcp_transmit_skb <profiled>
+  - __tcp_select_window <profiled>
+  - ip_queue_xmit <profiled>
+    - __ip_queue_xmit <profiled>
+      - __ip_local_out <profiled>
+      - __sk_dst_check <profiled>
+        - dst_release <profiled>
+          - __warn_printk
+        - ipv4_dst_check <profiled>
+      - ip_finish_output2 <profiled>
+        - neigh_direct_output
+        - skb_expand_head
+      - ip_local_deliver_finish <profiled>
+      - ip_output <profiled>
+      - sk_setup_caps <profiled>
+      - skb_push <profiled>
+      - dst_output
+      - ip_finish_output
+      - xfrm4_output
+  - skb_clone <profiled>
+    - __skb_clone <profiled>
+      - __copy_skb_header <profiled>
+    - kmem_cache_alloc <profiled>
+      - should_failslab <profiled>
+  - sock_edemux <profiled>
+    - sock_gen_put <profiled>
+      - inet_twsk_free <profiled>
+        - module_put <profiled>
+        - tcp_twsk_destructor <profiled>
+      - tcp_v4_reqsk_destructor <profiled>
+  - sock_wfree <profiled>
+    - __wake_up_sync_key <profiled>
+      - autoremove_wake_function <profiled>
+        - default_wake_function <profiled>
+      - ep_autoremove_wake_function <profiled>
+      - ep_poll_callback <profiled>
+        - __pm_stay_awake
+          - wakeup_source_report_event
+      - wake_bit_function <profiled>
+      - io_poll_wake
+      - pollwake
+      - synchronous_wake_function
+  - tcp_options_write <profiled>
+  - tcp_rate_skb_sent <profiled>
+  - tcp_v4_md5_lookup <profiled>
+  - tcp_v4_send_check <profiled>
+  - inet6_csk_xmit
+    - inet6_csk_route_socket
+    - ip6_xmit
+  - tcp_syn_options
+  - tcp_v6_send_check
+- netlbl_req_delattr <profiled>
+  - cipso_v4_req_delattr <profiled>
+    - cipso_v4_delopt <profiled>
+- __ip_dev_find <profiled>
+  - fib_table_lookup <profiled>
+  - fib_get_table
+- skb_csum_hwoffload_help <profiled>
+- mempool_alloc_slab <profiled>
+  - kmem_cache_alloc <profiled>
+    - should_failslab <profiled>
+- d_alloc <profiled>
+  - __d_alloc <profiled>
+    - __kmalloc <profiled>
+      - __kmem_cache_alloc_node <profiled>
+        - should_failslab <profiled>
+    - d_set_d_op <profiled>
+- fib_info_nh_uses_dev <profiled>
+- ext4_set_aops <profiled>
+  - ext4_inode_journal_mode <profiled>
+- terminate_walk <profiled>
+  - do_sync_core <profiled>
+  - page_frag_free <profiled>
+    - free_unref_page <profiled>
+      - free_pcp_prepare <profiled>
+      - free_unref_page_commit <profiled>
+        - free_pcppages_bulk <profiled>
+          - __free_one_page
+- schedule <profiled>
+  - __schedule
+    - __delayacct_blkio_start
+    - dequeue_task_rt
+- mark_page_accessed <profiled>
+  - folio_mark_accessed <profiled>
+    - folio_activate <profiled>
+      - folio_batch_move_lru <profiled>
+        - lru_add_fn <profiled>
+          - __mod_node_page_state <profiled>
+          - __mod_zone_page_state <profiled>
+          - folio_mapping <profiled>
+        - release_pages <profiled>
+          - PageHeadHuge <profiled>
+          - free_unref_page_list <profiled>
+            - free_pcppages_bulk <profiled>
+              - __free_one_page
+        - folio_activate_fn
+        - lru_deactivate_file_fn
+          - folio_mapped
+        - lru_lazyfree_fn
+        - lru_move_tail_fn
+    - workingset_activation <profiled>
+- __netif_receive_skb_list_core <profiled>
+  - __netif_receive_skb_core <profiled>
+    - migrate_disable <profiled>
+    - migrate_enable <profiled>
+    - packet_rcv <profiled>
+      - __bpf_prog_run32 <profiled>
+      - dst_release <profiled>
+        - __warn_printk
+      - skb_clone <profiled>
+        - __skb_clone <profiled>
+          - __copy_skb_header <profiled>
+        - kmem_cache_alloc <profiled>
+          - should_failslab <profiled>
+      - skb_push <profiled>
+      - sock_def_readable <profiled>
+        - __wake_up_sync_key <profiled>
+          - autoremove_wake_function <profiled>
+            - default_wake_function <profiled>
+          - ep_autoremove_wake_function <profiled>
+          - ep_poll_callback <profiled>
+            - __pm_stay_awake
+              - wakeup_source_report_event
+          - wake_bit_function <profiled>
+          - io_poll_wake
+          - pollwake
+          - synchronous_wake_function
+        - sock_wake_async
+          - kill_fasync
+      - ___pskb_trim
+      - eth_header_parse
+    - do_xdp_generic
+      - bpf_prog_run_generic_xdp
+      - generic_xdp_tx
+      - xdp_do_generic_redirect
+    - nf_ingress
+    - skb_vlan_untag
+    - tcf_classify
+      - cls_cgroup_classify
+  - ip_list_rcv <profiled>
+    - ip_sublist_rcv <profiled>
+      - tcp_v4_init_seq <profiled>
+        - secure_tcp_seq <profiled>
+          - siphash_3u32
+      - tcp_v4_rcv <profiled>
+        - __inet_lookup_established <profiled>
+          - inet_ehashfn <profiled>
+            - __do_once_done
+            - __do_once_start
+            - get_random_bytes
+              - _get_random_bytes
+          - sock_gen_put <profiled>
+            - inet_twsk_free <profiled>
+              - module_put <profiled>
+              - tcp_twsk_destructor <profiled>
+            - tcp_v4_reqsk_destructor <profiled>
+        - __inet_lookup_listener <profiled>
+          - inet_lhash2_lookup <profiled>
+            - reuseport_select_sock
+              - bpf_run_sk_reuseport
+              - run_bpf_filter
+          - bpf_sk_lookup_run_v4
+        - __skb_checksum_complete <profiled>
+          - netdev_rx_csum_fault
+        - inet_twsk_deschedule_put <profiled>
+          - inet_twsk_kill <profiled>
+            - inet_bind2_bucket_destroy <profiled>
+            - inet_bind_bucket_destroy <profiled>
+        - inet_twsk_put <profiled>
+        - sk_filter_trim_cap <profiled>
+          - security_sock_rcv_skb <profiled>
+            - selinux_socket_sock_rcv_skb <profiled>
+              - avc_has_perm <profiled>
+              - netlbl_enabled <profiled>
+              - security_net_peersid_resolve <profiled>
+                - ebitmap_cmp
+                  - bcmp
+              - selinux_netlbl_skbuff_getsid <profiled>
+                - do_sync_core <profiled>
+                - page_frag_free <profiled>
+                  - free_unref_page <profiled>
+                    - free_pcp_prepare <profiled>
+                    - free_unref_page_commit <profiled>
+                      - free_pcppages_bulk <profiled>
+                        - __free_one_page
+                - netlbl_skbuff_getattr
+                  - calipso_getattr
+                  - calipso_optptr
+                  - cipso_v4_getattr
+                  - cipso_v4_optptr
+                  - netlbl_unlabel_getattr
+              - selinux_netlbl_sock_rcv_skb <profiled>
+                - netlbl_skbuff_err
+                  - cipso_v4_error
+              - selinux_netlbl_err
+              - selinux_parse_skb
+        - tcp_add_backlog <profiled>
+          - kfree_skb_partial <profiled>
+          - skb_condense <profiled>
+            - __pskb_pull_tail
+          - skb_try_coalesce <profiled>
+        - tcp_check_req <profiled>
+          - inet_csk_complete_hashdance <profiled>
+            - inet_csk_reqsk_queue_drop <profiled>
+              - reqsk_put
+            - inet_reqsk_clone
+          - tcp_oow_rate_limited <profiled>
+          - tcp_parse_options <profiled>
+          - tcp_synack_rtt_meas <profiled>
+            - tcp_ack_update_rtt
+              - minmax_running_min
+          - tcp_v4_syn_recv_sock <profiled>
+            - __inet_inherit_port <profiled>
+              - inet_csk_update_fastreuse
+                - sk_reuseport_match
+                - sock_i_uid
+            - get_random_u16 <profiled>
+              - crng_make_state <profiled>
+            - inet_csk_route_child_sock <profiled>
+              - security_req_classify_flow <profiled>
+                - selinux_req_classify_flow <profiled>
+            - inet_ehash_nolisten <profiled>
+              - inet_ehash_insert <profiled>
+              - inet_sk_set_state <profiled>
+            - ipv4_default_advmss <profiled>
+            - ipv4_mtu <profiled>
+            - sk_setup_caps <profiled>
+            - tcp_ca_openreq_child <profiled>
+              - tcp_assign_congestion_control <profiled>
+                - try_module_get <profiled>
+              - tcp_set_ca_state <profiled>
+                - cubictcp_state <profiled>
+              - tcp_ca_find_key
+            - tcp_create_openreq_child <profiled>
+              - tcp_v4_md5_lookup <profiled>
+            - tcp_done <profiled>
+              - inet_put_port <profiled>
+                - local_bh_enable
+              - inet_sk_state_store <profiled>
+              - inet_unhash <profiled>
+                - reuseport_stop_listen_sock
+                  - reuseport_detach_sock
+              - sock_def_wakeup <profiled>
+              - reqsk_fastopen_remove
+              - xs_local_state_change
+              - xs_tcp_state_change
+            - tcp_initialize_rcv_mss <profiled>
+            - tcp_sync_mss <profiled>
+            - inet_csk_prepare_forced_close
+            - tcp_md5_do_add
+              - sock_kfree_s
+              - sock_kmalloc
+              - tcp_alloc_md5sig_pool
+          - tcp_reset
+          - tcp_v4_reqsk_send_ack
+          - tcp_v4_send_reset
+            - __xfrm_sk_clone_policy
+            - tcp_v4_md5_hash_hdr
+            - tcp_v4_md5_hash_skb
+        - tcp_child_process <profiled>
+          - tcp_rcv_state_process <profiled>
+            - __tcp_ack_snd_check <profiled>
+              - __tcp_select_window <profiled>
+              - tcp_send_ack <profiled>
+                - __tcp_send_ack
+              - tcp_send_delayed_ack
+            - __tcp_push_pending_frames <profiled>
+              - nsecs_to_jiffies <profiled>
+              - tcp_write_xmit <profiled>
+                - __pskb_trim_head <profiled>
+                - __sk_mem_reclaim <profiled>
+                  - __sk_mem_reduce_allocated <profiled>
+                    - tcp_leave_memory_pressure
+                      - jiffies_to_msecs
+                - skb_put <profiled>
+                - tcp_current_mss <profiled>
+                  - dst_blackhole_mtu
+                  - xfrm_mtu
+                - tcp_event_new_data_sent <profiled>
+                  - tcp_check_space <profiled>
+                    - tcp_chrono_stop <profiled>
+                  - tcp_rbtree_insert <profiled>
+                    - rb_insert_color
+                  - tcp_rearm_rto
+                - tcp_schedule_loss_probe <profiled>
+                  - __usecs_to_jiffies <profiled>
+                  - jiffies_to_usecs <profiled>
+                - tcp_fragment
+                  - tcp_adjust_pcount
+            - tcp_ack <profiled>
+              - cubictcp_acked <profiled>
+              - cubictcp_cong_avoid <profiled>
+                - tcp_slow_start <profiled>
+                - tcp_cong_avoid_ai
+              - tcp_rack_update_reo_wnd <profiled>
+              - tcp_rate_gen <profiled>
+              - tcp_rate_skb_delivered <profiled>
+              - tcp_trim_head <profiled>
+                - __skb_unclone_keeptruesize <profiled>
+                  - pskb_expand_head <profiled>
+                    - __kmalloc_node_track_caller <profiled>
+                      - __kmem_cache_alloc_node <profiled>
+                      - __kmalloc_large_node
+                    - ksize <profiled>
+                      - __ksize <profiled>
+                    - gfp_pfmemalloc_allowed
+              - tcp_clamp_probe0_to_user_timeout
+              - tcp_fastretrans_alert
+                - tcp_enter_recovery
+                - tcp_mark_head_lost
+                - tcp_newreno_mark_lost
+                - tcp_simple_retransmit
+                - tcp_try_undo_recovery
+              - tcp_process_tlp_ack
+              - tcp_rack_advance
+              - tcp_reno_cong_avoid
+              - tcp_sacktag_write_queue
+                - tcp_sacktag_walk
+              - tcp_xmit_retransmit_queue
+                - __tcp_retransmit_skb
+            - tcp_data_queue <profiled>
+              - get_random_u32 <profiled>
+              - sk_forced_mem_schedule <profiled>
+              - sock_edemux <profiled>
+              - sock_wfree <profiled>
+              - tcp_event_data_recv <profiled>
+                - tcp_ecn_check_ce
+                - tcp_grow_window
+              - tcp_fin
+              - tcp_try_coalesce
+              - tcp_try_rmem_schedule
+                - __sk_mem_schedule
+                - tcp_prune_ofo_queue
+            - tcp_init_transfer <profiled>
+              - inet_sk_rebuild_header <profiled>
+                - __sk_dst_check <profiled>
+                  - ipv4_dst_check <profiled>
+                - ip_route_output_key_hash <profiled>
+                - security_sk_classify_flow
+                  - selinux_sk_getsecid
+              - tcp_init_congestion_control <profiled>
+                - cubictcp_init <profiled>
+              - tcp_init_metrics <profiled>
+                - __msecs_to_jiffies <profiled>
+                - tcp_get_metrics <profiled>
+                  - kmalloc_trace <profiled>
+              - tcp_mstamp_refresh <profiled>
+              - tcp_mtup_init <profiled>
+            - tcp_set_state <profiled>
+            - tcp_time_wait <profiled>
+              - __inet_twsk_schedule <profiled>
+              - inet_twsk_alloc <profiled>
+                - __module_get <profiled>
+              - inet_twsk_hashdance <profiled>
+                - inet_bhashfn_portaddr
+              - tcp_update_metrics <profiled>
+            - tcp_urg <profiled>
+            - tcp_v4_conn_request <profiled>
+              - tcp_conn_request <profiled>
+                - __kmalloc <profiled>
+                - inet_csk_reqsk_queue_add <profiled>
+                - inet_csk_reqsk_queue_hash_add <profiled>
+                - inet_reqsk_alloc <profiled>
+                - tcp_openreq_init_rwin <profiled>
+                  - tcp_select_initial_window <profiled>
+                - tcp_try_fastopen <profiled>
+                - tcp_v4_route_req <profiled>
+                  - __ip_options_echo <profiled>
+                    - inet_addr_type
+                  - inet_csk_route_req <profiled>
+                  - security_inet_conn_request <profiled>
+                    - selinux_inet_conn_request <profiled>
+                      - selinux_netlbl_inet_conn_request <profiled>
+                        - netlbl_req_setattr <profiled>
+                          - cipso_v4_req_delattr <profiled>
+                            - cipso_v4_delopt <profiled>
+                          - netlbl_domhsh_getentry_af4 <profiled>
+                            - netlbl_af4list_search
+                          - calipso_req_delattr
+                          - cipso_v4_req_setattr
+                            - cipso_v4_genopt
+                        - security_netlbl_sid_to_secattr <profiled>
+                          - kstrdup
+                          - mls_export_netlbl_cat
+                            - ebitmap_netlbl_export
+                          - mls_export_netlbl_lvl
+                          - sidtab_search_entry
+                - cookie_v4_init_sequence
+                  - secure_tcp_syn_cookie
+                - dev_queue_xmit
+                - tcp_peer_is_proven
+                - tcp_v4_init_ts_off
+                  - secure_tcp_ts_off
+            - tcp_validate_incoming <profiled>
+              - tcp_write_queue_purge <profiled>
+              - tcp_fastopen_active_disable
+              - tcp_send_challenge_ack
+              - tcp_send_dupack
+        - tcp_inbound_md5_hash <profiled>
+          - tcp_parse_md5sig_option <profiled>
+          - __tcp_md5_do_lookup
+        - tcp_timewait_state_process <profiled>
+        - tcp_v4_do_rcv <profiled>
+          - tcp_rcv_established <profiled>
+            - inet_sk_rx_dst_set <profiled>
+        - tcp_v4_send_ack <profiled>
+          - ip_send_unicast_reply <profiled>
+            - __ip_local_out <profiled>
+            - __ip_make_skb <profiled>
+              - __ip_select_ident
+              - icmp_out_count
+              - ip_options_build
+                - inet_current_timestamp
+                - ip_rt_get_source
+            - ip_finish_output2 <profiled>
+              - neigh_direct_output
+              - skb_expand_head
+            - ip_output <profiled>
+            - ip_setup_cork <profiled>
+              - __sock_tx_timestamp
+            - dev_loopback_xmit
+              - netif_rx_internal
+            - xdst_queue_output
+            - xfrm_output2
+              - xfrm_output_resume
+        - __xfrm_policy_check
+          - __nf_nat_decode_session
+          - __xfrm_decode_session
+          - xfrm_selector_match
+        - inet_csk_reqsk_queue_drop_and_put
+        - reuseport_migrate_sock
+      - nf_hook_slow_list
+        - ipv4_confirm
+        - ipv4_conntrack_defrag
+        - ipv4_conntrack_in
+        - ipv4_conntrack_local
+        - ipv6_conntrack_in
+        - ipv6_defrag
+        - nf_nat_ipv4_local_fn
+        - nf_nat_ipv4_local_in
+        - nf_nat_ipv4_pre_routing
+        - nf_queue
+        - selinux_ip_forward
+    - ip_rcv_core
+  - ipv6_list_rcv
+    - ip6_sublist_rcv
+- ip_push_pending_frames <profiled>
+  - __ip_local_out <profiled>
+  - __ip_make_skb <profiled>
+    - dst_release <profiled>
+      - __warn_printk
+    - ipv4_mtu <profiled>
+    - __ip_select_ident
+    - icmp_out_count
+    - ip_options_build
+      - inet_current_timestamp
+      - ip_rt_get_source
+  - ip_finish_output2 <profiled>
+    - neigh_direct_output
+    - skb_expand_head
+  - ip_output <profiled>
+- generic_exec_single <profiled>
+  - do_sync_core <profiled>
+  - flush_tlb_func <profiled>
+  - page_frag_free <profiled>
+    - free_unref_page <profiled>
+      - free_pcp_prepare <profiled>
+      - free_unref_page_commit <profiled>
+        - free_pcppages_bulk <profiled>
+          - __free_one_page
+- __bio_add_page <profiled>
+- calc_wheel_index <profiled>
+- fixup_red_left <profiled>
+- eth_type_trans <profiled>
+- inet_bind2_bucket_find <profiled>
+- serial8250_backup_timeout <profiled>
+  - io_serial_in <profiled>
+  - io_serial_out <profiled>
+  - nsecs_to_jiffies <profiled>
+  - f815xxa_mem_serial_out
+  - hub6_serial_in
+  - kt_serial_in
+  - mem16_serial_in
+  - mem16_serial_out
+  - mem32_serial_in
+  - mem32_serial_out
+  - mem32be_serial_in
+    - ioread32be
+  - mem32be_serial_out
+    - iowrite32be
+  - mem_serial_in
+  - mem_serial_out
+  - serial8250_tx_chars
+    - serial8250_stop_tx
+    - uart_write_wakeup
+    - uart_xchar_out
+- policy_nodemask <profiled>
+- __sock_wfree <profiled>
+- bio_init <profiled>
+  - bio_associate_blkg <profiled>
+    - bio_associate_blkg_from_css <profiled>
+      - radix_tree_lookup
+    - kthread_blkcg <profiled>
+- __skb_checksum <profiled>
+  - csum_partial <profiled>
+  - csum_partial_ext
+  - warn_crc32c_csum_combine
+- mix_interrupt_randomness <profiled>
+  - blake2s_update <profiled>
+  - _credit_init_bits
+    - crng_reseed
+    - execute_in_process_context
+- scsi_init_command <profiled>
+- pfifo_fast_dequeue <profiled>
+- sd_init_command <profiled>
+  - mempool_alloc <profiled>
+    - __ksize <profiled>
+    - finish_wait <profiled>
+    - prepare_to_wait <profiled>
+    - io_schedule_timeout
+  - scsi_alloc_sgtables <profiled>
+    - __blk_rq_map_sg <profiled>
+    - sg_alloc_table_chained
+      - __sg_alloc_table
+      - __sg_free_table
+      - sg_init_table
+  - scsi_free_sgtables <profiled>
+  - sd_setup_write_same10_cmnd
+  - sd_setup_write_same16_cmnd
+- mix_pool_bytes <profiled>
+  - blake2s_update <profiled>
+- path_init <profiled>
+  - __fdget_raw <profiled>
+  - fput <profiled>
+  - mntget <profiled>
+  - nd_jump_root <profiled>
+    - set_root <profiled>
+- tcp_orphan_count_sum <profiled>
+- __tcp_v4_send_check <profiled>
+- skb_headers_offset_update <profiled>
+- inet_twsk_bind_unhash <profiled>
+  - inet_bind2_bucket_destroy <profiled>
+  - inet_bind_bucket_destroy <profiled>
+- run_rebalance_domains <profiled>
+  - rebalance_domains <profiled>
+    - __msecs_to_jiffies <profiled>
+    - load_balance <profiled>
+      - group_balance_cpu <profiled>
+        - _find_first_bit
+      - update_group_capacity <profiled>
+      - __bitmap_and
+      - __bitmap_subset
+      - detach_tasks
+        - can_migrate_task
+      - need_active_balance
+      - stop_one_cpu_nowait
+        - cpu_stop_queue_work
+- tcp_wfree <profiled>
+  - __tasklet_schedule <profiled>
+    - __tasklet_schedule_common <profiled>
+- tcp_v4_send_synack <profiled>
+  - inet_csk_route_req <profiled>
+    - dst_release <profiled>
+      - __warn_printk
+    - security_req_classify_flow <profiled>
+      - selinux_req_classify_flow <profiled>
+  - ip_build_and_send_pkt <profiled>
+    - __ip_local_out <profiled>
+    - get_random_u16 <profiled>
+      - crng_make_state <profiled>
+    - ip_finish_output2 <profiled>
+      - neigh_direct_output
+      - skb_expand_head
+    - ip_local_deliver_finish <profiled>
+    - ip_output <profiled>
+    - skb_push <profiled>
+  - tcp_make_synack <profiled>
+    - __alloc_skb <profiled>
+      - __kmalloc_node_track_caller <profiled>
+        - __kmem_cache_alloc_node <profiled>
+          - should_failslab <profiled>
+        - __kmalloc_large_node
+      - kmem_cache_alloc_bulk <profiled>
+      - kmem_cache_alloc_node <profiled>
+      - ksize <profiled>
+        - __ksize <profiled>
+    - ipv4_default_advmss <profiled>
+    - tcp_options_write <profiled>
+    - tcp_v4_md5_lookup <profiled>
+    - cookie_init_timestamp
+- e1000_alloc_rx_buffers <profiled>
+  - dma_map_page_attrs <profiled>
+    - is_swiotlb_active <profiled>
+    - swiotlb_map <profiled>
+      - swiotlb_tbl_map_single <profiled>
+        - swiotlb_bounce <profiled>
+        - _dev_warn
+      - swiotlb_tbl_unmap_single <profiled>
+    - iommu_dma_map_page
+      - __iommu_dma_map
+  - dma_unmap_page_attrs <profiled>
+    - swiotlb_sync_single_for_cpu <profiled>
+    - iommu_dma_unmap_page
+      - __iommu_dma_unmap
+      - iommu_get_dma_domain
+      - iommu_iova_to_phys
+  - is_vmalloc_addr <profiled>
+  - page_frag_free <profiled>
+    - free_unref_page <profiled>
+      - free_pcp_prepare <profiled>
+      - free_unref_page_commit <profiled>
+        - free_pcppages_bulk <profiled>
+          - __free_one_page
+  - skb_trim <profiled>
+  - e1000e_update_rdt_wa
+- kmem_cache_alloc_lru <profiled>
+  - ___slab_alloc <profiled>
+    - allocate_slab
+    - deactivate_slab
+    - get_partial_node
+    - slab_out_of_memory
+  - should_failslab <profiled>
+- finish_task_switch <profiled>
+  - __mmdrop
+    - __mmu_notifier_subscriptions_destroy
+    - pgd_free
+  - __perf_event_task_sched_in
+    - ctx_sched_in
+    - perf_pmu_nop_void
+    - uncore_pmu_enable
+    - x86_pmu_sched_task
+  - put_task_stack
+  - task_dead_fair
+- bvec_free <profiled>
+  - kmem_cache_free <profiled>
+    - __slab_free <profiled>
+      - __free_slab <profiled>
+        - mod_node_page_state <profiled>
+        - check_object
+          - check_bytes_and_report
+          - print_trailer
+        - slab_pad_check
+          - memchr_inv
+          - slab_err
+      - __unfreeze_partials <profiled>
+        - __cmpxchg_double_slab
+      - cmpxchg_double_slab
+      - free_debug_processing
+  - mempool_free <profiled>
+- ip_send_check <profiled>
+- kthread_is_per_cpu <profiled>
+- __sysvec_call_function <profiled>
+  - generic_smp_call_function_single_interrupt <profiled>
+    - __flush_smp_call_function_queue <profiled>
+      - do_sync_core <profiled>
+      - page_frag_free <profiled>
+        - free_unref_page <profiled>
+          - free_pcp_prepare <profiled>
+          - free_unref_page_commit <profiled>
+            - free_pcppages_bulk <profiled>
+              - __free_one_page
+      - sched_ttwu_pending <profiled>
+        - set_task_cpu <profiled>
+          - migrate_task_rq_fair <profiled>
+          - set_task_rq_fair <profiled>
+        - ttwu_do_activate
+          - task_woken_dl
+      - llist_reverse_order
+- inode_permission <profiled>
+  - generic_permission <profiled>
+    - capable_wrt_inode_uidgid
+  - security_inode_permission <profiled>
+    - selinux_inode_permission <profiled>
+      - inode_doinit_with_dentry <profiled>
+        - d_find_alias
+        - d_find_any_alias
+        - inode_doinit_use_xattr
+          - security_context_to_sid_default
+        - security_genfs_sid
+          - __security_genfs_sid
+        - security_transition_sid
+          - security_compute_sid
+  - autofs_dir_permission
+  - nfs_permission
+    - nfs_do_access
+- mempool_free_slab <profiled>
+- ip_reply_glue_bits <profiled>
+  - csum_partial_copy_nocheck <profiled>
+- netif_skb_features <profiled>
+  - skb_network_protocol <profiled>
+  - rtl8169_features_check
+- get_acl <profiled>
+  - ext4_get_acl <profiled>
+    - __kmalloc <profiled>
+      - __kmem_cache_alloc_node <profiled>
+        - should_failslab <profiled>
+    - ext4_xattr_get <profiled>
+      - __brelse <profiled>
+      - down_read <profiled>
+        - __down_read_common
+      - ext4_xattr_ibody_get <profiled>
+        - ext4_get_inode_loc
+        - strnlen
+      - up_read <profiled>
+      - ext4_sb_bread
+        - ext4_read_bh
+    - posix_acl_alloc
+  - get_cached_acl <profiled>
+  - bad_inode_get_acl
+  - nfs3_get_acl
+    - forget_cached_acl
+    - nfs3_complete_get_acl
+    - nfs_alloc_fattr
+    - nfs_refresh_inode
+    - nfs_revalidate_inode
+    - posix_acl_equiv_mode
+    - rpc_call_sync
+- submit_bh <profiled>
+  - submit_bh_wbc
+- update_dl_rq_load_avg <profiled>
+- __zone_watermark_ok <profiled>
+- security_sk_clone <profiled>
+  - selinux_sk_clone_security <profiled>
+    - selinux_netlbl_sk_security_reset <profiled>
+- napi_gro_receive <profiled>
+  - dev_gro_receive <profiled>
+    - inet_gro_receive <profiled>
+      - tcp4_gro_receive <profiled>
+        - __skb_gro_checksum_complete <profiled>
+          - skb_checksum <profiled>
+        - tcp_gro_receive <profiled>
+          - skb_gro_receive
+      - udp4_gro_receive
+        - udp_gro_receive
+    - eth_gro_receive
+      - gro_find_receive_by_type
+    - gro_pull_from_frag0
+    - ipv6_gro_receive
+    - napi_gro_complete
+      - inet_gro_complete
+      - ip6ip6_gro_complete
+      - ipv6_gro_complete
+      - tcp4_gro_complete
+      - udp4_gro_complete
+      - udp6_gro_complete
+      - xfrm6_transport_finish
+  - netif_receive_skb_list_internal <profiled>
+    - __netif_receive_skb_list
+    - enqueue_to_backlog
+    - get_rps_cpu
+- walk_component <profiled>
+  - do_sync_core <profiled>
+  - down_read <profiled>
+    - __down_read_common
+  - handle_dots <profiled>
+    - __legitimize_mnt <profiled>
+    - set_root <profiled>
+      - mntget <profiled>
+    - step_into <profiled>
+      - kmalloc_trace <profiled>
+        - __kmem_cache_alloc_node <profiled>
+          - should_failslab <profiled>
+      - nd_jump_root <profiled>
+      - page_frag_free <profiled>
+        - free_unref_page <profiled>
+          - free_pcp_prepare <profiled>
+          - free_unref_page_commit <profiled>
+            - free_pcppages_bulk <profiled>
+              - __free_one_page
+      - __lookup_mnt
+      - autofs_get_link
+      - ext4_encrypted_get_link
+        - ext4_inode_is_fast_symlink
+      - kernfs_iop_get_link
+      - nfs_get_link
+        - nfs_revalidate_mapping
+        - read_cache_page
+      - proc_get_link
+      - proc_ns_get_link
+        - get_pid_task
+        - nd_jump_link
+        - ns_get_path
+        - ptrace_may_access
+      - proc_thread_self_get_link
+        - __task_pid_nr_ns
+        - sprintf
+      - security_inode_follow_link
+        - selinux_inode_follow_link
+      - shmem_get_link
+      - simple_get_link
+      - v9fs_vfs_get_link_dotl
+        - p9_client_readlink
+        - v9fs_fid_lookup
+  - lookup_fast <profiled>
+    - __d_lookup <profiled>
+      - efivarfs_d_compare
+        - strncasecmp
+      - isofs_dentry_cmp_ms
+        - strncmp
+      - msdos_cmp
+        - memcmp
+        - msdos_format_name
+      - vfat_cmp
+      - vfat_cmpi
+    - kernfs_dop_revalidate
+    - map_files_d_revalidate
+      - down_read_killable
+      - mm_access
+      - mmput
+      - security_task_to_inode
+    - nfs4_lookup_revalidate
+      - __nfs_lookup_revalidate
+    - nfs_lookup_revalidate
+    - pid_revalidate
+      - pid_update_inode
+    - proc_misc_d_revalidate
+    - proc_sys_revalidate
+    - tid_fd_revalidate
+    - v9fs_lookup_revalidate
+      - v9fs_refresh_inode
+      - v9fs_refresh_inode_dotl
+    - vfat_revalidate
+    - vfat_revalidate_ci
+  - up_read <profiled>
+- process_timeout <profiled>
+- balance_fair <profiled>
+- raw_local_deliver <profiled>
+  - skb_clone <profiled>
+    - __skb_clone <profiled>
+      - __copy_skb_header <profiled>
+    - kmem_cache_alloc <profiled>
+      - should_failslab <profiled>
+- __kthread_should_park <profiled>
+- wake_all_kswapds <profiled>
+  - wakeup_kswapd <profiled>
+    - __wake_up <profiled>
+      - autoremove_wake_function <profiled>
+        - default_wake_function <profiled>
+      - ep_autoremove_wake_function <profiled>
+      - ep_poll_callback <profiled>
+        - __pm_stay_awake
+          - wakeup_source_report_event
+      - wake_bit_function <profiled>
+    - zone_watermark_ok_safe <profiled>
+- io_schedule_prepare <profiled>
+- ip_local_out <profiled>
+  - __ip_local_out <profiled>
+  - ip_finish_output2 <profiled>
+    - neigh_direct_output
+    - skb_expand_head
+  - ip_local_deliver_finish <profiled>
+  - ip_output <profiled>
+  - __xfrm4_output
+    - xfrm_output
+- virtqueue_enable_cb_prepare <profiled>
+- second_overflow <profiled>
+- native_flush_tlb_local <profiled>
+- resched_curr <profiled>
+  - add_interrupt_randomness <profiled>
+  - native_smp_send_reschedule <profiled>
+- ext4_search_dir <profiled>
+  - __ext4_check_dir_entry <profiled>
+    - __ext4_error_file
+      - file_path
+- complete_walk <profiled>
+  - try_to_unlazy <profiled>
+    - __legitimize_mnt <profiled>
+    - do_sync_core <profiled>
+    - page_frag_free <profiled>
+      - free_unref_page <profiled>
+        - free_pcp_prepare <profiled>
+        - free_unref_page_commit <profiled>
+          - free_pcppages_bulk <profiled>
+            - __free_one_page
+  - nfs_weak_revalidate
+- skb_gso_validate_network_len <profiled>
+- note_interrupt <profiled>
+- should_fail_alloc_page <profiled>
+- find_suitable_fallback <profiled>
+- tcp_orphan_update <profiled>
+- __sysvec_call_function_single <profiled>
+  - generic_smp_call_function_single_interrupt <profiled>
+    - __flush_smp_call_function_queue <profiled>
+      - do_sync_core <profiled>
+      - page_frag_free <profiled>
+        - free_unref_page <profiled>
+          - free_pcp_prepare <profiled>
+          - free_unref_page_commit <profiled>
+            - free_pcppages_bulk <profiled>
+              - __free_one_page
+      - sched_ttwu_pending <profiled>
+        - set_task_cpu <profiled>
+          - migrate_task_rq_fair <profiled>
+          - set_task_rq_fair <profiled>
+        - ttwu_do_activate
+          - task_woken_dl
+      - llist_reverse_order
+- blk_mq_free_request <profiled>
+  - __blk_mq_free_request <profiled>
+    - blk_mq_put_tag <profiled>
+      - sbitmap_queue_clear
+        - sbitmap_queue_wake_up
+    - blk_queue_exit <profiled>
+    - __blk_mq_sched_restart
+  - __rq_qos_done <profiled>
+    - ioc_rqos_done
+  - dd_finish_request
+  - kyber_finish_request
+- vfs_getattr <profiled>
+  - security_inode_getattr <profiled>
+    - selinux_inode_getattr <profiled>
+      - avc_has_perm <profiled>
+      - inode_doinit_with_dentry <profiled>
+        - d_find_alias
+        - d_find_any_alias
+        - inode_doinit_use_xattr
+          - security_context_to_sid_default
+        - security_genfs_sid
+          - __security_genfs_sid
+        - security_transition_sid
+          - security_compute_sid
+  - vfs_getattr_nosec <profiled>
+    - ext4_file_getattr <profiled>
+      - ext4_getattr <profiled>
+        - ext4_inode_journal_mode <profiled>
+        - generic_fillattr <profiled>
+    - bad_inode_getattr
+    - empty_dir_getattr
+    - ext4_encrypted_symlink_getattr
+    - fat_getattr
+    - kernfs_iop_getattr
+    - nfs_getattr
+    - nfs_namespace_getattr
+    - pid_getattr
+      - pid_task
+    - proc_getattr
+    - proc_root_getattr
+      - nr_processes
+    - proc_sys_getattr
+    - proc_task_getattr
+    - proc_tgid_net_getattr
+      - get_proc_task_net
+    - shmem_getattr
+    - simple_getattr
+    - v9fs_vfs_getattr
+      - p9_client_stat
+    - v9fs_vfs_getattr_dotl
+      - p9_client_getattr_dotl
+      - v9fs_stat2inode_dotl
+- __note_gp_changes <profiled>
+- update_rt_rq_load_avg <profiled>
+- net_rx_action <profiled>
+  - __napi_poll <profiled>
+    - __napi_schedule <profiled>
+    - e100_poll
+      - e100_tx_clean
+      - ioread8
+      - iowrite8
+    - nv_napi_poll
+      - nv_alloc_rx
+      - nv_alloc_rx_optimized
+      - nv_linkchange
+      - nv_rx_process_optimized
+      - nv_tx_done
+      - nv_tx_done_optimized
+    - process_backlog
+      - __netif_receive_skb
+    - rtl8139_poll
+      - ioread16
+    - rtl8169_poll
+      - netif_tx_wake_queue
+    - sky2_poll
+      - sky2_phy_intr
+    - tg3_poll
+      - tg3_poll_work
+      - tg3_write32
+      - tg3_write_mem
+    - tg3_poll_msix
+    - virtnet_poll
+      - receive_buf
+      - xdp_do_flush
+    - virtnet_poll_tx
+  - __usecs_to_jiffies <profiled>
+  - napi_consume_skb <profiled>
+  - smp_call_function_single_async <profiled>
+- fib_select_path <profiled>
+  - fib_multipath_hash
+    - flow_hash_from_keys
+    - ip_multipath_l3_keys
+  - fib_select_multipath
+  - inet_select_addr
+- sk_destruct <profiled>
+- blk_update_request <profiled>
+  - bio_endio <profiled>
+    - __rq_qos_done_bio <profiled>
+      - blkcg_iolatency_done_bio <profiled>
+      - ioc_rqos_done_bio
+    - bio_put <profiled>
+      - mempool_free <profiled>
+    - end_bio_bh_io_sync <profiled>
+      - end_buffer_read_sync <profiled>
+        - wake_up_bit <profiled>
+      - end_buffer_write_sync <profiled>
+        - mark_buffer_write_io_error
+          - __filemap_set_wb_err
+          - errseq_set
+      - journal_end_buffer_io_sync <profiled>
+      - end_bitmap_write
+      - end_buffer_async_write
+        - end_page_writeback
+      - ext4_end_bitmap_read
+      - ext4_end_buffer_io_sync
+    - ext4_end_bio <profiled>
+      - ext4_put_io_end_defer <profiled>
+        - queue_work_on <profiled>
+        - ext4_release_io_end
+          - ext4_finish_bio
+      - __ext4_warning
+    - mpage_end_io <profiled>
+      - __read_end_io <profiled>
+    - bio_chain_endio
+    - blkdev_bio_end_io
+      - __bio_release_pages
+      - aio_complete_rw
+      - bio_check_pages_dirty
+      - sio_read_complete
+      - sio_write_complete
+    - blkdev_bio_end_io_async
+    - clone_endio
+      - __dm_io_complete
+      - mirror_end_io
+      - stripe_end_io
+    - end_clone_bio
+    - end_swap_bio_read
+    - endio
+      - zero_fill_bio
+    - iomap_dio_bio_end_io
+      - iomap_dio_complete
+    - iomap_read_end_io
+    - iomap_writepage_end_bio
+      - iomap_finish_ioend
+    - md_end_io_acct
+  - blk_account_io_completion <profiled>
+  - blk_dump_rq_flags
+  - blk_recalc_rq_segments
+- swake_up_one <profiled>
+- tcp_v4_early_demux <profiled>
+  - __inet_lookup_established <profiled>
+    - inet_ehashfn <profiled>
+      - __do_once_done
+      - __do_once_start
+      - get_random_bytes
+        - _get_random_bytes
+    - sock_gen_put <profiled>
+      - inet_twsk_free <profiled>
+        - module_put <profiled>
+        - tcp_twsk_destructor <profiled>
+      - tcp_v4_reqsk_destructor <profiled>
+  - ipv4_dst_check <profiled>
+- wake_up_process <profiled>
+- fib_lookup_good_nhc <profiled>
+- dma_sync_single_for_cpu <profiled>
+  - swiotlb_sync_single_for_cpu <profiled>
+    - swiotlb_bounce <profiled>
+  - iommu_dma_sync_single_for_cpu
+- filemap_add_folio <profiled>
+  - __filemap_add_folio <profiled>
+    - PageHeadHuge <profiled>
+    - __mod_node_page_state <profiled>
+    - xa_get_order
+      - xas_load
+    - xa_load
+    - xas_find_conflict
+    - xas_nomem
+    - xas_split
+    - xas_split_alloc
+  - folio_add_lru <profiled>
+    - folio_batch_move_lru <profiled>
+      - lru_add_fn <profiled>
+        - __mod_zone_page_state <profiled>
+        - folio_mapping <profiled>
+      - release_pages <profiled>
+        - free_unref_page_list <profiled>
+          - free_pcppages_bulk <profiled>
+            - __free_one_page
+      - folio_activate_fn
+      - lru_deactivate_file_fn
+        - folio_mapped
+      - lru_lazyfree_fn
+      - lru_move_tail_fn
+- skb_set_owner_w <profiled>
+  - sock_edemux <profiled>
+    - sock_gen_put <profiled>
+      - inet_twsk_free <profiled>
+        - module_put <profiled>
+        - tcp_twsk_destructor <profiled>
+      - tcp_v4_reqsk_destructor <profiled>
+  - sock_wfree <profiled>
+    - __wake_up_sync_key <profiled>
+      - autoremove_wake_function <profiled>
+        - default_wake_function <profiled>
+      - ep_autoremove_wake_function <profiled>
+      - ep_poll_callback <profiled>
+        - __pm_stay_awake
+          - wakeup_source_report_event
+      - wake_bit_function <profiled>
+      - io_poll_wake
+      - pollwake
+      - synchronous_wake_function
+- sd_done <profiled>
+  - sd_config_write_same
+    - blk_queue_max_write_zeroes_sectors
+- tcp_data_ready <profiled>
+  - sock_def_readable <profiled>
+    - __wake_up_sync_key <profiled>
+      - autoremove_wake_function <profiled>
+        - default_wake_function <profiled>
+      - ep_autoremove_wake_function <profiled>
+      - ep_poll_callback <profiled>
+        - __pm_stay_awake
+          - wakeup_source_report_event
+      - wake_bit_function <profiled>
+      - io_poll_wake
+      - pollwake
+      - synchronous_wake_function
+    - sock_wake_async
+      - kill_fasync
+- dequeue_task_fair <profiled>
+  - dequeue_entity
+- attach_entity_load_avg <profiled>
+- chacha_permute <profiled>
+- vring_interrupt <profiled>
+  - virtqueue_disable_cb <profiled>
+  - virtscsi_req_done <profiled>
+    - virtscsi_vq_done <profiled>
+      - virtqueue_enable_cb <profiled>
+      - virtqueue_get_buf <profiled>
+        - virtqueue_get_buf_ctx <profiled>
+          - detach_buf_split <profiled>
+            - dma_unmap_page_attrs <profiled>
+              - swiotlb_sync_single_for_cpu <profiled>
+                - swiotlb_bounce <profiled>
+              - swiotlb_tbl_unmap_single <profiled>
+              - iommu_dma_unmap_page
+                - __iommu_dma_unmap
+                - iommu_get_dma_domain
+                - iommu_iova_to_phys
+      - virtqueue_is_broken <profiled>
+      - virtscsi_complete_cmd <profiled>
+        - scsi_done <profiled>
+  - in_intr
+    - discard_port_data
+    - flush_bufs
+    - hvc_kick
+    - hvc_poll
+  - skb_recv_done
+  - virtblk_done
+    - blk_mq_start_stopped_hw_queues
+  - virtinput_recv_events
+  - virtio_gpu_ctrl_ack
+  - virtscsi_ctrl_done
+- __wake_up_bit <profiled>
+  - __wake_up <profiled>
+    - autoremove_wake_function <profiled>
+      - default_wake_function <profiled>
+    - ep_autoremove_wake_function <profiled>
+    - ep_poll_callback <profiled>
+      - __pm_stay_awake
+        - wakeup_source_report_event
+    - wake_bit_function <profiled>
+- guard_bio_eod <profiled>
+- path_get <profiled>
+  - mntget <profiled>
+- ext4_es_lookup_extent <profiled>
+- sk_prot_alloc <profiled>
+  - __kmalloc <profiled>
+    - __kmem_cache_alloc_node <profiled>
+      - should_failslab <profiled>
+  - kmem_cache_alloc <profiled>
+  - security_sk_alloc <profiled>
+    - selinux_sk_alloc_security <profiled>
+      - kmalloc_trace <profiled>
+      - selinux_netlbl_sk_security_reset <profiled>
+  - security_sk_free <profiled>
+    - selinux_sk_free_security <profiled>
+      - selinux_netlbl_sk_security_free <profiled>
+        - do_sync_core <profiled>
+        - page_frag_free <profiled>
+          - free_unref_page <profiled>
+            - free_pcp_prepare <profiled>
+            - free_unref_page_commit <profiled>
+              - free_pcppages_bulk <profiled>
+                - __free_one_page
+  - try_module_get <profiled>
+- sched_slice <profiled>
+- __local_bh_enable_ip <profiled>
+- nf_hook_slow <profiled>
+  - selinux_ip_output <profiled>
+    - netlbl_enabled <profiled>
+    - selinux_netlbl_skbuff_setsid
+      - netlbl_skbuff_setattr
+  - selinux_ip_postroute <profiled>
+    - avc_has_perm <profiled>
+    - security_net_peersid_resolve <profiled>
+      - ebitmap_cmp
+        - bcmp
+    - selinux_netlbl_skbuff_getsid <profiled>
+      - do_sync_core <profiled>
+      - page_frag_free <profiled>
+        - free_unref_page <profiled>
+          - free_pcp_prepare <profiled>
+          - free_unref_page_commit <profiled>
+            - free_pcppages_bulk <profiled>
+              - __free_one_page
+      - netlbl_skbuff_getattr
+        - calipso_getattr
+        - calipso_optptr
+        - cipso_v4_getattr
+        - cipso_v4_optptr
+        - netlbl_unlabel_getattr
+- init_page_buffers <profiled>
+- ext4_find_extent <profiled>
+  - __brelse <profiled>
+  - __kmalloc <profiled>
+    - __kmem_cache_alloc_node <profiled>
+      - should_failslab <profiled>
+  - ext4_es_cache_extent <profiled>
+    - __es_insert_extent <profiled>
+      - ext4_es_free_extent <profiled>
+      - kmem_cache_alloc <profiled>
+- ip_route_output_flow <profiled>
+  - xfrm_lookup_route <profiled>
+    - dst_release <profiled>
+      - __warn_printk
+    - xfrm_lookup_with_ifid <profiled>
+      - xfrm6_fill_dst
+        - rt6_uncached_list_add
+      - xfrm_resolve_and_create_bundle
+        - xfrm4_dst_lookup
+        - xfrm4_get_saddr
+        - xfrm_state_find
+        - xfrm_state_mtu
+    - ip6_blackhole_route
+    - ipv4_blackhole_route
+- ip_route_use_hint <profiled>
+  - fib_validate_source <profiled>
+    - fib_table_lookup <profiled>
+- bio_add_page <profiled>
+- ip_local_deliver <profiled>
+  - ip_defrag
+    - inet_frag_destroy
+    - inet_frag_find
+    - inet_frag_queue_insert
+    - inet_frag_reasm_finish

@@ -1,0 +1,9 @@
+/delete_module01
+/delete_module02
+/delete_module03
+/*.ko
+/*.mod.c
+/*.cmd
+/Module.symvers
+/modules.order
+modules.livepatch

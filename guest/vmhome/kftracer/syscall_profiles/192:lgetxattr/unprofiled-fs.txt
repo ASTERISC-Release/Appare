@@ -1,0 +1,5 @@
+192:lgetxattr
+    cp-0.txt: total funcs: N/A; 
+    ls-0.txt: total funcs: 164; not profiled: 32/164 (19.5%) [__audit_syscall_entry, __audit_syscall_exit, __legitimize_path.isra.0, __slab_free, calc_global_load, cgroup_base_stat_cputime_account_end.isra.0, file_free_rcu, get_cached_acl_rcu, handle_dots, ktime_get_coarse_real_ts64, link_path_walk.part.0, ntp_get_next_leap, ntp_tick_length, path_lookupat.isra.0, put_cpu_partial, raw_notifier_call_chain, raw_spin_rq_lock_nested.constprop.0, rcu_cblist_dequeue, rcu_segcblist_add_len, rcu_segcblist_extract_done_cbs, rcu_segcblist_insert_done_cbs, rcu_segcblist_n_segment_cbs, set_root, syscall_exit_work, tick_do_update_jiffies64, tick_sched_handle.isra.0, timekeeping_advance, timekeeping_update, update_fast_timekeeper, update_rq_clock.part.0, update_vsyscall, update_wall_time]
+    tar-0.txt: total funcs: N/A; 
+    unqlite-0.txt: total funcs: N/A; 

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libunqlite.a CMakeFiles/unqlite.dir/unqlite.c.o
+/usr/bin/ranlib libunqlite.a

@@ -1,0 +1,14 @@
+__cond_resched
+__rcu_read_lock
+__rcu_read_unlock
+__x64_sys_reboot
+cap_capable
+cred_has_capability
+mutex_lock
+mutex_unlock
+ns_capable
+ns_capable_common
+reboot_pid_ns
+security_capable
+selinux_capable
+task_active_pid_ns

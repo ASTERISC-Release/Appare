@@ -1,0 +1,5 @@
+13:rt_sigaction
+    cp-0.txt: total funcs: N/A; 
+    ls-0.txt: total funcs: N/A; 
+    tar-0.txt: total funcs: 12; not profiled: 5/12 (41.7%) [__audit_syscall_entry, __audit_syscall_exit, flush_sigqueue_mask, ktime_get_coarse_real_ts64, syscall_exit_work]
+    unqlite-0.txt: total funcs: N/A; 

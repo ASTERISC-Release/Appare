@@ -1,0 +1,14 @@
+__audit_syscall_entry
+__audit_syscall_exit
+__fdget
+__fget_light
+__sys_getsockopt
+__x64_sys_getsockopt
+ktime_get_coarse_real_ts64
+security_socket_getsockopt
+selinux_socket_getsockopt
+sk_getsockopt
+sock_getsockopt
+sock_has_perm
+sockfd_lookup_light
+syscall_exit_work

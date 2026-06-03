@@ -1,0 +1,27 @@
+Profiled functions: 25 nodes and 17 edges.
+Profiled (filtered) functions:
+__bad_area_nosemaphore
+selinux_socket_getsockname
+inet_getname
+unix_getname
+search_exception_tables
+default_wake_function
+kernelmode_fixup_or_oops
+__local_bh_enable_ip
+__sys_getpeername
+find_vma
+unix_peer_get
+__cond_resched
+security_socket_getpeername
+__wake_up
+autoremove_wake_function
+move_addr_to_user
+selinux_socket_getpeername
+release_sock
+__x64_sys_getpeername
+tcp_release_cb
+select_task_rq_fair
+fixup_exception
+__fdget
+up_read
+bad_area

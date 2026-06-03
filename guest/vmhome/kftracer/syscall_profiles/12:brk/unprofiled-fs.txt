@@ -1,0 +1,5 @@
+12:brk
+    cp-0.txt: total funcs: 31; not profiled: 4/31 (12.9%) [__audit_syscall_entry, __audit_syscall_exit, ktime_get_coarse_real_ts64, syscall_exit_work]
+    ls-0.txt: total funcs: 35; not profiled: 5/35 (14.3%) [__audit_syscall_entry, __audit_syscall_exit, kmem_cache_free_bulk.part.0, ktime_get_coarse_real_ts64, syscall_exit_work]
+    tar-0.txt: total funcs: 31; not profiled: 4/31 (12.9%) [__audit_syscall_entry, __audit_syscall_exit, ktime_get_coarse_real_ts64, syscall_exit_work]
+    unqlite-0.txt: total funcs: 110; not profiled: 21/110 (19.1%) [__audit_syscall_entry, __audit_syscall_exit, anon_vma_interval_tree_insert, calc_global_load, can_vma_merge_after.isra.0, cgroup_base_stat_cputime_account_end.isra.0, kmem_cache_free_bulk.part.0, ktime_get_coarse_real_ts64, ntp_get_next_leap, ntp_tick_length, raw_notifier_call_chain, raw_spin_rq_lock_nested.constprop.0, syscall_exit_work, tick_do_update_jiffies64, tick_sched_handle.isra.0, timekeeping_advance, timekeeping_update, update_fast_timekeeper, update_rq_clock.part.0, update_vsyscall, update_wall_time]

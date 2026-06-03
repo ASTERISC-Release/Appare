@@ -1,0 +1,398 @@
+Subgraph has 390 nodes and 382 edges.
+Markdown tree representation:
+- update_rt_rq_load_avg <profiled>
+- update_dl_rq_load_avg <profiled>
+- deactivate_super <profiled>
+  - down_write
+    - __down_write_common
+- schedule <profiled>
+- smp_call_function_single_async <profiled>
+- fsnotify_destroy_marks <profiled>
+  - iput <profiled>
+    - evict <profiled>
+      - __destroy_inode <profiled>
+        - __fsnotify_inode_delete <profiled>
+        - inode_has_buffers <profiled>
+        - security_inode_free <profiled>
+          - integrity_inode_free <profiled>
+            - rb_erase
+          - selinux_inode_free_security <profiled>
+      - clear_inode <profiled>
+      - inode_wait_for_writeback <profiled>
+        - bit_waitqueue <profiled>
+        - __wait_on_bit
+          - bit_wait
+          - bit_wait_io
+          - bit_wait_io_timeout
+          - bit_wait_timeout
+          - nfs_wait_bit_killable
+      - proc_evict_inode <profiled>
+        - proc_pid_evict_inode <profiled>
+          - put_pid <profiled>
+            - put_pid_ns
+              - idr_destroy
+        - pde_put
+        - proc_sys_evict_inode
+      - truncate_inode_pages_final <profiled>
+        - truncate_inode_pages_range <profiled>
+          - __filemap_get_folio
+            - __filemap_add_folio
+            - folio_wait_bit_common
+            - xas_load
+          - delete_from_page_cache_batch
+            - filemap_unaccount_folio
+            - inode_add_lru
+          - ext4_invalidate_folio
+          - ext4_journalled_invalidate_folio
+            - jbd2_journal_invalidate_folio
+          - find_get_entries
+          - folio_wait_writeback
+            - folio_mapping
+            - folio_wait_bit
+          - nfs_invalidate_folio
+            - nfs_wb_folio_cancel
+          - truncate_folio_batch_exceptionals
+          - truncate_inode_folio
+            - filemap_remove_folio
+          - truncate_inode_partial_folio
+            - zero_user_segments
+      - wake_up_bit <profiled>
+      - autofs_evict_inode
+      - bdev_evict_inode
+        - invalidate_inode_buffers
+      - bm_evict_inode
+      - cd_forget
+      - efivarfs_evict_inode
+      - ext4_destroy_inode
+        - __ext4_msg
+        - dump_stack
+        - print_hex_dump
+      - ext4_evict_inode
+        - __ext4_journal_stop
+        - __ext4_std_error
+        - __ext4_warning
+        - dquot_initialize
+        - ext4_clear_inode
+        - ext4_free_inode
+        - ext4_orphan_del
+        - ext4_truncate
+        - ext4_xattr_delete_inode
+        - ext4_xattr_inode_array_free
+        - is_bad_inode
+        - jbd2_journal_begin_ordered_truncate
+      - fat_evict_inode
+        - fat_cache_inval_inode
+        - fat_detach
+      - hugetlbfs_destroy_inode
+        - mpol_free_shared_policy
+      - hugetlbfs_evict_inode
+        - remove_inode_hugepages
+        - resv_map_release
+      - inode_io_list_del
+      - kernfs_evict_inode
+      - mqueue_evict_inode
+        - free_msg
+        - msg_get
+        - put_ipc_ns
+        - put_ucounts
+      - nfs4_evict_inode
+        - nfs_clear_inode
+        - nfs_inode_evict_delegation
+      - nfs_evict_inode
+      - nsfs_evict
+        - cgroupns_put
+        - ipcns_put
+        - mntns_put
+        - netns_put
+        - pidns_put
+        - timens_put
+        - utsns_put
+      - shmem_destroy_inode
+      - shmem_evict_inode
+        - __var_waitqueue
+        - finish_wait
+        - init_wait_var_entry
+        - percpu_counter_add_batch
+        - prepare_to_wait_event
+        - shmem_undo_range
+      - v9fs_evict_inode
+        - filemap_fdatawrite
+    - generic_delete_inode <profiled>
+    - list_lru_del <profiled>
+    - nfs_drop_inode
+    - write_inode_now
+      - writeback_single_inode
+  - fsnotify_destroy_mark
+    - fsnotify_detach_mark
+  - fsnotify_detach_connector_from_object
+  - fsnotify_put_mark
+    - queue_delayed_work_on
+- __cond_resched <profiled>
+  - __schedule
+    - __delayacct_blkio_start
+    - dequeue_task_dl
+    - dequeue_task_rt
+    - enter_lazy_tlb
+    - perf_event_task_sched_out
+    - set_next_task_rt
+- __x64_sys_wait4 <profiled>
+  - kernel_wait4 <profiled>
+    - do_wait <profiled>
+      - add_wait_queue <profiled>
+      - pid_task <profiled>
+      - remove_wait_queue <profiled>
+      - wait_consider_task <profiled>
+        - __task_pid_nr_ns <profiled>
+        - getrusage <profiled>
+          - get_task_mm <profiled>
+          - ns_to_kernel_old_timeval <profiled>
+          - mmput
+            - __mmput
+        - release_task <profiled>
+          - __cleanup_sighand <profiled>
+            - signalfd_cleanup <profiled>
+              - __wake_up_pollfree
+          - add_device_randomness <profiled>
+            - blake2s_update <profiled>
+          - cgroup_release <profiled>
+            - pids_release <profiled>
+          - dec_rlimit_ucounts <profiled>
+          - detach_pid <profiled>
+            - free_pid <profiled>
+              - idr_remove
+                - radix_tree_delete_item
+          - flush_sigqueue <profiled>
+          - proc_flush_pid <profiled>
+            - proc_invalidate_siblings_dcache <profiled>
+              - d_find_any_alias <profiled>
+              - igrab <profiled>
+              - d_find_alias
+          - put_pid <profiled>
+            - put_pid_ns
+              - idr_destroy
+          - release_thread <profiled>
+          - seccomp_filter_release <profiled>
+            - bpf_prog_destroy
+          - tty_kref_put <profiled>
+            - refcount_warn_saturate
+              - __warn_printk
+          - __ptrace_unlink
+            - __put_cred
+            - signal_wake_up_state
+            - task_clear_jobctl_pending
+            - task_clear_jobctl_trapping
+          - do_notify_parent
+            - __wake_up_parent
+            - task_active_pid_ns
+    - find_get_pid <profiled>
+      - idr_find
+        - radix_tree_lookup
+    - get_task_pid
+- run_rebalance_domains <profiled>
+  - rebalance_domains <profiled>
+    - __msecs_to_jiffies <profiled>
+    - load_balance <profiled>
+      - __bitmap_subset
+      - detach_tasks
+        - can_migrate_task
+      - need_active_balance
+      - stop_one_cpu_nowait
+        - cpu_stop_queue_work
+- d_invalidate <profiled>
+  - d_walk <profiled>
+    - find_submount <profiled>
+    - select_collect <profiled>
+      - list_lru_del <profiled>
+    - d_genocide_kill
+    - path_check_mount
+      - __lookup_mnt
+    - select_collect2
+    - umount_check
+  - shrink_dcache_parent <profiled>
+    - shrink_dentry_list <profiled>
+- kmem_cache_free <profiled>
+  - __slab_free
+    - __free_slab
+    - cmpxchg_double_slab
+- dequeue_task_fair <profiled>
+  - dequeue_entity
+- dput <profiled>
+  - __dentry_kill <profiled>
+    - dentry_unlink_inode <profiled>
+      - __fsnotify_inode_delete <profiled>
+      - fsnotify
+        - dnotify_handle_event
+        - inotify_handle_inode_event
+      - nfs_dentry_iput
+        - drop_nlink
+    - list_lru_del <profiled>
+    - __d_drop
+    - autofs_dentry_release
+      - autofs_free_ino
+    - debugfs_release_dentry
+    - dma_buf_release
+      - dma_resv_fini
+      - drm_gem_dmabuf_release
+      - module_put
+    - nfs_d_release
+    - ns_prune_dentry
+    - v9fs_dentry_release
+  - retain_dentry
+    - nfs_dentry_delete
+    - pid_delete_dentry
+    - proc_misc_d_delete
+    - proc_sys_delete
+    - v9fs_cached_dentry_delete
+- finish_task_switch <profiled>
+  - ___perf_sw_event
+    - perf_swevent_event
+  - __mmdrop
+    - __mmu_notifier_subscriptions_destroy
+    - destroy_context_ldt
+    - pgd_free
+  - __perf_event_task_sched_in
+    - ctx_sched_in
+    - x86_pmu_disable
+    - x86_pmu_enable
+    - x86_pmu_sched_task
+  - put_task_stack
+  - task_dead_fair
+- generic_exec_single <profiled>
+  - __blk_mq_complete_request_remote
+  - __mce_disable_bank
+    - cmci_disable_bank
+  - __perf_event_read
+    - _x86_pmu_read
+    - amd_uncore_read
+    - bts_event_read
+    - cstate_pmu_event_update
+    - hw_breakpoint_pmu_read
+    - i915_pmu_event_read
+    - intel_pmu_read_event
+    - msr_event_update
+    - perf_ibs_read
+    - perf_iommu_read
+    - perf_pmu_commit_txn
+    - perf_pmu_nop_int
+    - perf_pmu_start_txn
+    - perf_swevent_read
+    - pt_event_read
+    - rapl_pmu_event_read
+    - uncore_pmu_event_read
+    - x86_pmu_commit_txn
+    - x86_pmu_read
+    - x86_pmu_start_txn
+  - __rdmsr_on_cpu
+  - __rdmsr_safe_on_cpu
+    - complete
+  - __rdmsr_safe_regs_on_cpu
+  - __wbinvd
+  - __wrmsr_on_cpu
+  - __wrmsr_safe_on_cpu
+  - __wrmsr_safe_regs_on_cpu
+  - apply_microcode_local
+    - apply_microcode_amd
+    - apply_microcode_intel
+  - bts_buffer_free_aux
+  - cpuid_smp_cpuid
+  - cr4_update_pce
+  - do_drv_write
+    - cpu_freq_write_amd
+    - cpu_freq_write_io
+  - do_flush_tlb_all
+  - do_kernel_range_flush
+  - do_sync_core
+  - flip_smm_bit
+    - msr_clear_bit
+    - msr_set_bit
+  - flush_ldt
+    - load_mm_ldt
+  - flush_tlb_func
+  - intel_pmu_arch_lbr_xrstors
+    - xrstors
+  - intel_pmu_arch_lbr_xsaves
+    - xsaves
+  - invalidate_bh_lru
+  - ipi_mb
+  - ipi_rseq
+  - ipi_sync_core
+  - ipi_sync_rq_state
+  - kvm_disable_host_haltpoll
+  - kvm_enable_host_haltpoll
+  - kvm_pv_guest_cpu_reboot
+    - kvm_guest_cpu_offline
+  - llist_add_batch
+  - mce_disable_cmci
+    - cmci_clear
+  - mtrr_save_fixed_ranges
+    - get_fixed_ranges
+  - net_drop_ns
+  - nfs3_nlm_alloc_call
+    - get_nfs_open_context
+  - nfs3_nlm_release_call
+    - put_nfs_open_context
+  - nfs4_delegreturn_release
+    - nfs_refresh_inode
+    - nfs_sb_deactive
+  - nfs4_open_confirm_release
+    - nfs4_close_state
+    - nfs4_opendata_put
+    - nfs4_opendata_to_nfs4_state
+  - nfs_async_rename_release
+    - nfs_force_lookup_revalidate
+  - nfs_pgio_release
+    - nfs_direct_read_completion
+    - nfs_direct_write_completion
+    - nfs_read_completion
+  - nlmclnt_rpc_release
+  - nlmsvc_callback_release
+    - nlmsvc_release_host
+  - nohz_csd_func
+  - pcim_msi_release
+    - pci_disable_msi
+  - pm_runtime_disable_action
+    - __pm_runtime_disable
+  - shmem_put_link
+  - threshold_restart_bank
+  - tlb_remove_table_smp_sync
+  - trigger_card_free
+    - put_device
+  - umwait_update_control_msr
+  - update_tfa_sched
+    - perf_pmu_resched
+    - x86_get_pmu
+  - v1_tlb_flush_all
+  - v2_tlb_flush_all
+  - vmware_pv_guest_cpu_reboot
+  - wakeup_all_recovery_waiters
+  - xhci_intel_unregister_pdev
+    - platform_device_unregister
+- __wake_up_bit <profiled>
+  - __wake_up
+    - aio_poll_wake
+    - autoremove_wake_function
+    - blk_mq_dispatch_wake
+    - default_wake_function
+    - do_rps_boost
+    - ep_autoremove_wake_function
+    - i915_sw_fence_wake
+    - io_poll_wake
+    - io_wqe_hash_wake
+    - iocg_wake_fn
+    - kyber_domain_wake
+    - p9_pollwake
+    - synchronous_wake_function
+    - unix_dgram_peer_wake_relay
+    - wake_page_function
+- housekeeping_cpumask <profiled>
+- pick_next_task_fair <profiled>
+  - put_prev_entity <profiled>
+    - __update_stats_wait_start
+    - rb_insert_color
+    - update_load_avg
+      - detach_entity_load_avg
+  - put_prev_task_fair <profiled>
+  - pick_next_entity
+    - rb_next
+  - set_next_entity
+  - update_misfit_status

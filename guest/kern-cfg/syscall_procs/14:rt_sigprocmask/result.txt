@@ -1,0 +1,9 @@
+Subgraph has 7 nodes and 4 edges.
+Markdown tree representation:
+- recalc_sigpending <profiled>
+  - freezing_slow_path
+    - cgroup_freezing
+- __x64_sys_rt_sigprocmask <profiled>
+  - _copy_from_user
+  - _copy_to_user
+- sigprocmask <profiled>

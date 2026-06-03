@@ -1,0 +1,3 @@
+1:write
+232:epoll_wait
+288:accept4

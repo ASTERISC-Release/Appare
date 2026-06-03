@@ -1,0 +1,5 @@
+61:wait4
+    cp-0.txt: total funcs: N/A; 
+    ls-0.txt: total funcs: N/A; 
+    tar-0.txt: total funcs: 150; not profiled: 23/150 (15.3%) [__audit_syscall_entry, __audit_syscall_exit, calc_global_load, cgroup_base_stat_cputime_account_end.isra.0, enter_lazy_tlb, ktime_get_coarse_real_ts64, newidle_balance.isra.0, ntp_get_next_leap, ntp_tick_length, put_pid.part.0, raw_notifier_call_chain, raw_spin_rq_lock_nested.constprop.0, save_fpregs_to_fpstate, syscall_exit_work, tick_do_update_jiffies64, tick_sched_handle.isra.0, timekeeping_advance, timekeeping_update, update_fast_timekeeper, update_rq_clock.part.0, update_vsyscall, update_wall_time, xfd_validate_state]
+    unqlite-0.txt: total funcs: N/A; 

@@ -1,0 +1,8 @@
+__audit_syscall_entry
+__audit_syscall_exit
+__rcu_read_lock
+__rcu_read_unlock
+__task_pid_nr_ns
+__x64_sys_getpid
+ktime_get_coarse_real_ts64
+syscall_exit_work

@@ -1,0 +1,82 @@
+Subgraph has 78 nodes and 69 edges.
+Markdown tree representation:
+- kvmalloc_node <profiled>
+  - __kmalloc_node <profiled>
+    - __kmem_cache_alloc_node <profiled>
+      - should_failslab <profiled>
+    - __kmalloc_large_node
+  - __vmalloc_node_range
+    - __get_vm_area_node
+    - __vmap_pages_range_noflush
+    - remove_vm_area
+    - schedule_timeout_uninterruptible
+    - warn_alloc
+- filp_close <profiled>
+  - dnotify_flush <profiled>
+    - fsnotify_detach_mark
+    - fsnotify_find_mark
+    - fsnotify_free_mark
+      - inotify_freeing_mark
+  - fput <profiled>
+    - queue_delayed_work_on
+      - __queue_delayed_work
+  - mqueue_flush_file
+  - nfs4_file_flush
+    - nfs4_delegation_flush_on_close
+  - nfs_file_flush
+- select_task_rq_fair <profiled>
+  - _find_first_bit
+  - _find_next_and_bit
+  - _find_next_bit
+- __x64_sys_dup2 <profiled>
+  - ksys_dup3 <profiled>
+    - do_dup2 <profiled>
+    - expand_files <profiled>
+      - alloc_fdtable <profiled>
+        - kmalloc_trace <profiled>
+          - __kmem_cache_alloc_node <profiled>
+            - should_failslab <profiled>
+        - kvfree
+          - is_vmalloc_addr
+      - finish_wait
+      - init_wait_entry
+      - prepare_to_wait_event
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - aio_poll_wake
+    - iocb_put
+    - queue_work_on
+  - ep_autoremove_wake_function
+  - i915_sw_fence_wake
+  - io_async_buf_func
+    - io_req_task_queue
+  - io_poll_wake
+    - __io_req_task_work_add
+    - io_pollfree_wake
+  - io_wqe_hash_wake
+    - io_wqe_activate_free_worker
+  - iocg_wake_fn
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - percpu_rwsem_wake_function
+  - pollwake
+  - receiver_wake_function
+  - wake_page_function
+    - wake_up_state
+- swake_up_one <profiled>
+- __note_gp_changes <profiled>
+- __cond_resched <profiled>
+  - __schedule
+    - __delayacct_blkio_start
+    - __schedule_bug
+    - dequeue_task_fair
+    - dequeue_task_rt
+    - enter_lazy_tlb
+    - finish_task_switch
+    - perf_event_task_sched_out
+    - pick_next_task_fair
+    - set_next_task_dl
+- wake_up_process <profiled>
+- kmalloc_slab <profiled>
+- kthread_is_per_cpu <profiled>

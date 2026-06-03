@@ -1,0 +1,29 @@
+Profiled functions: 27 nodes and 13 edges.
+Profiled (filtered) functions:
+queue_work_on
+__x64_sys_dup
+alloc_fdtable
+kvmalloc_node
+fd_install
+resched_curr
+default_wake_function
+kmalloc_trace
+expand_files
+select_task_rq_fair
+__kmem_cache_alloc_node
+should_failslab
+smp_call_function_single_async
+alloc_fd
+enqueue_task_fair
+__wake_up
+housekeeping_cpumask
+generic_exec_single
+__note_gp_changes
+autoremove_wake_function
+process_timeout
+__cond_resched
+wake_up_process
+__kmalloc_node
+fput
+kmalloc_slab
+kthread_is_per_cpu

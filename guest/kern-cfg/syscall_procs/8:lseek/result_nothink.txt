@@ -1,0 +1,234 @@
+Subgraph has 231 nodes and 218 edges.
+Markdown tree representation:
+- serial8250_rpm_put_tx <profiled>
+  - __pm_runtime_suspend
+- serial8250_tx_chars <profiled>
+  - io_serial_in <profiled>
+  - io_serial_out <profiled>
+  - uart_write_wakeup <profiled>
+    - tty_port_tty_wakeup <profiled>
+      - tty_port_default_wakeup <profiled>
+        - tty_kref_put <profiled>
+          - queue_work_on
+        - tty_wakeup <profiled>
+          - n_tty_write_wakeup
+            - kill_fasync
+          - tty_ldisc_deref
+            - ldsem_up_read
+          - tty_ldisc_ref
+  - f815xxa_mem_serial_out
+  - hub6_serial_out
+  - mem16_serial_out
+  - mem32_serial_out
+  - mem32be_serial_out
+    - iowrite32be
+  - mem_serial_out
+  - uart_xchar_out
+- ext4_es_lookup_extent <profiled>
+  - percpu_counter_add_batch
+- select_task_rq_fair <profiled>
+  - __bitmap_weight
+  - _find_first_bit
+  - _find_next_bit
+- smp_call_function_single_async <profiled>
+- __common_interrupt <profiled>
+  - debug_smp_processor_id
+- add_interrupt_randomness <profiled>
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - pollwake <profiled>
+  - aio_poll_wake
+    - iocb_put
+  - cwt_wakefn
+  - i915_sw_fence_wake
+  - io_async_buf_func
+    - io_req_task_queue
+  - io_wake_function
+  - iocg_wake_fn
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - p9_pollwake
+  - wake_page_function
+    - wake_up_state
+- housekeeping_cpumask <profiled>
+- serial8250_modem_status <profiled>
+  - io_serial_in <profiled>
+  - hub6_serial_in
+  - kt_serial_in
+  - mem16_serial_in
+  - mem32_serial_in
+  - mem32be_serial_in
+    - ioread32be
+  - mem_serial_in
+  - uart_handle_cts_change
+    - serial8250_start_tx
+    - serial8250_stop_tx
+  - uart_handle_dcd_change
+    - tty_hangup
+- note_interrupt <profiled>
+- generic_exec_single <profiled>
+  - __cpa_flush_tlb
+    - flush_tlb_one_kernel
+  - __fix_erratum_688
+    - msr_set_bit
+  - __mce_disable_bank
+    - cmci_disable_bank
+  - __perf_event_exit_context
+    - ctx_sched_out
+  - __rdmsr_on_cpu
+  - __rdmsr_safe_on_cpu
+  - __rdmsr_safe_regs_on_cpu
+  - __relay_set_buf_dentry
+  - __wbinvd
+  - __wrmsr_on_cpu
+  - __wrmsr_safe_on_cpu
+  - __wrmsr_safe_regs_on_cpu
+  - apply_microcode_local
+    - apply_microcode_amd
+    - apply_microcode_intel
+    - x86_family
+  - bts_buffer_free_aux
+  - cpuid_smp_cpuid
+  - devm_i2c_del_adapter
+    - i2c_del_adapter
+  - do_flush_tlb_all
+  - do_kernel_range_flush
+  - do_nothing
+  - flip_smm_bit
+    - msr_clear_bit
+  - flush_ldt
+    - load_mm_ldt
+  - flush_tlb_func
+  - hybrid_get_type
+    - get_this_hybrid_cpu_type
+  - intel_pmu_arch_lbr_xrstors
+    - xrstors
+  - intel_pmu_arch_lbr_xsaves
+    - xsaves
+  - intel_pmu_lbr_restore
+  - ipi_rseq
+  - ipi_sync_rq_state
+  - kvm_disable_host_haltpoll
+  - mce_cpu_restart
+    - __mcheck_cpu_init_clear_banks
+  - mce_disable_cmci
+    - cmci_clear
+  - mce_enable_ce
+    - cmci_recheck
+    - cmci_reenable
+  - net_drop_ns
+  - nfs3_nlm_release_call
+    - put_nfs_open_context
+  - nfs4_delegreturn_release
+    - nfs_refresh_inode
+  - nfs4_open_confirm_release
+    - nfs4_close_state
+    - nfs4_opendata_put
+    - nfs4_opendata_to_nfs4_state
+  - nfs4_renew_release
+    - nfs4_schedule_state_renewal
+  - nfs_pgio_release
+    - nfs_direct_read_completion
+    - nfs_direct_write_completion
+    - nfs_read_completion
+  - nlm4svc_callback_release
+    - nlmsvc_release_call
+  - nohz_csd_func
+  - page_put_link
+  - pm_runtime_disable_action
+    - __pm_runtime_disable
+  - rpc_cb_add_xprt_release
+    - xprt_put
+    - xprt_switch_put
+  - rpcb_map_release
+  - shmem_init_inode
+    - inode_init_once
+  - trigger_card_free
+    - put_device
+  - update_stibp_msr
+  - update_tfa_sched
+    - perf_pmu_resched
+    - x86_get_pmu
+  - v1_tlb_flush_all
+  - vmware_pv_guest_cpu_reboot
+- tty_port_tty_get <profiled>
+- jbd2_transaction_committed <profiled>
+- __cond_resched <profiled>
+  - __schedule
+    - __delayacct_blkio_start
+    - dequeue_task_dl
+    - dequeue_task_fair
+    - dequeue_task_rt
+    - enter_lazy_tlb
+    - finish_task_switch
+    - perf_event_task_sched_out
+    - pick_next_task_fair
+    - set_next_task_dl
+- __x64_sys_lseek <profiled>
+  - __fdget_pos <profiled>
+    - __fget_files
+  - ext4_llseek <profiled>
+    - down_read <profiled>
+      - __down_read_common
+    - generic_file_llseek_size <profiled>
+    - iomap_seek_data <profiled>
+      - iomap_iter <profiled>
+        - ext4_iomap_begin_report <profiled>
+          - ext4_es_find_extent_range <profiled>
+            - __es_find_extent_range <profiled>
+              - ext4_es_is_delayed
+              - ext4_es_is_mapped
+              - rb_next
+          - ext4_inline_data_iomap
+            - __brelse
+            - ext4_get_inode_loc
+          - ext4_set_iomap
+        - ext4_iomap_begin
+        - ext4_iomap_end
+    - iomap_seek_hole <profiled>
+      - mapping_seek_hole_data
+        - xas_find
+        - xas_pause
+    - up_read <profiled>
+      - rwsem_mark_wake
+        - wake_q_add
+        - wake_q_add_safe
+    - vfs_setpos <profiled>
+  - fput <profiled>
+    - queue_delayed_work_on
+      - __queue_delayed_work
+  - blkdev_llseek
+    - down_write
+    - fixed_size_llseek
+    - up_write
+  - dcache_dir_lseek
+    - scan_positives
+  - default_llseek
+  - devkmsg_llseek
+    - prb_first_valid_seq
+    - prb_next_seq
+  - dma_buf_llseek
+  - empty_dir_llseek
+  - ext4_dir_llseek
+  - full_proxy_llseek
+    - debugfs_file_get
+  - generic_file_llseek
+  - mem_lseek
+  - memory_lseek
+  - nfs_file_llseek
+  - nfs_llseek_dir
+  - no_seek_end_llseek
+  - noop_llseek
+  - null_lseek
+  - nvram_misc_llseek
+  - proc_reg_llseek
+    - proc_bus_pci_lseek
+    - snd_info_entry_llseek
+  - seq_lseek
+    - traverse
+  - shmem_file_llseek
+  - snd_disconnect_llseek
+  - snd_hwdep_llseek
+  - vcs_lseek
+- serial8250_interrupt <profiled>

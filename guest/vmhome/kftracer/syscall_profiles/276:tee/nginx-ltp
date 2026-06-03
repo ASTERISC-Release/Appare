@@ -1,0 +1,13 @@
+__cond_resched
+__fdget
+__fget_light
+__x64_sys_tee
+do_tee
+generic_pipe_buf_get
+get_pipe_info
+kill_fasync
+mutex_lock
+mutex_unlock
+pipe_double_lock
+pipe_unlock
+wakeup_pipe_readers

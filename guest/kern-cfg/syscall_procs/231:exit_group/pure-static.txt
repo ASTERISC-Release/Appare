@@ -1,0 +1,9 @@
+Subgraph has 7 nodes and 6 edges.
+Markdown tree representation:
+- __x64_sys_exit_group
+  - __se_sys_exit_group
+    - __do_sys_exit_group
+      - do_group_exit
+        - zap_other_threads
+          - wake_up_bit <profiled>
+          - wake_up_state

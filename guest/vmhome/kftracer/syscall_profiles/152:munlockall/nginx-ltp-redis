@@ -1,0 +1,7 @@
+__cond_resched
+__x64_sys_munlock
+apply_vma_lock_flags
+down_write_killable
+preempt_count_add
+preempt_count_sub
+up_write

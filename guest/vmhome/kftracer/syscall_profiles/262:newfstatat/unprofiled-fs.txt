@@ -1,0 +1,5 @@
+262:newfstatat
+    cp-0.txt: total funcs: 188; not profiled: 3/188 (1.6%) [__d_free, __do_softirq, __lock_text_start]
+    ls-0.txt: total funcs: 59; not profiled: 1/59 (1.7%) [__lookup_mnt]
+    tar-0.txt: total funcs: 60; not profiled: 1/60 (1.7%) [__lookup_mnt]
+    unqlite-0.txt: total funcs: 43; not profiled: 0/43 (0.0%) []

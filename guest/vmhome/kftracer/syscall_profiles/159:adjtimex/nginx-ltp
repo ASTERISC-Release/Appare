@@ -1,0 +1,10 @@
+__rcu_read_lock
+__rcu_read_unlock
+__x64_sys_adjtimex
+cap_capable
+capable
+cred_has_capability
+do_adjtimex
+ns_capable_common
+security_capable
+selinux_capable

@@ -1,0 +1,5 @@
+228:clock_gettime
+    cp-0.txt: total funcs: N/A; 
+    ls-0.txt: total funcs: N/A; 
+    tar-0.txt: total funcs: N/A; 
+    unqlite-0.txt: total funcs: 32; not profiled: 6/32 (18.8%) [__audit_syscall_entry, __audit_syscall_exit, cgroup_base_stat_cputime_account_end.isra.0, raw_spin_rq_lock_nested.constprop.0, syscall_exit_work, update_rq_clock.part.0]

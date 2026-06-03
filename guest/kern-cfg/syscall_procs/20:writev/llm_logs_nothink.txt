@@ -1,0 +1,263 @@
+PROMPT (depth 0):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- generic_exec_single
+  - page_frag_free
+    - free_unref_page
+      - free_unref_page_commit
+        - free_pcppages_bulk
+- kfree_skb_reason
+  - __kfree_skb
+    - skb_release_data
+      - page_frag_free
+        - free_unref_page
+          - free_unref_page_commit
+            - free_pcppages_bulk
+- tcp_tasklet_func
+  - sk_free
+    - __sk_free
+      - __sk_destruct
+        - security_sk_free
+          - selinux_sk_free_security
+            - selinux_netlbl_sk_security_free
+              - page_frag_free
+                - free_unref_page
+                  - free_unref_page_commit
+                    - free_pcppages_bulk
+- nf_hook_slow
+  - selinux_ip_postroute
+    - selinux_netlbl_skbuff_getsid
+      - page_frag_free
+        - free_unref_page
+          - free_unref_page_commit
+            - free_pcppages_bulk
+- sk_prot_alloc
+  - security_sk_free
+    - selinux_sk_free_security
+      - selinux_netlbl_sk_security_free
+        - page_frag_free
+          - free_unref_page
+            - free_unref_page_commit
+              - free_pcppages_bulk
+- __dev_queue_xmit
+  - __qdisc_run
+    - sch_direct_xmit
+      - dev_hard_start_xmit
+        - e1000_xmit_frame
+          - __skb_pad
+            - pskb_expand_head
+              - page_frag_free
+                - free_unref_page
+                  - free_unref_page_commit
+                    - free_pcppages_bulk
+- __napi_alloc_skb
+  - page_frag_free
+    - free_unref_page
+      - free_unref_page_commit
+        - free_pcppages_bulk
+- e1000_alloc_rx_buffers
+  - page_frag_free
+    - free_unref_page
+      - free_unref_page_commit
+        - free_pcppages_bulk
+- __sysvec_call_function
+  - generic_smp_call_function_single_interrupt
+    - __flush_smp_call_function_queue
+      - page_frag_free
+        - free_unref_page
+          - free_unref_page_commit
+            - free_pcppages_bulk
+- inet_csk_destroy_sock
+  - sk_free
+    - __sk_free
+      - __sk_destruct
+        - security_sk_free
+          - selinux_sk_free_security
+            - selinux_netlbl_sk_security_free
+              - page_frag_free
+                - free_unref_page
+                  - free_unref_page_commit
+                    - free_pcppages_bulk
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - sk_filter_trim_cap
+          - security_sock_rcv_skb
+            - selinux_socket_sock_rcv_skb
+              - selinux_netlbl_skbuff_getsid
+                - page_frag_free
+                  - free_unref_page
+                    - free_unref_page_commit
+                      - free_pcppages_bulk
+              - selinux_netlbl_sock_rcv_skb
+        - tcp_child_process
+          - tcp_rcv_state_process
+            - tcp_ack
+              - tcp_trim_head
+                - __skb_unclone_keeptruesize
+                  - pskb_expand_head
+            - tcp_v4_conn_request
+              - tcp_conn_request
+                - tcp_v4_route_req
+                  - security_inet_conn_request
+                    - selinux_inet_conn_request
+                      - selinux_netlbl_inet_conn_request
+        - tcp_v4_do_rcv
+          - tcp_rcv_established
+
+Caller: free_pcppages_bulk
+Source code:
+static void free_pcppages_bulk(struct zone *zone, int count,
+					struct per_cpu_pages *pcp,
+					int pindex)
+{
+	int min_pindex = 0;
+	int max_pindex = NR_PCP_LISTS - 1;
+	unsigned int order;
+	bool isolated_pageblocks;
+	struct page *page;
+
+	/*
+	 */
+	count = min(pcp->count, count);
+
+	/* Ensure requested pindex is drained first. */
+	pindex = pindex - 1;
+
+	/* Caller must hold IRQ-safe pcp->lock so IRQs are disabled. */
+	spin_lock(&zone->lock);
+	isolated_pageblocks = has_isolate_pageblock(zone);
+
+	while (count > 0) {
+		struct list_head *list;
+		int nr_pages;
+
+		/* Remove pages from lists in a round-robin fashion. */
+		do {
+			if (++pindex > max_pindex)
+				pindex = min_pindex;
+			list = &pcp->lists[pindex];
+			if (!list_empty(list))
+				break;
+
+			if (pindex == max_pindex)
+				max_pindex--;
+			if (pindex == min_pindex)
+				min_pindex++;
+		} while (1);
+
+		order = pindex_to_order(pindex);
+		nr_pages = 1 << order;
+		do {
+			int mt;
+
+			page = list_last_entry(list, struct page, pcp_list);
+			mt = get_pcppage_migratetype(page);
+
+			/* must delete to avoid corrupting pcp list */
+			list_del(&page->pcp_list);
+			count -= nr_pages;
+			pcp->count -= nr_pages;
+
+			if (bulkfree_pcp_prepare(page))
+				continue;
+
+			/* MIGRATE_ISOLATE page should not go to pcplists */
+			VM_BUG_ON_PAGE(is_migrate_isolate(mt), page);
+			/* Pageblock could have been isolated meanwhile */
+			if (unlikely(isolated_pageblocks))
+				mt = get_pageblock_migratetype(page);
+
+			__free_one_page(page, page_to_pfn(page), zone, order, mt, FPI_NONE);
+			trace_mm_page_pcpu_drain(page, order, mt);
+		} while (count > 0 && !list_empty(list));
+	}
+
+	spin_unlock(&zone->lock);
+}
+
+
+Callee candidate: __free_one_page
+Source code:
+static inline void __free_one_page(struct page *page,
+		unsigned long pfn,
+		struct zone *zone, unsigned int order,
+		int migratetype, fpi_t fpi_flags)
+{
+	struct capture_control *capc = task_capc(zone);
+	unsigned long buddy_pfn = 0;
+	unsigned long combined_pfn;
+	struct page *buddy;
+	bool to_tail;
+
+	VM_BUG_ON(!zone_is_initialized(zone));
+	VM_BUG_ON_PAGE(page->flags & PAGE_FLAGS_CHECK_AT_PREP, page);
+
+	VM_BUG_ON(migratetype == -1);
+	if (likely(!is_migrate_isolate(migratetype)))
+		__mod_zone_freepage_state(zone, 1 << order, migratetype);
+
+	VM_BUG_ON_PAGE(pfn & ((1 << order) - 1), page);
+	VM_BUG_ON_PAGE(bad_range(zone, page), page);
+
+	while (order < MAX_ORDER - 1) {
+		if (compaction_capture(capc, page, order, migratetype)) {
+			__mod_zone_freepage_state(zone, -(1 << order),
+								migratetype);
+			return;
+		}
+
+		buddy = find_buddy_page_pfn(page, pfn, order, &buddy_pfn);
+		if (!buddy)
+			goto done_merging;
+
+		if (unlikely(order >= pageblock_order)) {
+			/*
+			 */
+			int buddy_mt = get_pageblock_migratetype(buddy);
+
+			if (migratetype != buddy_mt
+					&& (!migratetype_is_mergeable(migratetype) ||
+						!migratetype_is_mergeable(buddy_mt)))
+				goto done_merging;
+		}
+
+		/*
+		 */
+		if (page_is_guard(buddy))
+			clear_page_guard(zone, buddy, order, migratetype);
+		else
+			del_page_from_free_list(buddy, zone, order);
+		combined_pfn = buddy_pfn & pfn;
+		page = page + (combined_pfn - pfn);
+		pfn = combined_pfn;
+		order++;
+	}
+
+done_merging:
+	set_buddy_order(page, order);
+
+	if (fpi_flags & FPI_TO_TAIL)
+		to_tail = true;
+	else if (is_shuffle_order(order))
+		to_tail = shuffle_pick_tail();
+	else
+		to_tail = buddy_merge_likely(pfn, buddy_pfn, page, order);
+
+	if (to_tail)
+		add_to_free_list_tail(page, zone, order, migratetype);
+	else
+		add_to_free_list(page, zone, order, migratetype);
+
+	/* Notify page reporting subsystem of freed page */
+	if (!(fpi_flags & FPI_SKIP_REPORT_NOTIFY))
+		page_reporting_notify_free(order);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of free_pcppages_bulk will reach __free_one_page? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+

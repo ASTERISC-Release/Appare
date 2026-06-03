@@ -1,0 +1,65 @@
+Subgraph has 63 nodes and 79 edges.
+Markdown tree representation:
+- __wake_up <profiled>
+  - aio_poll_wake
+    - iocb_put
+      - refcount_warn_saturate
+    - queue_work_on
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - barrier_wake
+    - i915_sw_fence_complete
+  - blk_mq_dispatch_wake
+    - blk_mq_run_hw_queue
+  - child_wait_callback
+  - cwt_wakefn
+  - do_rps_boost
+    - drm_crtc_vblank_put
+    - intel_rps_boost
+  - ep_autoremove_wake_function
+  - ep_poll_callback
+    - __pm_stay_awake
+    - sock_from_file
+  - i915_sw_fence_wake
+  - io_async_buf_func
+    - io_req_task_queue
+      - __io_req_task_work_add
+  - io_poll_wake
+    - io_pollfree_wake
+  - io_wake_function
+  - io_wqe_hash_wake
+    - io_wqe_activate_free_worker
+  - iocg_wake_fn
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - p9_pollwake
+  - percpu_rwsem_wake_function
+  - pollwake
+  - receiver_wake_function
+  - rq_qos_wake_function
+    - iolat_acquire_inflight
+  - synchronous_wake_function
+  - unix_dgram_peer_wake_relay
+  - var_wake_function
+  - wake_bit_function
+  - wake_page_function
+    - wake_up_state
+  - woken_wake_function
+- __x64_sys_rt_sigaction <profiled>
+  - _copy_from_user
+  - _copy_to_user
+  - do_sigaction <profiled>
+    - dec_rlimit_put_ucounts
+    - kmem_cache_free
+      - __slab_free
+      - cache_from_obj
+    - sigaction_compat_abi <profiled>
+- select_task_rq_fair <profiled>
+  - __bitmap_and
+  - __bitmap_intersects
+  - __bitmap_weight
+  - _find_first_bit
+  - _find_next_and_bit
+  - _find_next_bit
+  - wake_affine
+    - cpus_share_cache

@@ -1,0 +1,5 @@
+Profiled functions: 3 nodes and 2 edges.
+Profiled (filtered) functions:
+do_arch_prctl_common
+do_arch_prctl_64
+__x64_sys_arch_prctl

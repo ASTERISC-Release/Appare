@@ -1,0 +1,9 @@
+Subgraph has 7 nodes and 6 edges.
+Markdown tree representation:
+- __x64_sys_sysinfo
+  - _copy_to_user
+  - get_avenrun
+  - ns_to_timespec64
+  - set_normalized_timespec64
+  - si_meminfo
+  - si_swapinfo

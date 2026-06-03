@@ -1,0 +1,328 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d3" for="edge" attr.name="inferred" attr.type="boolean" />
+  <key id="d2" for="edge" attr.name="indirect" attr.type="boolean" />
+  <key id="d1" for="node" attr.name="has_indirect" attr.type="boolean" />
+  <key id="d0" for="node" attr.name="profiled" attr.type="boolean" />
+  <graph edgedefault="directed">
+    <node id="__bad_area_nosemaphore">
+      <data key="d0">True</data>
+    </node>
+    <node id="__cond_resched">
+      <data key="d0">True</data>
+    </node>
+    <node id="kernelmode_fixup_or_oops">
+      <data key="d0">True</data>
+    </node>
+    <node id="crng_make_state">
+      <data key="d0">True</data>
+    </node>
+    <node id="__x64_sys_getrandom">
+      <data key="d0">True</data>
+    </node>
+    <node id="find_vma">
+      <data key="d0">True</data>
+    </node>
+    <node id="autoremove_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="chacha_permute">
+      <data key="d0">True</data>
+    </node>
+    <node id="fixup_exception">
+      <data key="d0">True</data>
+    </node>
+    <node id="select_task_rq_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="up_read">
+      <data key="d0">True</data>
+    </node>
+    <node id="get_random_bytes_user">
+      <data key="d0">True</data>
+    </node>
+    <node id="default_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="bad_area">
+      <data key="d0">True</data>
+    </node>
+    <node id="search_exception_tables">
+      <data key="d0">True</data>
+    </node>
+    <node id="__wake_up">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="search_module_extables" />
+    <node id="mod_find" />
+    <node id="fpu_reset_from_exception_fixup" />
+    <node id="restore_fpregs_from_fpstate" />
+    <node id="is_prefetch" />
+    <node id="page_fault_oops" />
+    <node id="__die" />
+    <node id="dump_pagetable" />
+    <node id="get_stack_info_noinstr" />
+    <node id="lookup_address_in_pgd" />
+    <node id="oops_begin" />
+    <node id="oops_end" />
+    <node id="oops_may_print" />
+    <node id="extract_entropy" />
+    <node id="blake2s_final" />
+    <node id="blake2s_update" />
+    <node id="rwsem_mark_wake" />
+    <node id="wake_q_add" />
+    <node id="wake_q_add_safe" />
+    <node id="_copy_to_iter" />
+    <node id="aio_poll_wake" />
+    <node id="cwt_wakefn" />
+    <node id="ep_poll_callback" />
+    <node id="i915_sw_fence_wake" />
+    <node id="io_poll_wake" />
+    <node id="io_wqe_hash_wake" />
+    <node id="iocg_wake_fn" />
+    <node id="kyber_domain_wake" />
+    <node id="percpu_rwsem_wake_function" />
+    <node id="receiver_wake_function" />
+    <node id="synchronous_wake_function" />
+    <node id="unix_dgram_peer_wake_relay" />
+    <node id="wake_page_function" />
+    <node id="iocb_put" />
+    <node id="queue_work_on" />
+    <node id="__pm_stay_awake" />
+    <node id="__io_req_task_work_add" />
+    <node id="io_pollfree_wake" />
+    <node id="io_wqe_activate_free_worker" />
+    <node id="sbitmap_del_wait_queue" />
+    <node id="wake_up_state" />
+    <node id="__bitmap_and" />
+    <node id="__bitmap_weight" />
+    <node id="_find_first_bit" />
+    <node id="_find_next_and_bit" />
+    <node id="mt_find" />
+    <node id="mas_next_entry" />
+    <node id="import_single_range" />
+    <node id="wait_for_random_bytes" />
+    <node id="finish_wait" />
+    <node id="init_wait_entry" />
+    <node id="prepare_to_wait_event" />
+    <node id="try_to_generate_entropy" />
+    <node id="__schedule" />
+    <node id="dequeue_task_dl" />
+    <node id="dequeue_task_fair" />
+    <node id="finish_task_switch" />
+    <node id="perf_event_task_sched_out" />
+    <node id="pick_next_task_fair" />
+    <node id="set_next_task_fair" />
+    <edge source="__bad_area_nosemaphore" target="kernelmode_fixup_or_oops">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__cond_resched" target="__schedule">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kernelmode_fixup_or_oops" target="fixup_exception">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kernelmode_fixup_or_oops" target="is_prefetch">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kernelmode_fixup_or_oops" target="page_fault_oops">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="crng_make_state" target="extract_entropy">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__x64_sys_getrandom" target="get_random_bytes_user">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__x64_sys_getrandom" target="import_single_range">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__x64_sys_getrandom" target="wait_for_random_bytes">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="find_vma" target="mt_find">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="autoremove_wake_function" target="default_wake_function">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="fixup_exception" target="search_exception_tables">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="fixup_exception" target="fpu_reset_from_exception_fixup">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="__bitmap_and">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="__bitmap_weight">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_first_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_next_and_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="up_read" target="rwsem_mark_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="get_random_bytes_user" target="crng_make_state">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="get_random_bytes_user" target="_copy_to_iter">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="bad_area" target="__bad_area_nosemaphore">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="bad_area" target="up_read">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="search_exception_tables" target="search_module_extables">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="autoremove_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="default_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="aio_poll_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="cwt_wakefn">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="ep_poll_callback">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="i915_sw_fence_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_poll_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_wqe_hash_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="iocg_wake_fn">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="kyber_domain_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="percpu_rwsem_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="receiver_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="synchronous_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="unix_dgram_peer_wake_relay">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="wake_page_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="search_module_extables" target="mod_find">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="fpu_reset_from_exception_fixup" target="restore_fpregs_from_fpstate">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="__die">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="dump_pagetable">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="get_stack_info_noinstr">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="lookup_address_in_pgd">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="oops_begin">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="oops_end">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="page_fault_oops" target="oops_may_print">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="extract_entropy" target="blake2s_final">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="extract_entropy" target="blake2s_update">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="rwsem_mark_wake" target="wake_q_add">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="rwsem_mark_wake" target="wake_q_add_safe">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="iocb_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="queue_work_on">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ep_poll_callback" target="__pm_stay_awake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_poll_wake" target="__io_req_task_work_add">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_poll_wake" target="io_pollfree_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_wqe_hash_wake" target="io_wqe_activate_free_worker">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kyber_domain_wake" target="sbitmap_del_wait_queue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="wake_page_function" target="wake_up_state">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="mt_find" target="mas_next_entry">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="wait_for_random_bytes" target="finish_wait">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="wait_for_random_bytes" target="init_wait_entry">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="wait_for_random_bytes" target="prepare_to_wait_event">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="wait_for_random_bytes" target="try_to_generate_entropy">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="dequeue_task_dl">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="dequeue_task_fair">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="finish_task_switch">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="perf_event_task_sched_out">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="pick_next_task_fair">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="set_next_task_fair">
+      <data key="d3">True</data>
+    </edge>
+  </graph>
+</graphml>

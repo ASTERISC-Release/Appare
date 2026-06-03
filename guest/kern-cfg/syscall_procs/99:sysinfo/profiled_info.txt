@@ -1,0 +1,8 @@
+Profiled functions: 6 nodes and 5 edges.
+Profiled (filtered) functions:
+ns_to_timespec64
+get_avenrun
+__x64_sys_sysinfo
+set_normalized_timespec64
+si_meminfo
+si_swapinfo

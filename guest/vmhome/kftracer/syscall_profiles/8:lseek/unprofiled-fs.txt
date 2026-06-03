@@ -1,0 +1,5 @@
+8:lseek
+    cp-0.txt: total funcs: 7; not profiled: 4/7 (57.1%) [__audit_syscall_entry, __audit_syscall_exit, ktime_get_coarse_real_ts64, syscall_exit_work]
+    ls-0.txt: total funcs: 13; not profiled: 4/13 (30.8%) [__audit_syscall_entry, __audit_syscall_exit, ktime_get_coarse_real_ts64, syscall_exit_work]
+    tar-0.txt: total funcs: 9; not profiled: 4/9 (44.4%) [__audit_syscall_entry, __audit_syscall_exit, ktime_get_coarse_real_ts64, syscall_exit_work]
+    unqlite-0.txt: total funcs: N/A; 

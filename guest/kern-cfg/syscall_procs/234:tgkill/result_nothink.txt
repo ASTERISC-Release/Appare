@@ -1,0 +1,111 @@
+Subgraph has 105 nodes and 90 edges.
+Markdown tree representation:
+- serial8250_modem_status <profiled>
+  - io_serial_in <profiled>
+  - uart_handle_cts_change
+    - serial8250_start_tx
+  - uart_handle_dcd_change
+    - tty_hangup
+- prepare_signal <profiled>
+  - dec_rlimit_put_ucounts <profiled>
+  - wake_up_state <profiled>
+  - ptrace_trap_notify
+- __common_interrupt <profiled>
+- signal_wake_up_state <profiled>
+  - wake_up_state <profiled>
+- serial8250_tx_chars <profiled>
+  - io_serial_in <profiled>
+  - io_serial_out <profiled>
+  - uart_write_wakeup <profiled>
+    - tty_port_tty_wakeup <profiled>
+      - tty_port_default_wakeup <profiled>
+        - tty_kref_put <profiled>
+          - queue_work_on <profiled>
+        - tty_wakeup <profiled>
+          - n_tty_write_wakeup
+            - kill_fasync
+          - tty_ldisc_deref
+            - ldsem_up_read
+          - tty_ldisc_ref
+  - f815xxa_mem_serial_out
+  - hub6_serial_in
+  - hub6_serial_out
+  - kt_serial_in
+  - mem16_serial_in
+  - mem16_serial_out
+  - mem32_serial_in
+  - mem32_serial_out
+  - mem32be_serial_in
+    - ioread32be
+  - mem32be_serial_out
+    - iowrite32be
+  - mem_serial_in
+  - mem_serial_out
+  - uart_xchar_out
+- wake_up_process <profiled>
+- tty_port_tty_get <profiled>
+- kthread_is_per_cpu <profiled>
+- put_ucounts <profiled>
+- serial8250_interrupt <profiled>
+- __x64_sys_tgkill <profiled>
+  - __task_pid_nr_ns <profiled>
+  - do_send_specific <profiled>
+    - check_kill_permission <profiled>
+      - security_task_kill <profiled>
+        - selinux_task_kill <profiled>
+          - avc_has_perm <profiled>
+    - do_send_sig_info <profiled>
+    - find_task_by_vpid <profiled>
+- serial8250_rpm_put_tx <profiled>
+  - __pm_runtime_suspend
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - pollwake <profiled>
+  - aio_poll_wake
+    - iocb_put
+  - blk_mq_dispatch_wake
+    - blk_mq_run_hw_queue
+  - child_wait_callback
+  - cwt_wakefn
+  - ep_poll_callback
+    - __pm_stay_awake
+  - i915_sw_fence_wake
+  - io_async_buf_func
+    - io_req_task_queue
+  - io_poll_wake
+    - __io_req_task_work_add
+    - io_pollfree_wake
+  - io_wqe_hash_wake
+    - io_wqe_activate_free_worker
+  - iocg_wake_fn
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - wake_page_function
+- resched_curr <profiled>
+  - add_interrupt_randomness <profiled>
+  - native_smp_send_reschedule
+    - __warn_printk
+- enqueue_task_fair <profiled>
+  - enqueue_entity
+    - rb_insert_color
+  - update_load_avg
+    - attach_entity_load_avg
+    - detach_entity_load_avg
+- __sigqueue_alloc <profiled>
+  - dec_rlimit_put_ucounts <profiled>
+  - inc_rlimit_get_ucounts <profiled>
+  - kmem_cache_alloc <profiled>
+    - should_failslab <profiled>
+- siginfo_layout <profiled>
+- select_task_rq_fair <profiled>
+  - __bitmap_weight
+  - _find_first_bit
+  - _find_next_and_bit
+  - _find_next_bit
+- task_active_pid_ns <profiled>
+- complete_signal <profiled>
+  - wake_up_state <profiled>
+  - wake_up_bit
+- get_ucounts <profiled>
+- note_interrupt <profiled>

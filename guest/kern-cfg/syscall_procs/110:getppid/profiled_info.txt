@@ -1,0 +1,4 @@
+Profiled functions: 2 nodes and 1 edges.
+Profiled (filtered) functions:
+__x64_sys_getpgid
+find_task_by_vpid

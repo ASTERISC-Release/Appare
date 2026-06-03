@@ -1,0 +1,17 @@
+__rcu_read_lock
+__rcu_read_unlock
+__x64_sys_clock_getres
+_raw_spin_lock_irqsave
+_raw_spin_unlock_irqrestore
+alarm_clock_getres
+alarmtimer_get_rtcdev
+ns_to_timespec64
+pid_for_clock
+posix_cpu_clock_getres
+posix_get_coarse_res
+posix_get_hrtimer_res
+preempt_count_add
+preempt_count_sub
+process_cpu_clock_getres
+put_timespec64
+thread_cpu_clock_getres

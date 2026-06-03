@@ -1,0 +1,1730 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d3" for="edge" attr.name="inferred" attr.type="boolean" />
+  <key id="d2" for="edge" attr.name="indirect" attr.type="boolean" />
+  <key id="d1" for="node" attr.name="has_indirect" attr.type="boolean" />
+  <key id="d0" for="node" attr.name="profiled" attr.type="boolean" />
+  <graph edgedefault="directed">
+    <node id="default_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="security_sk_alloc">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="sk_prot_alloc">
+      <data key="d0">True</data>
+    </node>
+    <node id="free_modprobe_argv">
+      <data key="d0">True</data>
+    </node>
+    <node id="kmem_cache_alloc">
+      <data key="d0">True</data>
+    </node>
+    <node id="should_failslab">
+      <data key="d0">True</data>
+    </node>
+    <node id="jiffies_to_usecs">
+      <data key="d0">True</data>
+    </node>
+    <node id="security_inode_alloc">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="d_instantiate">
+      <data key="d0">True</data>
+    </node>
+    <node id="mntget">
+      <data key="d0">True</data>
+    </node>
+    <node id="kthread_is_per_cpu">
+      <data key="d0">True</data>
+    </node>
+    <node id="kstrdup">
+      <data key="d0">True</data>
+    </node>
+    <node id="__alloc_file">
+      <data key="d0">True</data>
+    </node>
+    <node id="dequeue_task_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="inode_doinit_with_dentry">
+      <data key="d0">True</data>
+    </node>
+    <node id="select_task_rq_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="__kmem_cache_free">
+      <data key="d0">True</data>
+    </node>
+    <node id="alloc_file_pseudo">
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_socket_create">
+      <data key="d0">True</data>
+    </node>
+    <node id="kmem_cache_free">
+      <data key="d0">True</data>
+    </node>
+    <node id="set_next_entity">
+      <data key="d0">True</data>
+    </node>
+    <node id="cpus_share_cache">
+      <data key="d0">True</data>
+    </node>
+    <node id="security_socket_post_create">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="inode_wait_for_writeback">
+      <data key="d0">True</data>
+    </node>
+    <node id="clear_inode">
+      <data key="d0">True</data>
+    </node>
+    <node id="inode_has_buffers">
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_netlbl_sk_security_reset">
+      <data key="d0">True</data>
+    </node>
+    <node id="resched_curr">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="new_inode_pseudo">
+      <data key="d0">True</data>
+    </node>
+    <node id="bit_waitqueue">
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_netlbl_socket_post_create">
+      <data key="d0">True</data>
+    </node>
+    <node id="pgd_free">
+      <data key="d0">True</data>
+    </node>
+    <node id="call_usermodehelper_setup">
+      <data key="d0">True</data>
+    </node>
+    <node id="tcp_init_sock">
+      <data key="d0">True</data>
+    </node>
+    <node id="__request_module">
+      <data key="d0">True</data>
+    </node>
+    <node id="kmalloc_slab">
+      <data key="d0">True</data>
+    </node>
+    <node id="d_alloc_pseudo">
+      <data key="d0">True</data>
+    </node>
+    <node id="security_d_instantiate">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="security_transition_sid">
+      <data key="d0">True</data>
+    </node>
+    <node id="tcp_v4_init_sock">
+      <data key="d0">True</data>
+    </node>
+    <node id="__free_pages">
+      <data key="d0">True</data>
+    </node>
+    <node id="destroy_context_ldt">
+      <data key="d0">True</data>
+    </node>
+    <node id="truncate_inode_pages_range">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_inode_free_security">
+      <data key="d0">True</data>
+    </node>
+    <node id="alloc_fd">
+      <data key="d0">True</data>
+    </node>
+    <node id="cgroup_sk_alloc">
+      <data key="d0">True</data>
+    </node>
+    <node id="alloc_file">
+      <data key="d0">True</data>
+    </node>
+    <node id="alloc_inode">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="unix_create1">
+      <data key="d0">True</data>
+    </node>
+    <node id="free_pages">
+      <data key="d0">True</data>
+    </node>
+    <node id="d_set_d_op">
+      <data key="d0">True</data>
+    </node>
+    <node id="schedule">
+      <data key="d0">True</data>
+    </node>
+    <node id="__sock_create">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="netlbl_sock_setattr">
+      <data key="d0">True</data>
+    </node>
+    <node id="__d_alloc">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="queue_work_on">
+      <data key="d0">True</data>
+    </node>
+    <node id="integrity_inode_free">
+      <data key="d0">True</data>
+    </node>
+    <node id="udp_init_sock">
+      <data key="d0">True</data>
+    </node>
+    <node id="security_file_alloc">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_socket_post_create">
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_file_alloc_security">
+      <data key="d0">True</data>
+    </node>
+    <node id="expand_files">
+      <data key="d0">True</data>
+    </node>
+    <node id="netlbl_domhsh_getentry">
+      <data key="d0">True</data>
+    </node>
+    <node id="wake_up_process">
+      <data key="d0">True</data>
+    </node>
+    <node id="call_usermodehelper_exec">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="try_module_get">
+      <data key="d0">True</data>
+    </node>
+    <node id="__mmdrop">
+      <data key="d0">True</data>
+    </node>
+    <node id="finish_task_switch">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="fd_install">
+      <data key="d0">True</data>
+    </node>
+    <node id="kmalloc_trace">
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_sk_alloc_security">
+      <data key="d0">True</data>
+    </node>
+    <node id="__init_rwsem">
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_d_instantiate">
+      <data key="d0">True</data>
+    </node>
+    <node id="inet_create">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="iput">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_netlbl_sock_genattr">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="get_unused_fd_flags">
+      <data key="d0">True</data>
+    </node>
+    <node id="sock_alloc_inode">
+      <data key="d0">True</data>
+    </node>
+    <node id="unix_create">
+      <data key="d0">True</data>
+    </node>
+    <node id="put_prev_entity">
+      <data key="d0">True</data>
+    </node>
+    <node id="__fsnotify_inode_delete">
+      <data key="d0">True</data>
+    </node>
+    <node id="___slab_alloc">
+      <data key="d0">True</data>
+    </node>
+    <node id="get_next_ino">
+      <data key="d0">True</data>
+    </node>
+    <node id="free_unref_page">
+      <data key="d0">True</data>
+    </node>
+    <node id="tcp_assign_congestion_control">
+      <data key="d0">True</data>
+    </node>
+    <node id="security_inode_free">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="module_put">
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_inode_alloc_security">
+      <data key="d0">True</data>
+    </node>
+    <node id="stream_open">
+      <data key="d0">True</data>
+    </node>
+    <node id="security_socket_create">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="current_is_async">
+      <data key="d0">True</data>
+    </node>
+    <node id="__wake_up_bit">
+      <data key="d0">True</data>
+    </node>
+    <node id="fsnotify_destroy_marks">
+      <data key="d0">True</data>
+    </node>
+    <node id="__kmem_cache_alloc_node">
+      <data key="d0">True</data>
+    </node>
+    <node id="__kmalloc_node_track_caller">
+      <data key="d0">True</data>
+    </node>
+    <node id="get_max_files">
+      <data key="d0">True</data>
+    </node>
+    <node id="enqueue_task_fair">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="sock_alloc_file">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="sock_init_data">
+      <data key="d0">True</data>
+    </node>
+    <node id="wait_for_completion_state">
+      <data key="d0">True</data>
+    </node>
+    <node id="__init_waitqueue_head">
+      <data key="d0">True</data>
+    </node>
+    <node id="free_unref_page_commit">
+      <data key="d0">True</data>
+    </node>
+    <node id="security_kernel_module_request">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="sched_slice">
+      <data key="d0">True</data>
+    </node>
+    <node id="schedule_timeout">
+      <data key="d0">True</data>
+    </node>
+    <node id="__d_instantiate">
+      <data key="d0">True</data>
+    </node>
+    <node id="kmem_cache_alloc_lru">
+      <data key="d0">True</data>
+    </node>
+    <node id="autoremove_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="pick_next_task_fair">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="pick_next_entity">
+      <data key="d0">True</data>
+    </node>
+    <node id="sock_alloc">
+      <data key="d0">True</data>
+    </node>
+    <node id="free_pcp_prepare">
+      <data key="d0">True</data>
+    </node>
+    <node id="__cond_resched">
+      <data key="d0">True</data>
+    </node>
+    <node id="sk_alloc">
+      <data key="d0">True</data>
+    </node>
+    <node id="inode_init_always">
+      <data key="d0">True</data>
+    </node>
+    <node id="evict">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="wake_up_bit">
+      <data key="d0">True</data>
+    </node>
+    <node id="truncate_inode_pages_final">
+      <data key="d0">True</data>
+    </node>
+    <node id="security_netlbl_sid_to_secattr">
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_kernel_module_request">
+      <data key="d0">True</data>
+    </node>
+    <node id="kfree">
+      <data key="d0">True</data>
+    </node>
+    <node id="__note_gp_changes">
+      <data key="d0">True</data>
+    </node>
+    <node id="__x64_sys_socket">
+      <data key="d0">True</data>
+    </node>
+    <node id="__destroy_inode">
+      <data key="d0">True</data>
+    </node>
+    <node id="avc_has_perm">
+      <data key="d0">True</data>
+    </node>
+    <node id="alloc_empty_file">
+      <data key="d0">True</data>
+    </node>
+    <node id="__wake_up">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="__sys_socket">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="__kmalloc_large_node" />
+    <node id="security_compute_sid" />
+    <node id="avtab_search" />
+    <node id="avtab_search_node" />
+    <node id="avtab_search_node_next" />
+    <node id="mls_compute_sid" />
+    <node id="policydb_context_isvalid" />
+    <node id="policydb_roletr_search" />
+    <node id="security_is_socket_class" />
+    <node id="sidtab_context_to_sid" />
+    <node id="sidtab_search_entry" />
+    <node id="strlen" />
+    <node id="d_find_alias" />
+    <node id="d_find_any_alias" />
+    <node id="inode_doinit_use_xattr" />
+    <node id="security_genfs_sid" />
+    <node id="__kmalloc" />
+    <node id="security_context_to_sid_default" />
+    <node id="__security_genfs_sid" />
+    <node id="selinux_file_open" />
+    <node id="avc_policy_seqno" />
+    <node id="mls_export_netlbl_cat" />
+    <node id="mls_export_netlbl_lvl" />
+    <node id="ebitmap_netlbl_export" />
+    <node id="rb_erase" />
+    <node id="__put_cred" />
+    <node id="kfree_sensitive" />
+    <node id="kvfree" />
+    <node id="__ksize" />
+    <node id="is_vmalloc_addr" />
+    <node id="calipso_sock_setattr" />
+    <node id="cipso_v4_sock_setattr" />
+    <node id="cipso_v4_genopt" />
+    <node id="tcp_mss_to_mtu" />
+    <node id="tcp_mtu_to_mss" />
+    <node id="tcp_sync_mss" />
+    <node id="__percpu_counter_sum" />
+    <node id="percpu_counter_add_batch" />
+    <node id="__filemap_get_folio" />
+    <node id="delete_from_page_cache_batch" />
+    <node id="ext4_invalidate_folio" />
+    <node id="find_get_entries" />
+    <node id="folio_wait_writeback" />
+    <node id="truncate_folio_batch_exceptionals" />
+    <node id="truncate_inode_folio" />
+    <node id="truncate_inode_partial_folio" />
+    <node id="__filemap_add_folio" />
+    <node id="folio_wait_bit_common" />
+    <node id="xas_load" />
+    <node id="filemap_unaccount_folio" />
+    <node id="inode_add_lru" />
+    <node id="folio_mapping" />
+    <node id="folio_wait_bit" />
+    <node id="filemap_remove_folio" />
+    <node id="zero_user_segments" />
+    <node id="errseq_sample" />
+    <node id="__wait_on_bit" />
+    <node id="bit_wait" />
+    <node id="bit_wait_io" />
+    <node id="bit_wait_io_timeout" />
+    <node id="bit_wait_timeout" />
+    <node id="nfs_wait_bit_killable" />
+    <node id="alloc_fdtable" />
+    <node id="finish_wait" />
+    <node id="prepare_to_wait_event" />
+    <node id="socket_type_to_security_class" />
+    <node id="sock_free_inode" />
+    <node id="v9fs_alloc_inode" />
+    <node id="ihold" />
+    <node id="path_put" />
+    <node id="autofs_evict_inode" />
+    <node id="bdev_evict_inode" />
+    <node id="bm_evict_inode" />
+    <node id="efivarfs_evict_inode" />
+    <node id="ext4_evict_inode" />
+    <node id="fat_evict_inode" />
+    <node id="hugetlbfs_evict_inode" />
+    <node id="inode_io_list_del" />
+    <node id="kernfs_evict_inode" />
+    <node id="mqueue_evict_inode" />
+    <node id="nfs4_evict_inode" />
+    <node id="nfs_evict_inode" />
+    <node id="nsfs_evict" />
+    <node id="proc_evict_inode" />
+    <node id="shmem_evict_inode" />
+    <node id="v9fs_evict_inode" />
+    <node id="invalidate_inode_buffers" />
+    <node id="__ext4_journal_stop" />
+    <node id="__ext4_std_error" />
+    <node id="__ext4_warning" />
+    <node id="dquot_initialize" />
+    <node id="ext4_clear_inode" />
+    <node id="ext4_fc_mark_ineligible" />
+    <node id="ext4_free_inode" />
+    <node id="ext4_orphan_del" />
+    <node id="ext4_truncate" />
+    <node id="ext4_xattr_delete_inode" />
+    <node id="ext4_xattr_inode_array_free" />
+    <node id="is_bad_inode" />
+    <node id="jbd2_complete_transaction" />
+    <node id="fat_cache_inval_inode" />
+    <node id="fat_detach" />
+    <node id="remove_inode_hugepages" />
+    <node id="resv_map_release" />
+    <node id="dec_rlimit_ucounts" />
+    <node id="free_msg" />
+    <node id="msg_get" />
+    <node id="put_ipc_ns" />
+    <node id="put_ucounts" />
+    <node id="nfs_clear_inode" />
+    <node id="nfs_inode_evict_delegation" />
+    <node id="cgroupns_put" />
+    <node id="ipcns_put" />
+    <node id="mntns_put" />
+    <node id="netns_put" />
+    <node id="pidns_put" />
+    <node id="timens_put" />
+    <node id="utsns_put" />
+    <node id="pde_put" />
+    <node id="proc_pid_evict_inode" />
+    <node id="proc_sys_evict_inode" />
+    <node id="__var_waitqueue" />
+    <node id="init_wait_var_entry" />
+    <node id="shmem_undo_range" />
+    <node id="filemap_fdatawrite" />
+    <node id="_find_next_zero_bit" />
+    <node id="inet_hash" />
+    <node id="ns_capable" />
+    <node id="ping_init_sock" />
+    <node id="raw_hash_sk" />
+    <node id="raw_sk_init" />
+    <node id="rawv6_init_sk" />
+    <node id="sk_common_release" />
+    <node id="udp_lib_hash" />
+    <node id="udplite_sk_init" />
+    <node id="groups_free" />
+    <node id="inet_unhash" />
+    <node id="ping_unhash" />
+    <node id="raw6_destroy" />
+    <node id="raw_destroy" />
+    <node id="raw_unhash_sk" />
+    <node id="tcp_v4_destroy_sock" />
+    <node id="tcp_v6_destroy_sock" />
+    <node id="udp_destroy_sock" />
+    <node id="udp_lib_unhash" />
+    <node id="udpv6_destroy_sock" />
+    <node id="free_pcppages_bulk" />
+    <node id="__free_one_page" />
+    <node id="ext4_drop_inode" />
+    <node id="nfs_drop_inode" />
+    <node id="v9fs_drop_inode" />
+    <node id="inet6_create" />
+    <node id="net_ratelimit" />
+    <node id="netlink_create" />
+    <node id="packet_create" />
+    <node id="dev_add_pack" />
+    <node id="sk_free" />
+    <node id="wait_for_common" />
+    <node id="rb_next" />
+    <node id="update_load_avg" />
+    <node id="attach_entity_load_avg" />
+    <node id="detach_entity_load_avg" />
+    <node id="rb_insert_color" />
+    <node id="allocate_slab" />
+    <node id="deactivate_slab" />
+    <node id="get_any_partial" />
+    <node id="get_partial_node" />
+    <node id="gfp_pfmemalloc_allowed" />
+    <node id="slab_out_of_memory" />
+    <node id="__free_slab" />
+    <node id="cmpxchg_double_slab" />
+    <node id="__cpuset_node_allowed" />
+    <node id="__next_zones_zonelist" />
+    <node id="mempolicy_slab_node" />
+    <node id="aio_poll_wake" />
+    <node id="blk_mq_dispatch_wake" />
+    <node id="cwt_wakefn" />
+    <node id="ep_autoremove_wake_function" />
+    <node id="ep_poll_callback" />
+    <node id="io_async_buf_func" />
+    <node id="io_poll_wake" />
+    <node id="io_wake_function" />
+    <node id="io_wqe_hash_wake" />
+    <node id="iocg_wake_fn" />
+    <node id="kyber_domain_wake" />
+    <node id="pollwake" />
+    <node id="receiver_wake_function" />
+    <node id="unix_dgram_peer_wake_relay" />
+    <node id="wake_page_function" />
+    <node id="woken_wake_function" />
+    <node id="iocb_put" />
+    <node id="blk_mq_run_hw_queue" />
+    <node id="__pm_stay_awake" />
+    <node id="io_req_task_queue" />
+    <node id="io_pollfree_wake" />
+    <node id="io_wqe_activate_free_worker" />
+    <node id="sbitmap_del_wait_queue" />
+    <node id="wake_up_state" />
+    <node id="__mmu_notifier_subscriptions_destroy" />
+    <node id="__schedule" />
+    <node id="dequeue_task_dl" />
+    <node id="dequeue_task_rt" />
+    <node id="enter_lazy_tlb" />
+    <node id="set_next_task_dl" />
+    <node id="enqueue_entity" />
+    <node id="reweight_entity" />
+    <node id="__update_stats_enqueue_sleeper" />
+    <node id="fsnotify_destroy_mark" />
+    <node id="fsnotify_detach_connector_from_object" />
+    <node id="fsnotify_put_mark" />
+    <node id="fsnotify_detach_mark" />
+    <node id="__fsnotify_recalc_mask" />
+    <node id="queue_delayed_work_on" />
+    <node id="___perf_sw_event" />
+    <node id="__perf_event_task_sched_in" />
+    <node id="__warn_printk" />
+    <node id="put_task_stack" />
+    <node id="task_dead_fair" />
+    <node id="perf_swevent_event" />
+    <node id="ctx_sched_in" />
+    <node id="perf_pmu_nop_void" />
+    <node id="x86_pmu_enable" />
+    <node id="x86_pmu_sched_task" />
+    <node id="native_smp_send_reschedule" />
+    <node id="_find_first_bit" />
+    <node id="_find_next_and_bit" />
+    <node id="dequeue_entity" />
+    <edge source="security_sk_alloc" target="selinux_sk_alloc_security">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="sk_prot_alloc" target="kmem_cache_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="sk_prot_alloc" target="security_sk_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="sk_prot_alloc" target="try_module_get">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kmem_cache_alloc" target="should_failslab">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="security_inode_alloc" target="integrity_inode_free">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="security_inode_alloc" target="kmem_cache_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="security_inode_alloc" target="selinux_inode_alloc_security">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="security_inode_alloc" target="selinux_inode_free_security">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="d_instantiate" target="__d_instantiate">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="d_instantiate" target="security_d_instantiate">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kstrdup" target="__kmalloc_node_track_caller">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kstrdup" target="strlen">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__alloc_file" target="kmem_cache_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__alloc_file" target="security_file_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__alloc_file" target="__put_cred">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="dequeue_task_fair" target="dequeue_entity">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inode_doinit_with_dentry" target="free_pages">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="inode_doinit_with_dentry" target="security_transition_sid">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="inode_doinit_with_dentry" target="d_find_alias">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inode_doinit_with_dentry" target="d_find_any_alias">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inode_doinit_with_dentry" target="inode_doinit_use_xattr">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inode_doinit_with_dentry" target="security_genfs_sid">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_first_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_next_and_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="alloc_file_pseudo" target="alloc_file">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="alloc_file_pseudo" target="d_alloc_pseudo">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="alloc_file_pseudo" target="d_instantiate">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="alloc_file_pseudo" target="d_set_d_op">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="alloc_file_pseudo" target="mntget">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="alloc_file_pseudo" target="ihold">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="alloc_file_pseudo" target="path_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="selinux_socket_create" target="avc_has_perm">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="selinux_socket_create" target="security_transition_sid">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="set_next_entity" target="rb_next">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="set_next_entity" target="update_load_avg">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_socket_post_create" target="selinux_socket_post_create">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="inode_wait_for_writeback" target="bit_waitqueue">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="inode_wait_for_writeback" target="__wait_on_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="resched_curr" target="native_smp_send_reschedule">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="new_inode_pseudo" target="alloc_inode">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="selinux_netlbl_socket_post_create" target="netlbl_sock_setattr">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="selinux_netlbl_socket_post_create" target="selinux_netlbl_sock_genattr">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="pgd_free" target="free_pages">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="call_usermodehelper_setup" target="kmalloc_trace">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="tcp_init_sock" target="jiffies_to_usecs">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="tcp_init_sock" target="tcp_assign_congestion_control">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__request_module" target="call_usermodehelper_exec">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__request_module" target="call_usermodehelper_setup">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__request_module" target="current_is_async">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__request_module" target="kmalloc_trace">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__request_module" target="kstrdup">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__request_module" target="security_kernel_module_request">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="d_alloc_pseudo" target="__d_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="security_d_instantiate" target="selinux_d_instantiate">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="security_transition_sid" target="security_compute_sid">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="tcp_v4_init_sock" target="tcp_init_sock">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__free_pages" target="free_unref_page">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="destroy_context_ldt" target="free_pages">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="truncate_inode_pages_range" target="__filemap_get_folio">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="truncate_inode_pages_range" target="delete_from_page_cache_batch">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="truncate_inode_pages_range" target="ext4_invalidate_folio">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="truncate_inode_pages_range" target="find_get_entries">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="truncate_inode_pages_range" target="folio_wait_writeback">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="truncate_inode_pages_range" target="truncate_folio_batch_exceptionals">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="truncate_inode_pages_range" target="truncate_inode_folio">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="truncate_inode_pages_range" target="truncate_inode_partial_folio">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="alloc_fd" target="expand_files">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="alloc_fd" target="_find_next_zero_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="alloc_file" target="alloc_empty_file">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="alloc_file" target="errseq_sample">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="alloc_inode" target="inode_init_always">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="alloc_inode" target="sock_alloc_inode">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="alloc_inode" target="sock_free_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="alloc_inode" target="v9fs_alloc_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="unix_create1" target="__init_waitqueue_head">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="unix_create1" target="get_max_files">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="unix_create1" target="sk_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="unix_create1" target="sock_init_data">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sock_create" target="get_next_ino">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sock_create" target="inet_create">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__sock_create" target="module_put">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sock_create" target="new_inode_pseudo">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sock_create" target="security_socket_create">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sock_create" target="security_socket_post_create">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sock_create" target="try_module_get">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sock_create" target="unix_create">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__sock_create" target="inet6_create">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__sock_create" target="net_ratelimit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__sock_create" target="netlink_create">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__sock_create" target="packet_create">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="netlbl_sock_setattr" target="netlbl_domhsh_getentry">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="netlbl_sock_setattr" target="calipso_sock_setattr">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="netlbl_sock_setattr" target="cipso_v4_sock_setattr">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__d_alloc" target="d_set_d_op">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="integrity_inode_free" target="rb_erase">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_file_alloc" target="kmem_cache_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="security_file_alloc" target="selinux_file_alloc_security">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="security_file_alloc" target="selinux_file_open">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="selinux_socket_post_create" target="security_transition_sid">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="selinux_socket_post_create" target="selinux_netlbl_socket_post_create">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="selinux_socket_post_create" target="socket_type_to_security_class">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="expand_files" target="alloc_fdtable">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="expand_files" target="finish_wait">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="expand_files" target="prepare_to_wait_event">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="call_usermodehelper_exec" target="free_modprobe_argv">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="call_usermodehelper_exec" target="queue_work_on">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="call_usermodehelper_exec" target="wait_for_completion_state">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__mmdrop" target="destroy_context_ldt">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__mmdrop" target="pgd_free">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__mmdrop" target="__mmu_notifier_subscriptions_destroy">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="finish_task_switch" target="__mmdrop">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="finish_task_switch" target="___perf_sw_event">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="finish_task_switch" target="__perf_event_task_sched_in">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="finish_task_switch" target="__warn_printk">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="finish_task_switch" target="put_task_stack">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="finish_task_switch" target="task_dead_fair">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kmalloc_trace" target="__kmem_cache_alloc_node">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="selinux_sk_alloc_security" target="kmalloc_trace">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="selinux_sk_alloc_security" target="selinux_netlbl_sk_security_reset">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="selinux_d_instantiate" target="inode_doinit_with_dentry">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="inet_create" target="sk_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="inet_create" target="sock_init_data">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="inet_create" target="tcp_v4_init_sock">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="inet_create" target="udp_init_sock">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="inet_create" target="inet_hash">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inet_create" target="ns_capable">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inet_create" target="ping_init_sock">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inet_create" target="raw_hash_sk">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inet_create" target="raw_sk_init">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inet_create" target="rawv6_init_sk">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inet_create" target="sk_common_release">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inet_create" target="udp_lib_hash">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inet_create" target="udplite_sk_init">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="iput" target="evict">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="iput" target="ext4_drop_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="iput" target="nfs_drop_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="iput" target="v9fs_drop_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="selinux_netlbl_sock_genattr" target="kmalloc_trace">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="selinux_netlbl_sock_genattr" target="security_netlbl_sid_to_secattr">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="selinux_netlbl_sock_genattr" target="kfree_sensitive">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="selinux_netlbl_sock_genattr" target="kvfree">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="get_unused_fd_flags" target="alloc_fd">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="sock_alloc_inode" target="__init_waitqueue_head">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="unix_create" target="unix_create1">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="put_prev_entity" target="rb_insert_color">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="___slab_alloc" target="allocate_slab">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="___slab_alloc" target="deactivate_slab">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="___slab_alloc" target="get_any_partial">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="___slab_alloc" target="get_partial_node">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="___slab_alloc" target="gfp_pfmemalloc_allowed">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="___slab_alloc" target="slab_out_of_memory">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="free_unref_page" target="free_pcp_prepare">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="free_unref_page" target="free_unref_page_commit">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="tcp_assign_congestion_control" target="try_module_get">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="security_inode_free" target="integrity_inode_free">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="security_inode_free" target="selinux_inode_free_security">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="security_socket_create" target="selinux_socket_create">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up_bit" target="__wake_up">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="fsnotify_destroy_marks" target="iput">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="fsnotify_destroy_marks" target="fsnotify_destroy_mark">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="fsnotify_destroy_marks" target="fsnotify_detach_connector_from_object">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="fsnotify_destroy_marks" target="fsnotify_put_mark">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__kmem_cache_alloc_node" target="should_failslab">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__kmalloc_node_track_caller" target="__kmem_cache_alloc_node">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__kmalloc_node_track_caller" target="__kmalloc_large_node">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="enqueue_task_fair" target="enqueue_entity">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="enqueue_task_fair" target="reweight_entity">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="sock_alloc_file" target="alloc_file_pseudo">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="sock_alloc_file" target="module_put">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="sock_alloc_file" target="stream_open">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="wait_for_completion_state" target="wait_for_common">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="free_unref_page_commit" target="free_pcppages_bulk">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_kernel_module_request" target="selinux_kernel_module_request">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="kmem_cache_alloc_lru" target="___slab_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kmem_cache_alloc_lru" target="should_failslab">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="autoremove_wake_function" target="default_wake_function">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="pick_next_task_fair" target="pick_next_entity">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="pick_next_task_fair" target="put_prev_entity">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="pick_next_task_fair" target="set_next_entity">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="sock_alloc" target="get_next_ino">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="sock_alloc" target="new_inode_pseudo">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__cond_resched" target="__schedule">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="sk_alloc" target="__init_waitqueue_head">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="sk_alloc" target="cgroup_sk_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="sk_alloc" target="sk_prot_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="inode_init_always" target="__init_rwsem">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="inode_init_always" target="security_inode_alloc">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="evict" target="__destroy_inode">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="evict" target="clear_inode">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="evict" target="inode_wait_for_writeback">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="evict" target="truncate_inode_pages_final">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="evict" target="wake_up_bit">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="evict" target="autofs_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="bdev_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="bm_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="efivarfs_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="ext4_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="fat_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="hugetlbfs_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="inode_io_list_del">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="kernfs_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="mqueue_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="nfs4_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="nfs_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="nsfs_evict">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="proc_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="shmem_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="evict" target="v9fs_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="truncate_inode_pages_final" target="truncate_inode_pages_range">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="security_netlbl_sid_to_secattr" target="kstrdup">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="security_netlbl_sid_to_secattr" target="mls_export_netlbl_cat">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_netlbl_sid_to_secattr" target="mls_export_netlbl_lvl">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="selinux_kernel_module_request" target="avc_has_perm">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kfree" target="__free_pages">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kfree" target="__kmem_cache_free">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__x64_sys_socket" target="__sys_socket">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__destroy_inode" target="__fsnotify_inode_delete">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__destroy_inode" target="inode_has_buffers">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__destroy_inode" target="security_inode_free">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="alloc_empty_file" target="__alloc_file">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="alloc_empty_file" target="__percpu_counter_sum">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="alloc_empty_file" target="percpu_counter_add_batch">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="autoremove_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="default_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="aio_poll_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="blk_mq_dispatch_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="cwt_wakefn">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="ep_autoremove_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="ep_poll_callback">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_async_buf_func">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_poll_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_wqe_hash_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="iocg_wake_fn">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="kyber_domain_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="pollwake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="receiver_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="unix_dgram_peer_wake_relay">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="wake_page_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="woken_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__sys_socket" target="__sock_create">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sys_socket" target="fd_install">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sys_socket" target="get_unused_fd_flags">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sys_socket" target="iput">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sys_socket" target="module_put">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__sys_socket" target="sock_alloc_file">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="security_compute_sid" target="avtab_search">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_compute_sid" target="avtab_search_node">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_compute_sid" target="avtab_search_node_next">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_compute_sid" target="mls_compute_sid">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_compute_sid" target="policydb_context_isvalid">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_compute_sid" target="policydb_roletr_search">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_compute_sid" target="security_is_socket_class">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_compute_sid" target="sidtab_context_to_sid">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_compute_sid" target="sidtab_search_entry">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inode_doinit_use_xattr" target="__kmalloc">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="inode_doinit_use_xattr" target="security_context_to_sid_default">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="security_genfs_sid" target="__security_genfs_sid">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="selinux_file_open" target="avc_policy_seqno">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="mls_export_netlbl_cat" target="ebitmap_netlbl_export">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kfree_sensitive" target="__ksize">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kvfree" target="is_vmalloc_addr">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="cipso_v4_sock_setattr" target="cipso_v4_genopt">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="cipso_v4_sock_setattr" target="tcp_mss_to_mtu">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="cipso_v4_sock_setattr" target="tcp_mtu_to_mss">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="cipso_v4_sock_setattr" target="tcp_sync_mss">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__filemap_get_folio" target="__filemap_add_folio">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__filemap_get_folio" target="folio_wait_bit_common">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__filemap_get_folio" target="xas_load">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="delete_from_page_cache_batch" target="filemap_unaccount_folio">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="delete_from_page_cache_batch" target="inode_add_lru">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="folio_wait_writeback" target="folio_mapping">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="folio_wait_writeback" target="folio_wait_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="truncate_inode_folio" target="filemap_remove_folio">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="truncate_inode_partial_folio" target="zero_user_segments">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wait_on_bit" target="bit_wait">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wait_on_bit" target="bit_wait_io">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wait_on_bit" target="bit_wait_io_timeout">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wait_on_bit" target="bit_wait_timeout">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wait_on_bit" target="nfs_wait_bit_killable">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="bdev_evict_inode" target="invalidate_inode_buffers">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="__ext4_journal_stop">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="__ext4_std_error">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="__ext4_warning">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="dquot_initialize">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="ext4_clear_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="ext4_fc_mark_ineligible">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="ext4_free_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="ext4_orphan_del">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="ext4_truncate">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="ext4_xattr_delete_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="ext4_xattr_inode_array_free">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="is_bad_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ext4_evict_inode" target="jbd2_complete_transaction">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="fat_evict_inode" target="fat_cache_inval_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="fat_evict_inode" target="fat_detach">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="hugetlbfs_evict_inode" target="remove_inode_hugepages">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="hugetlbfs_evict_inode" target="resv_map_release">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="mqueue_evict_inode" target="dec_rlimit_ucounts">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="mqueue_evict_inode" target="free_msg">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="mqueue_evict_inode" target="msg_get">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="mqueue_evict_inode" target="put_ipc_ns">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="mqueue_evict_inode" target="put_ucounts">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="nfs4_evict_inode" target="nfs_clear_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="nfs4_evict_inode" target="nfs_inode_evict_delegation">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="nsfs_evict" target="cgroupns_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="nsfs_evict" target="ipcns_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="nsfs_evict" target="mntns_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="nsfs_evict" target="netns_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="nsfs_evict" target="pidns_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="nsfs_evict" target="timens_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="nsfs_evict" target="utsns_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="proc_evict_inode" target="pde_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="proc_evict_inode" target="proc_pid_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="proc_evict_inode" target="proc_sys_evict_inode">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="shmem_evict_inode" target="__var_waitqueue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="shmem_evict_inode" target="init_wait_var_entry">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="shmem_evict_inode" target="shmem_undo_range">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="v9fs_evict_inode" target="filemap_fdatawrite">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ping_init_sock" target="groups_free">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="sk_common_release" target="inet_unhash">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="sk_common_release" target="ping_unhash">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="sk_common_release" target="raw6_destroy">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="sk_common_release" target="raw_destroy">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="sk_common_release" target="raw_unhash_sk">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="sk_common_release" target="tcp_v4_destroy_sock">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="sk_common_release" target="tcp_v6_destroy_sock">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="sk_common_release" target="udp_destroy_sock">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="sk_common_release" target="udp_lib_unhash">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="sk_common_release" target="udpv6_destroy_sock">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="free_pcppages_bulk" target="__free_one_page">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="packet_create" target="dev_add_pack">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="packet_create" target="sk_free">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="update_load_avg" target="attach_entity_load_avg">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="update_load_avg" target="detach_entity_load_avg">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="deactivate_slab" target="__free_slab">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="deactivate_slab" target="cmpxchg_double_slab">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="get_any_partial" target="__cpuset_node_allowed">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="get_any_partial" target="__next_zones_zonelist">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="get_any_partial" target="mempolicy_slab_node">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="iocb_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="blk_mq_dispatch_wake" target="blk_mq_run_hw_queue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="ep_poll_callback" target="__pm_stay_awake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_async_buf_func" target="io_req_task_queue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_poll_wake" target="io_pollfree_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_wqe_hash_wake" target="io_wqe_activate_free_worker">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kyber_domain_wake" target="sbitmap_del_wait_queue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="wake_page_function" target="wake_up_state">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="dequeue_task_dl">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="dequeue_task_rt">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="enter_lazy_tlb">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="set_next_task_dl">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="enqueue_entity" target="__update_stats_enqueue_sleeper">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="fsnotify_destroy_mark" target="fsnotify_detach_mark">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="fsnotify_put_mark" target="__fsnotify_recalc_mask">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="fsnotify_put_mark" target="queue_delayed_work_on">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="___perf_sw_event" target="perf_swevent_event">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__perf_event_task_sched_in" target="ctx_sched_in">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__perf_event_task_sched_in" target="perf_pmu_nop_void">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__perf_event_task_sched_in" target="x86_pmu_enable">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__perf_event_task_sched_in" target="x86_pmu_sched_task">
+      <data key="d3">True</data>
+    </edge>
+  </graph>
+</graphml>

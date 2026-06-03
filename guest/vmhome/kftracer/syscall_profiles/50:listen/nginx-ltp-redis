@@ -1,0 +1,9 @@
+__fdget
+__fget_light
+__sys_listen
+__x64_sys_listen
+security_socket_listen
+selinux_socket_listen
+sock_has_perm
+sock_no_listen
+sockfd_lookup_light

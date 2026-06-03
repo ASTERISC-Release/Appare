@@ -1,0 +1,2 @@
+__x64_sys_io_destroy
+lookup_ioctx

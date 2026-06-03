@@ -1,0 +1,21 @@
+Subgraph has 19 nodes and 19 edges.
+Markdown tree representation:
+- __x64_sys_getrandom
+  - get_random_bytes_user
+    - _copy_to_iter
+      - PageHeadHuge <profiled>
+      - append_pipe
+      - sanity
+      - xas_find
+        - xas_load
+    - crng_make_state <profiled>
+      - extract_entropy
+        - blake2s_final
+        - blake2s_update <profiled>
+  - import_single_range
+  - wait_for_random_bytes
+    - finish_wait <profiled>
+    - init_wait_entry <profiled>
+    - prepare_to_wait_event <profiled>
+    - try_to_generate_entropy
+      - mix_pool_bytes <profiled>

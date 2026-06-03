@@ -1,0 +1,13 @@
+__rdgsbase_inactive
+__wrgsbase_inactive
+__x64_sys_arch_prctl
+__xstate_request_perm
+do_arch_prctl_64
+do_arch_prctl_common
+enable_cpuid
+fpu_xstate_prctl
+preempt_count_add
+preempt_count_sub
+wrmsrl
+x86_fsbase_read_task
+x86_gsbase_read_task

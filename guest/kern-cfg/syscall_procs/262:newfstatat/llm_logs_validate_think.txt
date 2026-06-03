@@ -1,0 +1,5118 @@
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- vring_interrupt
+  - virtscsi_req_done
+    - virtscsi_vq_done
+      - virtqueue_get_buf
+        - virtqueue_get_buf_ctx
+          - detach_buf_split
+
+Caller: detach_buf_split
+Source code:
+static void detach_buf_split(struct vring_virtqueue *vq, unsigned int head,
+			     void **ctx)
+{
+	unsigned int i, j;
+	__virtio16 nextflag = cpu_to_virtio16(vq->vq.vdev, VRING_DESC_F_NEXT);
+
+	/* Clear data ptr. */
+	vq->split.desc_state[head].data = NULL;
+
+	/* Put back on free list: unmap first-level descriptors and find end */
+	i = head;
+
+	while (vq->split.vring.desc[i].flags & nextflag) {
+		vring_unmap_one_split(vq, i);
+		i = vq->split.desc_extra[i].next;
+		vq->vq.num_free++;
+	}
+
+	vring_unmap_one_split(vq, i);
+	vq->split.desc_extra[i].next = vq->free_head;
+	vq->free_head = head;
+
+	/* Plus final descriptor */
+	vq->vq.num_free++;
+
+	if (vq->indirect) {
+		struct vring_desc *indir_desc =
+				vq->split.desc_state[head].indir_desc;
+		u32 len;
+
+		/* Free the indirect table, if any, now that it's unmapped. */
+		if (!indir_desc)
+			return;
+
+		len = vq->split.desc_extra[head].len;
+
+		BUG_ON(!(vq->split.desc_extra[head].flags &
+				VRING_DESC_F_INDIRECT));
+		BUG_ON(len == 0 || len % sizeof(struct vring_desc));
+
+		for (j = 0; j < len / sizeof(struct vring_desc); j++)
+			vring_unmap_one_split_indirect(vq, &indir_desc[j]);
+
+		kfree(indir_desc);
+		vq->split.desc_state[head].indir_desc = NULL;
+	} else if (ctx) {
+		*ctx = vq->split.desc_state[head].indir_desc;
+	}
+}
+
+
+Callee candidate: dma_unmap_page_attrs
+Source code:
+void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr, size_t size,
+		enum dma_data_direction dir, unsigned long attrs)
+{
+	const struct dma_map_ops *ops = get_dma_ops(dev);
+
+	BUG_ON(!valid_dma_direction(dir));
+	if (dma_map_direct(dev, ops) ||
+	    arch_dma_unmap_page_direct(dev, addr + size))
+		dma_direct_unmap_page(dev, addr, size, dir, attrs);
+	else if (ops->unmap_page)
+		ops->unmap_page(dev, addr, size, dir, attrs);
+	debug_dma_unmap_page(dev, addr, size, dir);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of detach_buf_split will reach dma_unmap_page_attrs? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `detach_buf_split` unmaps descriptors via `vring_unmap_one_split` and `vring_unmap_one_split_indirect`, which are likely implemented using DMA unmap operations. Since `dma_unmap_page_attrs` is the standard kernel API for unmapping DMA memory, and the virtio SCSI driver (historically involved in this call chain) relies on DMA for data transfers, it is semantically and functionally reasonable to expect that these unmap helpers eventually invoke `dma_unmap_page_attrs` to release DMA-mapped buffers. The historical context further supports this, as the chain involves virtio devices that inherently use DMA.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: detach_buf_split
+
+Callee candidate: dma_unmap_page_attrs
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of detach_buf_split will reach dma_unmap_page_attrs? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `detach_buf_split` is typically involved in the cleanup or detachment of buffer resources, often in the context of DMA (Direct Memory Access) operations. The function `dma_unmap_page_attrs` is responsible for un-mapping a DMA-mapped page, which is a necessary step when releasing or detaching DMA resources.
+
+Since `detach_buf_split` likely handles the process of releasing buffer mappings, it is semantically and functionally reasonable for it to invoke or reach `dma_unmap_page_attrs` as part of its cleanup logic.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - __inet_lookup_listener
+          - inet_lhash2_lookup
+
+Caller: inet_lhash2_lookup
+Source code:
+static struct sock *inet_lhash2_lookup(struct net *net,
+				struct inet_listen_hashbucket *ilb2,
+				struct sk_buff *skb, int doff,
+				const __be32 saddr, __be16 sport,
+				const __be32 daddr, const unsigned short hnum,
+				const int dif, const int sdif)
+{
+	struct sock *sk, *result = NULL;
+	struct hlist_nulls_node *node;
+	int score, hiscore = 0;
+
+	sk_nulls_for_each_rcu(sk, node, &ilb2->nulls_head) {
+		score = compute_score(sk, net, hnum, daddr, dif, sdif);
+		if (score > hiscore) {
+			result = lookup_reuseport(net, sk, skb, doff,
+						  saddr, sport, daddr, hnum);
+			if (result)
+				return result;
+
+			result = sk;
+			hiscore = score;
+		}
+	}
+
+	return result;
+}
+
+
+Callee candidate: inet_ehashfn
+Source code:
+static u32 inet_ehashfn(const struct net *net, const __be32 laddr,
+			const __u16 lport, const __be32 faddr,
+			const __be16 fport)
+{
+	static u32 inet_ehash_secret __read_mostly;
+
+	net_get_random_once(&inet_ehash_secret, sizeof(inet_ehash_secret));
+
+	return __inet_ehashfn(laddr, lport, faddr, fport,
+			      inet_ehash_secret + net_hash_mix(net));
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of inet_lhash2_lookup will reach inet_ehashfn? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{Your justification}
+The `inet_lhash2_lookup` function is designed to search for listening sockets in the `lhash2` (listening hash table), which uses `ipv4_portaddr_hash` to compute bucket indices. The `inet_ehashfn` function, in contrast, computes hashes for established sockets in the `ehash` table. Since `inet_lhash2_lookup` operates on listening sockets and does not involve established connections or their hash logic, it does not invoke `inet_ehashfn`.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: inet_lhash2_lookup
+
+Callee candidate: inet_ehashfn
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of inet_lhash2_lookup will reach inet_ehashfn? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+inet_lhash2_lookup is a function in the Linux networking stack used to look up an IPv4 socket in a hash table based on its local address and port. inet_ehashfn, on the other hand, is a helper function used to compute a hash value for a socket based on its endpoints (local and remote addresses and ports), typically for insertion into or lookup in the established hash table. These functions serve different roles in socket management and operate on different hash tables (local hash vs. established hash). Therefore, it is not semantically or functionally reasonable to expect that inet_lhash2_lookup would reach inet_ehashfn during its execution.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- tcp_v4_send_synack
+  - ip_build_and_send_pkt
+
+Caller: ip_build_and_send_pkt
+Source code:
+int ip_build_and_send_pkt(struct sk_buff *skb, const struct sock *sk,
+			  __be32 saddr, __be32 daddr, struct ip_options_rcu *opt,
+			  u8 tos)
+{
+	struct inet_sock *inet = inet_sk(sk);
+	struct rtable *rt = skb_rtable(skb);
+	struct net *net = sock_net(sk);
+	struct iphdr *iph;
+
+	/* Build the IP header. */
+	skb_push(skb, sizeof(struct iphdr) + (opt ? opt->opt.optlen : 0));
+	skb_reset_network_header(skb);
+	iph = ip_hdr(skb);
+	iph->version  = 4;
+	iph->ihl      = 5;
+	iph->tos      = tos;
+	iph->ttl      = ip_select_ttl(inet, &rt->dst);
+	iph->daddr    = (opt && opt->opt.srr ? opt->opt.faddr : daddr);
+	iph->saddr    = saddr;
+	iph->protocol = sk->sk_protocol;
+	/* Do not bother generating IPID for small packets (eg SYNACK) */
+	if (skb->len <= IPV4_MIN_MTU || ip_dont_fragment(sk, &rt->dst)) {
+		iph->frag_off = htons(IP_DF);
+		iph->id = 0;
+	} else {
+		iph->frag_off = 0;
+		/* TCP packets here are SYNACK with fat IPv4/TCP options.
+		 */
+		if (sk->sk_protocol == IPPROTO_TCP)
+			iph->id = (__force __be16)get_random_u16();
+		else
+			__ip_select_ident(net, iph, 1);
+	}
+
+	if (opt && opt->opt.optlen) {
+		iph->ihl += opt->opt.optlen>>2;
+		ip_options_build(skb, &opt->opt, daddr, rt);
+	}
+
+	skb->priority = sk->sk_priority;
+	if (!skb->mark)
+		skb->mark = sk->sk_mark;
+
+	/* Send it out. */
+	return ip_local_out(net, skb->sk, skb);
+}
+
+
+Callee candidate: skb_push
+Source code:
+void *skb_push(struct sk_buff *skb, unsigned int len)
+{
+	skb->data -= len;
+	skb->len  += len;
+	if (unlikely(skb->data < skb->head))
+		skb_under_panic(skb, len, __builtin_return_address(0));
+	return skb->data;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of ip_build_and_send_pkt will reach skb_push? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `ip_build_and_send_pkt` explicitly calls `skb_push` as its first operation to allocate space for the IP header and options. This is a standard and necessary step to prepare the skb for header construction. Since the code directly invokes `skb_push` unconditionally, execution will always reach it during normal operation.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: ip_build_and_send_pkt
+
+Callee candidate: skb_push
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of ip_build_and_send_pkt will reach skb_push? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In the Linux networking stack, `ip_build_and_send_pkt` is responsible for constructing and sending an IPv4 packet. This function typically operates on a socket buffer (`skb`). To build a packet, it often needs to allocate or modify the `skb`, which may involve adjusting the data pointer using `skb_push`. Given the role of `skb_push` in prepending data to an `skb`, it is semantically and functionally reasonable for `ip_build_and_send_pkt` to call `skb_push` as part of packet construction.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - tcp_v4_send_ack
+
+Caller: tcp_v4_send_ack
+Source code:
+static void tcp_v4_send_ack(const struct sock *sk,
+			    struct sk_buff *skb, u32 seq, u32 ack,
+			    u32 win, u32 tsval, u32 tsecr, int oif,
+			    struct tcp_md5sig_key *key,
+			    int reply_flags, u8 tos)
+{
+	const struct tcphdr *th = tcp_hdr(skb);
+	struct {
+		struct tcphdr th;
+		__be32 opt[(TCPOLEN_TSTAMP_ALIGNED >> 2)
+#ifdef CONFIG_TCP_MD5SIG
+			   + (TCPOLEN_MD5SIG_ALIGNED >> 2)
+#endif
+			];
+	} rep;
+	struct net *net = sock_net(sk);
+	struct ip_reply_arg arg;
+	struct sock *ctl_sk;
+	u64 transmit_time;
+
+	memset(&rep.th, 0, sizeof(struct tcphdr));
+	memset(&arg, 0, sizeof(arg));
+
+	arg.iov[0].iov_base = (unsigned char *)&rep;
+	arg.iov[0].iov_len  = sizeof(rep.th);
+	if (tsecr) {
+		rep.opt[0] = htonl((TCPOPT_NOP << 24) | (TCPOPT_NOP << 16) |
+				   (TCPOPT_TIMESTAMP << 8) |
+				   TCPOLEN_TIMESTAMP);
+		rep.opt[1] = htonl(tsval);
+		rep.opt[2] = htonl(tsecr);
+		arg.iov[0].iov_len += TCPOLEN_TSTAMP_ALIGNED;
+	}
+
+	/* Swap the send and the receive. */
+	rep.th.dest    = th->source;
+	rep.th.source  = th->dest;
+	rep.th.doff    = arg.iov[0].iov_len / 4;
+	rep.th.seq     = htonl(seq);
+	rep.th.ack_seq = htonl(ack);
+	rep.th.ack     = 1;
+	rep.th.window  = htons(win);
+
+#ifdef CONFIG_TCP_MD5SIG
+	if (key) {
+		int offset = (tsecr) ? 3 : 0;
+
+		rep.opt[offset++] = htonl((TCPOPT_NOP << 24) |
+					  (TCPOPT_NOP << 16) |
+					  (TCPOPT_MD5SIG << 8) |
+					  TCPOLEN_MD5SIG);
+		arg.iov[0].iov_len += TCPOLEN_MD5SIG_ALIGNED;
+		rep.th.doff = arg.iov[0].iov_len/4;
+
+		tcp_v4_md5_hash_hdr((__u8 *) &rep.opt[offset],
+				    key, ip_hdr(skb)->saddr,
+				    ip_hdr(skb)->daddr, &rep.th);
+	}
+#endif
+	arg.flags = reply_flags;
+	arg.csum = csum_tcpudp_nofold(ip_hdr(skb)->daddr,
+				      ip_hdr(skb)->saddr, /* XXX */
+				      arg.iov[0].iov_len, IPPROTO_TCP, 0);
+	arg.csumoffset = offsetof(struct tcphdr, check) / 2;
+	if (oif)
+		arg.bound_dev_if = oif;
+	arg.tos = tos;
+	arg.uid = sock_net_uid(net, sk_fullsock(sk) ? sk : NULL);
+	local_bh_disable();
+	ctl_sk = this_cpu_read(ipv4_tcp_sk);
+	sock_net_set(ctl_sk, net);
+	ctl_sk->sk_mark = (sk->sk_state == TCP_TIME_WAIT) ?
+			   inet_twsk(sk)->tw_mark : sk->sk_mark;
+	ctl_sk->sk_priority = (sk->sk_state == TCP_TIME_WAIT) ?
+			   inet_twsk(sk)->tw_priority : sk->sk_priority;
+	transmit_time = tcp_transmit_time(sk);
+	ip_send_unicast_reply(ctl_sk,
+			      skb, &TCP_SKB_CB(skb)->header.h4.opt,
+			      ip_hdr(skb)->saddr, ip_hdr(skb)->daddr,
+			      &arg, arg.iov[0].iov_len,
+			      transmit_time);
+
+	ctl_sk->sk_mark = 0;
+	sock_net_set(ctl_sk, &init_net);
+	__TCP_INC_STATS(net, TCP_MIB_OUTSEGS);
+	local_bh_enable();
+}
+
+
+Callee candidate: ip_send_unicast_reply
+Source code:
+void ip_send_unicast_reply(struct sock *sk, struct sk_buff *skb,
+			   const struct ip_options *sopt,
+			   __be32 daddr, __be32 saddr,
+			   const struct ip_reply_arg *arg,
+			   unsigned int len, u64 transmit_time)
+{
+	struct ip_options_data replyopts;
+	struct ipcm_cookie ipc;
+	struct flowi4 fl4;
+	struct rtable *rt = skb_rtable(skb);
+	struct net *net = sock_net(sk);
+	struct sk_buff *nskb;
+	int err;
+	int oif;
+
+	if (__ip_options_echo(net, &replyopts.opt.opt, skb, sopt))
+		return;
+
+	ipcm_init(&ipc);
+	ipc.addr = daddr;
+	ipc.sockc.transmit_time = transmit_time;
+
+	if (replyopts.opt.opt.optlen) {
+		ipc.opt = &replyopts.opt;
+
+		if (replyopts.opt.opt.srr)
+			daddr = replyopts.opt.opt.faddr;
+	}
+
+	oif = arg->bound_dev_if;
+	if (!oif && netif_index_is_l3_master(net, skb->skb_iif))
+		oif = skb->skb_iif;
+
+	flowi4_init_output(&fl4, oif,
+			   IP4_REPLY_MARK(net, skb->mark) ?: sk->sk_mark,
+			   RT_TOS(arg->tos),
+			   RT_SCOPE_UNIVERSE, ip_hdr(skb)->protocol,
+			   ip_reply_arg_flowi_flags(arg),
+			   daddr, saddr,
+			   tcp_hdr(skb)->source, tcp_hdr(skb)->dest,
+			   arg->uid);
+	security_skb_classify_flow(skb, flowi4_to_flowi_common(&fl4));
+	rt = ip_route_output_flow(net, &fl4, sk);
+	if (IS_ERR(rt))
+		return;
+
+	inet_sk(sk)->tos = arg->tos & ~INET_ECN_MASK;
+
+	sk->sk_protocol = ip_hdr(skb)->protocol;
+	sk->sk_bound_dev_if = arg->bound_dev_if;
+	sk->sk_sndbuf = READ_ONCE(sysctl_wmem_default);
+	ipc.sockc.mark = fl4.flowi4_mark;
+	err = ip_append_data(sk, &fl4, ip_reply_glue_bits, arg->iov->iov_base,
+			     len, 0, &ipc, &rt, MSG_DONTWAIT);
+	if (unlikely(err)) {
+		ip_flush_pending_frames(sk);
+		goto out;
+	}
+
+	nskb = skb_peek(&sk->sk_write_queue);
+	if (nskb) {
+		if (arg->csumoffset >= 0)
+			*((__sum16 *)skb_transport_header(nskb) +
+			  arg->csumoffset) = csum_fold(csum_add(nskb->csum,
+								arg->csum));
+		nskb->ip_summed = CHECKSUM_NONE;
+		nskb->mono_delivery_time = !!transmit_time;
+		ip_push_pending_frames(sk, &fl4);
+	}
+out:
+	ip_rt_put(rt);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of tcp_v4_send_ack will reach ip_send_unicast_reply? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `tcp_v4_send_ack` explicitly calls `ip_send_unicast_reply` after preparing the necessary arguments and context. There are no intervening conditions or return statements that would prevent this call under normal execution. The historical call graph also aligns with this flow, as `tcp_v4_send_ack` is already part of the chain involving packet processing and response generation. Since the code directly invokes `ip_send_unicast_reply` without guarding it by error checks that would bypass it, the transition is semantically and functionally expected.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: tcp_v4_send_ack
+
+Callee candidate: ip_send_unicast_reply
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of tcp_v4_send_ack will reach ip_send_unicast_reply? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In the Linux TCP stack, `tcp_v4_send_ack` is responsible for sending an acknowledgment (ACK) segment in response to a received TCP segment. To send such a segment, it typically relies on the IP layer to route and transmit the packet. The function `ip_send_unicast_reply` is a helper function used to send a unicast IP reply, which aligns with the purpose of sending a TCP ACK in response to a specific incoming packet.
+
+Given the stack's design and the typical call flow during TCP response handling, it is semantically and functionally reasonable to expect that `tcp_v4_send_ack` would eventually reach `ip_send_unicast_reply` during execution.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- alloc_page_buffers
+  - alloc_buffer_head
+
+Caller: alloc_buffer_head
+Source code:
+struct buffer_head *alloc_buffer_head(gfp_t gfp_flags)
+{
+	struct buffer_head *ret = kmem_cache_zalloc(bh_cachep, gfp_flags);
+	if (ret) {
+		INIT_LIST_HEAD(&ret->b_assoc_buffers);
+		spin_lock_init(&ret->b_uptodate_lock);
+		preempt_disable();
+		__this_cpu_inc(bh_accounting.nr);
+		recalc_bh_state();
+		preempt_enable();
+	}
+	return ret;
+}
+
+
+Callee candidate: recalc_bh_state
+Source code:
+static void recalc_bh_state(void)
+{
+	int i;
+	int tot = 0;
+
+	if (__this_cpu_inc_return(bh_accounting.ratelimit) - 1 < 4096)
+		return;
+	__this_cpu_write(bh_accounting.ratelimit, 0);
+	for_each_online_cpu(i)
+		tot += per_cpu(bh_accounting, i).nr;
+	buffer_heads_over_limit = (tot > max_buffer_heads);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of alloc_buffer_head will reach recalc_bh_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The code in alloc_buffer_head explicitly calls recalc_bh_state() after incrementing the CPU-local counter, and this call is unconditional as long as the kmem_cache_zalloc() succeeds. Since the historical call graph confirms alloc_page_buffers invokes alloc_buffer_head, and recalc_bh_state is directly embedded in the success path of alloc_buffer_head, the semantic and functional reachability is guaranteed during normal execution. Security enforcement would recognize this as a legitimate, deterministic control flow.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: alloc_buffer_head
+
+Callee candidate: recalc_bh_state
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of alloc_buffer_head will reach recalc_bh_state? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+alloc_buffer_head is involved in buffer head allocation, while recalc_bh_state is responsible for recalculating the state of buffer heads. For security enforcement, if alloc_buffer_head can logically result in a state transition that necessitates recalculating buffer head state, then reaching recalc_bh_state is functionally reasonable. This is plausible in a context where buffer head allocation affects global buffer state consistency.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- submit_bio
+  - submit_bio_noacct
+
+Caller: submit_bio_noacct
+Source code:
+void submit_bio_noacct(struct bio *bio)
+{
+	struct block_device *bdev = bio->bi_bdev;
+	struct request_queue *q = bdev_get_queue(bdev);
+	blk_status_t status = BLK_STS_IOERR;
+	struct blk_plug *plug;
+
+	might_sleep();
+
+	plug = blk_mq_plug(bio);
+	if (plug && plug->nowait)
+		bio->bi_opf |= REQ_NOWAIT;
+
+	/*
+	 */
+	if ((bio->bi_opf & REQ_NOWAIT) && !bdev_nowait(bdev))
+		goto not_supported;
+
+	if (should_fail_bio(bio))
+		goto end_io;
+	bio_check_ro(bio);
+	if (!bio_flagged(bio, BIO_REMAPPED)) {
+		if (unlikely(bio_check_eod(bio)))
+			goto end_io;
+		if (bdev->bd_partno && unlikely(blk_partition_remap(bio)))
+			goto end_io;
+	}
+
+	/*
+	 */
+	if (op_is_flush(bio->bi_opf) &&
+	    !test_bit(QUEUE_FLAG_WC, &q->queue_flags)) {
+		bio->bi_opf &= ~(REQ_PREFLUSH | REQ_FUA);
+		if (!bio_sectors(bio)) {
+			status = BLK_STS_OK;
+			goto end_io;
+		}
+	}
+
+	if (!test_bit(QUEUE_FLAG_POLL, &q->queue_flags))
+		bio_clear_polled(bio);
+
+	switch (bio_op(bio)) {
+	case REQ_OP_DISCARD:
+		if (!bdev_max_discard_sectors(bdev))
+			goto not_supported;
+		break;
+	case REQ_OP_SECURE_ERASE:
+		if (!bdev_max_secure_erase_sectors(bdev))
+			goto not_supported;
+		break;
+	case REQ_OP_ZONE_APPEND:
+		status = blk_check_zone_append(q, bio);
+		if (status != BLK_STS_OK)
+			goto end_io;
+		break;
+	case REQ_OP_ZONE_RESET:
+	case REQ_OP_ZONE_OPEN:
+	case REQ_OP_ZONE_CLOSE:
+	case REQ_OP_ZONE_FINISH:
+		if (!bdev_is_zoned(bio->bi_bdev))
+			goto not_supported;
+		break;
+	case REQ_OP_ZONE_RESET_ALL:
+		if (!bdev_is_zoned(bio->bi_bdev) || !blk_queue_zone_resetall(q))
+			goto not_supported;
+		break;
+	case REQ_OP_WRITE_ZEROES:
+		if (!q->limits.max_write_zeroes_sectors)
+			goto not_supported;
+		break;
+	default:
+		break;
+	}
+
+	if (blk_throtl_bio(bio))
+		return;
+
+	blk_cgroup_bio_start(bio);
+	blkcg_bio_issue_init(bio);
+
+	if (!bio_flagged(bio, BIO_TRACE_COMPLETION)) {
+		trace_block_bio_queue(bio);
+		/* Now that enqueuing has been traced, we need to trace
+		 */
+		bio_set_flag(bio, BIO_TRACE_COMPLETION);
+	}
+	submit_bio_noacct_nocheck(bio);
+	return;
+
+not_supported:
+	status = BLK_STS_NOTSUPP;
+end_io:
+	bio->bi_status = status;
+	bio_endio(bio);
+}
+
+
+Callee candidate: submit_bio_noacct_nocheck
+Source code:
+void submit_bio_noacct_nocheck(struct bio *bio)
+{
+	/*
+	 */
+	if (current->bio_list)
+		bio_list_add(&current->bio_list[0], bio);
+	else if (!bio->bi_bdev->bd_disk->fops->submit_bio)
+		__submit_bio_noacct_mq(bio);
+	else
+		__submit_bio_noacct(bio);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of submit_bio_noacct will reach submit_bio_noacct_nocheck? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `submit_bio_noacct` directly calls `submit_bio_noacct_nocheck` in its normal execution path, as seen in the source code. Unless error conditions or unsupported operations trigger early exits (e.g., `goto not_supported` or `goto end_io`), the call to `submit_bio_noacct_nocheck` is executed. Since the historical call graph confirms `submit_bio` → `submit_bio_noacct`, and the code explicitly invokes the callee under typical scenarios, the edge is valid.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: submit_bio_noacct
+
+Callee candidate: submit_bio_noacct_nocheck
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of submit_bio_noacct will reach submit_bio_noacct_nocheck? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `submit_bio_noacct_nocheck` appears to be a variant or internal helper of `submit_bio_noacct`, likely designed to bypass certain checks. Given their similar naming and the typical structure of Linux kernel functions, it is reasonable to expect that `submit_bio_noacct` may call `submit_bio_noacct_nocheck` internally to offload or simplify a part of its execution. From a security-enforcement standpoint, this transition should be semantically valid if the latter function is a trusted, internal helper with no additional security checks that the former is expected to enforce.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - tcp_child_process
+          - tcp_rcv_state_process
+            - tcp_v4_conn_request
+              - tcp_conn_request
+                - tcp_v4_route_req
+                  - security_inet_conn_request
+                    - selinux_inet_conn_request
+                      - selinux_netlbl_inet_conn_request
+                        - netlbl_req_setattr
+
+Caller: netlbl_req_setattr
+Source code:
+int netlbl_req_setattr(struct request_sock *req,
+		       const struct netlbl_lsm_secattr *secattr)
+{
+	int ret_val;
+	struct netlbl_dommap_def *entry;
+	struct inet_request_sock *ireq = inet_rsk(req);
+
+	rcu_read_lock();
+	switch (req->rsk_ops->family) {
+	case AF_INET:
+		entry = netlbl_domhsh_getentry_af4(secattr->domain,
+						   ireq->ir_rmt_addr);
+		if (entry == NULL) {
+			ret_val = -ENOENT;
+			goto req_setattr_return;
+		}
+		switch (entry->type) {
+		case NETLBL_NLTYPE_CIPSOV4:
+			ret_val = cipso_v4_req_setattr(req,
+						       entry->cipso, secattr);
+			break;
+		case NETLBL_NLTYPE_UNLABELED:
+			netlbl_req_delattr(req);
+			ret_val = 0;
+			break;
+		default:
+			ret_val = -ENOENT;
+		}
+		break;
+#if IS_ENABLED(CONFIG_IPV6)
+	case AF_INET6:
+		entry = netlbl_domhsh_getentry_af6(secattr->domain,
+						   &ireq->ir_v6_rmt_addr);
+		if (entry == NULL) {
+			ret_val = -ENOENT;
+			goto req_setattr_return;
+		}
+		switch (entry->type) {
+		case NETLBL_NLTYPE_CALIPSO:
+			ret_val = calipso_req_setattr(req,
+						      entry->calipso, secattr);
+			break;
+		case NETLBL_NLTYPE_UNLABELED:
+			netlbl_req_delattr(req);
+			ret_val = 0;
+			break;
+		default:
+			ret_val = -ENOENT;
+		}
+		break;
+#endif /* IPv6 */
+	default:
+		ret_val = -EPROTONOSUPPORT;
+	}
+
+req_setattr_return:
+	rcu_read_unlock();
+	return ret_val;
+}
+
+
+Callee candidate: cipso_v4_req_delattr
+Source code:
+void cipso_v4_req_delattr(struct request_sock *req)
+{
+	cipso_v4_delopt(&inet_rsk(req)->ireq_opt);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of netlbl_req_setattr will reach cipso_v4_req_delattr? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `netlbl_req_setattr` calls `netlbl_req_delattr(req)` when handling `NETLBL_NLTYPE_UNLABELED` entries for AF_INET. However, the provided code does not show `netlbl_req_delattr` invoking `cipso_v4_req_delattr`. The latter is explicitly referenced in `cipso_v4_req_delattr` as a standalone function, but there is no direct or indirect call path from `netlbl_req_setattr` to it in the given code. The historical execution context also does not suggest such a connection.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: netlbl_req_setattr
+
+Callee candidate: cipso_v4_req_delattr
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of netlbl_req_setattr will reach cipso_v4_req_delattr? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+netlbl_req_setattr is responsible for setting attributes on a network labeling request, and it may interact with different labeling protocols, such as CIPSO. cipso_v4_req_delattr is used to remove CIPSO-specific attributes from a request. These functions are part of the NetLabel subsystem, which manages security labels in network protocols. It is plausible for netlbl_req_setattr to invoke cipso_v4_req_delattr as part of attribute management, particularly when updating or replacing attributes.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __sysvec_call_function_single
+
+Caller: __sysvec_call_function_single
+Source code:
+None
+
+Callee candidate: generic_smp_call_function_single_interrupt
+Source code:
+void generic_smp_call_function_single_interrupt(void)
+{
+	cfd_seq_store(this_cpu_ptr(&cfd_seq_local)->gotipi, CFD_SEQ_NOCPU,
+		      smp_processor_id(), CFD_SEQ_GOTIPI);
+	__flush_smp_call_function_queue(true);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __sysvec_call_function_single will reach generic_smp_call_function_single_interrupt? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `__sysvec_call_function_single` is an x86-specific interrupt handler for single-CPU function calls. When this handler is invoked, it transitions control to the generic SMP function processing logic, which includes `generic_smp_call_function_single_interrupt`. The latter is explicitly designed to handle such single-target function calls by flushing the per-CPU queue. The historical call graph and the semantic purpose of these functions confirm the execution path.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __sysvec_call_function_single
+
+Callee candidate: generic_smp_call_function_single_interrupt
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __sysvec_call_function_single will reach generic_smp_call_function_single_interrupt? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The `__sysvec_call_function_single` is part of the architecture-specific (x86) IPI (Inter-Processor Interrupt) handling infrastructure in the Linux kernel, used to trigger a function execution on a specific CPU. The `generic_smp_call_function_single_interrupt` is the generic (CPU-architecture agnostic) handler that processes such IPIs. It is semantically and functionally reasonable to expect that execution of `__sysvec_call_function_single` will eventually reach `generic_smp_call_function_single_interrupt`, as the former is designed to invoke the latter as part of the SMP function call mechanism.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- inet_csk_destroy_sock
+  - sk_free
+    - __sk_free
+      - __sk_destruct
+        - tcp_v4_destroy_sock
+          - tcp_cleanup_congestion_control
+
+Caller: tcp_cleanup_congestion_control
+Source code:
+void tcp_cleanup_congestion_control(struct sock *sk)
+{
+	struct inet_connection_sock *icsk = inet_csk(sk);
+
+	if (icsk->icsk_ca_ops->release)
+		icsk->icsk_ca_ops->release(sk);
+	bpf_module_put(icsk->icsk_ca_ops, icsk->icsk_ca_ops->owner);
+}
+
+
+Callee candidate: module_put
+Source code:
+void module_put(struct module *module)
+{
+	int ret;
+
+	if (module) {
+		preempt_disable();
+		ret = atomic_dec_if_positive(&module->refcnt);
+		WARN_ON(ret < 0);	/* Failed to put refcount */
+		trace_module_put(module, _RET_IP_);
+		preempt_enable();
+	}
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of tcp_cleanup_congestion_control will reach module_put? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `tcp_cleanup_congestion_control` explicitly calls `bpf_module_put`, which is a kernel helper that wraps `module_put`. Since `bpf_module_put` directly invokes `module_put` to decrement the module reference count, the call path from `tcp_cleanup_congestion_control` to `module_put` is semantically and functionally valid. This ensures proper cleanup of module references during socket destruction.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: tcp_cleanup_congestion_control
+
+Callee candidate: module_put
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of tcp_cleanup_congestion_control will reach module_put? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+tcp_cleanup_congestion_control is a function in the TCP stack that is responsible for cleaning up congestion control state when a connection is closed or otherwise terminated. It typically deals with releasing internal TCP resources, such as resetting congestion control algorithms. The function module_put, on the other hand, is used to decrement the usage count of a kernel module, potentially unloading it if the count reaches zero.
+
+For module_put to be called from tcp_cleanup_congestion_control, there would need to be a direct or indirect dependency on a loadable module that is being referenced by the TCP stack and is now being released. This is not the usual behavior of tcp_cleanup_congestion_control, which does not normally manage module references.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- e1000_alloc_rx_buffers
+  - dma_unmap_page_attrs
+    - swiotlb_sync_single_for_cpu
+- dma_sync_single_for_cpu
+  - swiotlb_sync_single_for_cpu
+- e1000_clean
+  - dma_unmap_page_attrs
+    - swiotlb_sync_single_for_cpu
+- vring_interrupt
+  - virtscsi_req_done
+    - virtscsi_vq_done
+      - virtqueue_get_buf
+        - virtqueue_get_buf_ctx
+          - detach_buf_split
+            - dma_unmap_page_attrs
+              - swiotlb_sync_single_for_cpu
+- __dev_queue_xmit
+  - __qdisc_run
+    - sch_direct_xmit
+      - dev_hard_start_xmit
+        - e1000_xmit_frame
+          - dma_unmap_page_attrs
+            - swiotlb_sync_single_for_cpu
+
+Caller: swiotlb_sync_single_for_cpu
+Source code:
+void swiotlb_sync_single_for_cpu(struct device *dev, phys_addr_t tlb_addr,
+		size_t size, enum dma_data_direction dir)
+{
+	if (dir == DMA_FROM_DEVICE || dir == DMA_BIDIRECTIONAL)
+		swiotlb_bounce(dev, tlb_addr, size, DMA_FROM_DEVICE);
+	else
+		BUG_ON(dir != DMA_TO_DEVICE);
+}
+
+
+Callee candidate: swiotlb_bounce
+Source code:
+static void swiotlb_bounce(struct device *dev, phys_addr_t tlb_addr, size_t size,
+			   enum dma_data_direction dir)
+{
+	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
+	int index = (tlb_addr - mem->start) >> IO_TLB_SHIFT;
+	phys_addr_t orig_addr = mem->slots[index].orig_addr;
+	size_t alloc_size = mem->slots[index].alloc_size;
+	unsigned long pfn = PFN_DOWN(orig_addr);
+	unsigned char *vaddr = mem->vaddr + tlb_addr - mem->start;
+	unsigned int tlb_offset, orig_addr_offset;
+
+	if (orig_addr == INVALID_PHYS_ADDR)
+		return;
+
+	tlb_offset = tlb_addr & (IO_TLB_SIZE - 1);
+	orig_addr_offset = swiotlb_align_offset(dev, orig_addr);
+	if (tlb_offset < orig_addr_offset) {
+		dev_WARN_ONCE(dev, 1,
+			"Access before mapping start detected. orig offset %u, requested offset %u.\n",
+			orig_addr_offset, tlb_offset);
+		return;
+	}
+
+	tlb_offset -= orig_addr_offset;
+	if (tlb_offset > alloc_size) {
+		dev_WARN_ONCE(dev, 1,
+			"Buffer overflow detected. Allocation size: %zu. Mapping size: %zu+%u.\n",
+			alloc_size, size, tlb_offset);
+		return;
+	}
+
+	orig_addr += tlb_offset;
+	alloc_size -= tlb_offset;
+
+	if (size > alloc_size) {
+		dev_WARN_ONCE(dev, 1,
+			"Buffer overflow detected. Allocation size: %zu. Mapping size: %zu.\n",
+			alloc_size, size);
+		size = alloc_size;
+	}
+
+	if (PageHighMem(pfn_to_page(pfn))) {
+		unsigned int offset = orig_addr & ~PAGE_MASK;
+		struct page *page;
+		unsigned int sz = 0;
+		unsigned long flags;
+
+		while (size) {
+			sz = min_t(size_t, PAGE_SIZE - offset, size);
+
+			local_irq_save(flags);
+			page = pfn_to_page(pfn);
+			if (dir == DMA_TO_DEVICE)
+				memcpy_from_page(vaddr, page, offset, sz);
+			else
+				memcpy_to_page(page, offset, vaddr, sz);
+			local_irq_restore(flags);
+
+			size -= sz;
+			pfn++;
+			vaddr += sz;
+			offset = 0;
+		}
+	} else if (dir == DMA_TO_DEVICE) {
+		memcpy(vaddr, phys_to_virt(orig_addr), size);
+	} else {
+		memcpy(phys_to_virt(orig_addr), vaddr, size);
+	}
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of swiotlb_sync_single_for_cpu will reach swiotlb_bounce? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `swiotlb_sync_single_for_cpu` conditionally calls `swiotlb_bounce` when the DMA direction is `DMA_FROM_DEVICE` or `DMA_BIDIRECTIONAL`. Historical call-graph edges show `swiotlb_sync_single_for_cpu` is invoked via paths like `dma_unmap_page_attrs` (e.g., in RX buffer cleanup or DMA unmap operations). In such contexts (e.g., receiving data from device memory), the DMA direction is often `DMA_FROM_DEVICE`, which directly triggers `swiotlb_bounce`. This is semantically valid for ensuring data coherence and security (e.g., preventing stale DMA cache lines).
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: swiotlb_sync_single_for_cpu
+
+Callee candidate: swiotlb_bounce
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of swiotlb_sync_single_for_cpu will reach swiotlb_bounce? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `swiotlb_sync_single_for_cpu` is part of the bounce buffer mechanism in the Linux kernel's SWIOTLB (Software IO TLB) subsystem. Its role is to ensure that a bounce buffer's memory is visible to the CPU after a DMA operation. The function `swiotlb_bounce` is responsible for initiating bounce buffer operations, including data copying between the device and the CPU memory.
+
+Semantically and functionally, `swiotlb_sync_single_for_cpu` is typically called *after* a DMA operation to make the data visible to the CPU. It is not directly responsible for initiating the bounce buffer operation, which is handled by `swiotlb_bounce`. Therefore, `swiotlb_sync_single_for_cpu` should not be expected to directly call or reach `swiotlb_bounce` in normal execution flow.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - tcp_child_process
+          - tcp_rcv_state_process
+            - __tcp_push_pending_frames
+              - tcp_write_xmit
+                - tcp_current_mss
+            - tcp_ack
+        - tcp_v4_do_rcv
+          - tcp_rcv_established
+
+Caller: tcp_current_mss
+Source code:
+unsigned int tcp_current_mss(struct sock *sk)
+{
+	const struct tcp_sock *tp = tcp_sk(sk);
+	const struct dst_entry *dst = __sk_dst_get(sk);
+	u32 mss_now;
+	unsigned int header_len;
+	struct tcp_out_options opts;
+	struct tcp_md5sig_key *md5;
+
+	mss_now = tp->mss_cache;
+
+	if (dst) {
+		u32 mtu = dst_mtu(dst);
+		if (mtu != inet_csk(sk)->icsk_pmtu_cookie)
+			mss_now = tcp_sync_mss(sk, mtu);
+	}
+
+	header_len = tcp_established_options(sk, NULL, &opts, &md5) +
+		     sizeof(struct tcphdr);
+	/* The mss_cache is sized based on tp->tcp_header_len, which assumes
+	 * we have to adjust mss_now correspondingly */
+	if (header_len != tp->tcp_header_len) {
+		int delta = (int) header_len - tp->tcp_header_len;
+		mss_now -= delta;
+	}
+
+	return mss_now;
+}
+
+
+Callee candidate: tcp_v4_md5_lookup
+Source code:
+struct tcp_md5sig_key *tcp_v4_md5_lookup(const struct sock *sk,
+					 const struct sock *addr_sk)
+{
+	const union tcp_md5_addr *addr;
+	int l3index;
+
+	l3index = l3mdev_master_ifindex_by_index(sock_net(sk),
+						 addr_sk->sk_bound_dev_if);
+	addr = (const union tcp_md5_addr *)&addr_sk->sk_daddr;
+	return tcp_md5_do_lookup(sk, l3index, addr, AF_INET);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of tcp_current_mss will reach tcp_v4_md5_lookup? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `tcp_current_mss` calculates the current MSS (Maximum Segment Size) for a TCP socket. It uses `tcp_established_options` to compute the header length, which may include MD5 signature options. However, the `tcp_established_options` function in this context is only used to determine the header length for MSS adjustment. The `md5` parameter in `tcp_established_options` is not utilized further in `tcp_current_mss` to trigger a lookup. The `tcp_v4_md5_lookup` function is typically invoked during MD5 signature verification or setup (e.g., in `tcp_inbound_md5_hash`), which is unrelated to MSS calculation. Since `tcp_current_mss` does not perform MD5 validation or key retrieval, there is no direct or indirect call path to `tcp_v4_md5_lookup` in this context.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: tcp_current_mss
+
+Callee candidate: tcp_v4_md5_lookup
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of tcp_current_mss will reach tcp_v4_md5_lookup? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+tcp_current_mss is responsible for determining the Maximum Segment Size (MSS) for a TCP connection. tcp_v4_md5_lookup, on the other hand, is used to retrieve the MD5 signature key for a TCP connection in the context of TCP MD5 signature option, which is a security feature. These functions serve distinct purposes and are not directly related in control flow. The calculation of MSS does not inherently require checking or retrieving MD5 keys, as the latter is for authentication and not for sizing TCP segments.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- kfree_skb_reason
+  - __kfree_skb
+    - skb_release_data
+
+Caller: skb_release_data
+Source code:
+static void skb_release_data(struct sk_buff *skb)
+{
+	struct skb_shared_info *shinfo = skb_shinfo(skb);
+	int i;
+
+	if (skb->cloned &&
+	    atomic_sub_return(skb->nohdr ? (1 << SKB_DATAREF_SHIFT) + 1 : 1,
+			      &shinfo->dataref))
+		goto exit;
+
+	if (skb_zcopy(skb)) {
+		bool skip_unref = shinfo->flags & SKBFL_MANAGED_FRAG_REFS;
+
+		skb_zcopy_clear(skb, true);
+		if (skip_unref)
+			goto free_head;
+	}
+
+	for (i = 0; i < shinfo->nr_frags; i++)
+		__skb_frag_unref(&shinfo->frags[i], skb->pp_recycle);
+
+free_head:
+	if (shinfo->frag_list)
+		kfree_skb_list(shinfo->frag_list);
+
+	skb_free_head(skb);
+exit:
+	/* When we clone an SKB we copy the reycling bit. The pp_recycle
+	 */
+	skb->pp_recycle = 0;
+}
+
+
+Callee candidate: page_frag_free
+Source code:
+void page_frag_free(void *addr)
+{
+	struct page *page = virt_to_head_page(addr);
+
+	if (unlikely(put_page_testzero(page)))
+		free_the_page(page, compound_order(page));
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of skb_release_data will reach page_frag_free? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The `skb_release_data` function processes skb fragments via `__skb_frag_unref`, which is responsible for decrementing reference counts on page fragments. If these fragments were allocated using `page_frag_alloc`, then `__skb_frag_unref` may invoke `page_frag_free` when the reference count reaches zero. Since `skb_release_data` explicitly iterates over fragments and calls `__skb_frag_unref`, there is a plausible execution path to `page_frag_free` during fragment cleanup.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: skb_release_data
+
+Callee candidate: page_frag_free
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of skb_release_data will reach page_frag_free? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In the Linux networking stack, `skb_release_data` is responsible for releasing the data buffer of an `sk_buff` (socket buffer). Depending on how the buffer was allocated, this function may invoke `page_frag_free` if the data was allocated via a `page_frag` structure, which is used for efficient small buffer allocations from page-based memory.
+
+Given that `page_frag_free` is a common cleanup function for such allocations within the skb lifecycle, it is semantically and functionally reasonable for `skb_release_data` to reach `page_frag_free`.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- blk_update_request
+  - bio_endio
+    - end_bio_bh_io_sync
+
+Caller: end_bio_bh_io_sync
+Source code:
+static void end_bio_bh_io_sync(struct bio *bio)
+{
+	struct buffer_head *bh = bio->bi_private;
+
+	if (unlikely(bio_flagged(bio, BIO_QUIET)))
+		set_bit(BH_Quiet, &bh->b_state);
+
+	bh->b_end_io(bh, !bio->bi_status);
+	bio_put(bio);
+}
+
+
+Callee candidate: end_buffer_write_sync
+Source code:
+void end_buffer_write_sync(struct buffer_head *bh, int uptodate)
+{
+	if (uptodate) {
+		set_buffer_uptodate(bh);
+	} else {
+		buffer_io_error(bh, ", lost sync page write");
+		mark_buffer_write_io_error(bh);
+		clear_buffer_uptodate(bh);
+	}
+	unlock_buffer(bh);
+	put_bh(bh);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of end_bio_bh_io_sync will reach end_buffer_write_sync? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `end_bio_bh_io_sync` invokes `bh->b_end_io(bh, !bio->bi_status)`, where `bh` is a `struct buffer_head`. The `b_end_io` field of `buffer_head` is a function pointer that can point to `end_buffer_write_sync`, which matches the required signature. This callback is typically set during buffer I/O setup (e.g., for synchronous writes). Since `end_buffer_write_sync` is a valid and commonly used `b_end_io` handler for buffer-based I/O, the transition is semantically and functionally valid.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: end_bio_bh_io_sync
+
+Callee candidate: end_buffer_write_sync
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of end_bio_bh_io_sync will reach end_buffer_write_sync? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification:**
+The functions `end_bio_bh_io_sync` and `end_buffer_write_sync` are both involved in synchronous I/O completion for buffer heads in the Linux kernel. `end_bio_bh_io_sync` is typically used to complete a bio operation for a buffer head in synchronous context, and it often calls `end_buffer_write_sync` to finalize the buffer's state after a successful write. This is a well-established control flow in the kernel's block I/O subsystem, especially for synchronous buffer writes.
+
+**FINAL ANSWER -> YES**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __napi_alloc_skb
+
+Caller: __napi_alloc_skb
+Source code:
+struct sk_buff *__napi_alloc_skb(struct napi_struct *napi, unsigned int len,
+				 gfp_t gfp_mask)
+{
+	struct napi_alloc_cache *nc;
+	struct sk_buff *skb;
+	bool pfmemalloc;
+	void *data;
+
+	DEBUG_NET_WARN_ON_ONCE(!in_softirq());
+	len += NET_SKB_PAD + NET_IP_ALIGN;
+
+	/* If requested length is either too small or too big,
+	 */
+	if ((!NAPI_HAS_SMALL_PAGE_FRAG && len <= SKB_WITH_OVERHEAD(1024)) ||
+	    len > SKB_WITH_OVERHEAD(PAGE_SIZE) ||
+	    (gfp_mask & (__GFP_DIRECT_RECLAIM | GFP_DMA))) {
+		skb = __alloc_skb(len, gfp_mask, SKB_ALLOC_RX | SKB_ALLOC_NAPI,
+				  NUMA_NO_NODE);
+		if (!skb)
+			goto skb_fail;
+		goto skb_success;
+	}
+
+	nc = this_cpu_ptr(&napi_alloc_cache);
+
+	if (sk_memalloc_socks())
+		gfp_mask |= __GFP_MEMALLOC;
+
+	if (NAPI_HAS_SMALL_PAGE_FRAG && len <= SKB_WITH_OVERHEAD(1024)) {
+		/* we are artificially inflating the allocation size, but
+		 */
+		len = SZ_1K;
+
+		data = page_frag_alloc_1k(&nc->page_small, gfp_mask);
+		pfmemalloc = NAPI_SMALL_PAGE_PFMEMALLOC(nc->page_small);
+	} else {
+		len += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+		len = SKB_DATA_ALIGN(len);
+
+		data = page_frag_alloc(&nc->page, len, gfp_mask);
+		pfmemalloc = nc->page.pfmemalloc;
+	}
+
+	if (unlikely(!data))
+		return NULL;
+
+	skb = __napi_build_skb(data, len);
+	if (unlikely(!skb)) {
+		skb_free_frag(data);
+		return NULL;
+	}
+
+	if (pfmemalloc)
+		skb->pfmemalloc = 1;
+	skb->head_frag = 1;
+
+skb_success:
+	skb_reserve(skb, NET_SKB_PAD + NET_IP_ALIGN);
+	skb->dev = napi->dev;
+
+skb_fail:
+	return skb;
+}
+
+
+Callee candidate: __alloc_skb
+Source code:
+struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
+			    int flags, int node)
+{
+	struct kmem_cache *cache;
+	struct sk_buff *skb;
+	unsigned int osize;
+	bool pfmemalloc;
+	u8 *data;
+
+	cache = (flags & SKB_ALLOC_FCLONE)
+		? skbuff_fclone_cache : skbuff_head_cache;
+
+	if (sk_memalloc_socks() && (flags & SKB_ALLOC_RX))
+		gfp_mask |= __GFP_MEMALLOC;
+
+	/* Get the HEAD */
+	if ((flags & (SKB_ALLOC_FCLONE | SKB_ALLOC_NAPI)) == SKB_ALLOC_NAPI &&
+	    likely(node == NUMA_NO_NODE || node == numa_mem_id()))
+		skb = napi_skb_cache_get();
+	else
+		skb = kmem_cache_alloc_node(cache, gfp_mask & ~GFP_DMA, node);
+	if (unlikely(!skb))
+		return NULL;
+	prefetchw(skb);
+
+	/* We do our best to align skb_shared_info on a separate cache
+	 */
+	size = SKB_DATA_ALIGN(size);
+	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+	data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
+	if (unlikely(!data))
+		goto nodata;
+	/* kmalloc(size) might give us more room than requested.
+	 */
+	osize = ksize(data);
+	size = SKB_WITH_OVERHEAD(osize);
+	prefetchw(data + size);
+
+	/*
+	 */
+	memset(skb, 0, offsetof(struct sk_buff, tail));
+	__build_skb_around(skb, data, osize);
+	skb->pfmemalloc = pfmemalloc;
+
+	if (flags & SKB_ALLOC_FCLONE) {
+		struct sk_buff_fclones *fclones;
+
+		fclones = container_of(skb, struct sk_buff_fclones, skb1);
+
+		skb->fclone = SKB_FCLONE_ORIG;
+		refcount_set(&fclones->fclone_ref, 1);
+	}
+
+	return skb;
+
+nodata:
+	kmem_cache_free(cache, skb);
+	return NULL;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __napi_alloc_skb will reach __alloc_skb? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function __napi_alloc_skb conditionally invokes __alloc_skb based on input parameters and configuration flags. Specifically, if the requested buffer size is too small or too large, or if the GFP mask includes direct reclaim or DMA flags, __alloc_skb is called. These conditions can occur during normal operation, making the call edge valid.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __napi_alloc_skb
+
+Callee candidate: __alloc_skb
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __napi_alloc_skb will reach __alloc_skb? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `__napi_alloc_skb` is part of the NAPI (New API) framework in the Linux networking stack, which is designed for efficient handling of network interrupts. It is responsible for allocating a socket buffer (`skb`) in a NAPI context.
+
+`__alloc_skb` is a core utility function in the Linux kernel used to allocate an `skb` with a specified headroom and memory allocation flags.
+
+Semantically and functionally, it is reasonable to expect that `__napi_alloc_skb` would reach `__alloc_skb` during its execution, because `__napi_alloc_skb` is essentially a specialized wrapper that performs NAPI-specific setup before delegating the actual allocation to the generic `__alloc_skb` function.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- alloc_inode
+  - inode_init_always
+
+Caller: inode_init_always
+Source code:
+int inode_init_always(struct super_block *sb, struct inode *inode)
+{
+	static const struct inode_operations empty_iops;
+	static const struct file_operations no_open_fops = {.open = no_open};
+	struct address_space *const mapping = &inode->i_data;
+
+	inode->i_sb = sb;
+	inode->i_blkbits = sb->s_blocksize_bits;
+	inode->i_flags = 0;
+	atomic64_set(&inode->i_sequence, 0);
+	atomic_set(&inode->i_count, 1);
+	inode->i_op = &empty_iops;
+	inode->i_fop = &no_open_fops;
+	inode->i_ino = 0;
+	inode->__i_nlink = 1;
+	inode->i_opflags = 0;
+	if (sb->s_xattr)
+		inode->i_opflags |= IOP_XATTR;
+	i_uid_write(inode, 0);
+	i_gid_write(inode, 0);
+	atomic_set(&inode->i_writecount, 0);
+	inode->i_size = 0;
+	inode->i_write_hint = WRITE_LIFE_NOT_SET;
+	inode->i_blocks = 0;
+	inode->i_bytes = 0;
+	inode->i_generation = 0;
+	inode->i_pipe = NULL;
+	inode->i_cdev = NULL;
+	inode->i_link = NULL;
+	inode->i_dir_seq = 0;
+	inode->i_rdev = 0;
+	inode->dirtied_when = 0;
+
+#ifdef CONFIG_CGROUP_WRITEBACK
+	inode->i_wb_frn_winner = 0;
+	inode->i_wb_frn_avg_time = 0;
+	inode->i_wb_frn_history = 0;
+#endif
+
+	spin_lock_init(&inode->i_lock);
+	lockdep_set_class(&inode->i_lock, &sb->s_type->i_lock_key);
+
+	init_rwsem(&inode->i_rwsem);
+	lockdep_set_class(&inode->i_rwsem, &sb->s_type->i_mutex_key);
+
+	atomic_set(&inode->i_dio_count, 0);
+
+	mapping->a_ops = &empty_aops;
+	mapping->host = inode;
+	mapping->flags = 0;
+	mapping->wb_err = 0;
+	atomic_set(&mapping->i_mmap_writable, 0);
+#ifdef CONFIG_READ_ONLY_THP_FOR_FS
+	atomic_set(&mapping->nr_thps, 0);
+#endif
+	mapping_set_gfp_mask(mapping, GFP_HIGHUSER_MOVABLE);
+	mapping->private_data = NULL;
+	mapping->writeback_index = 0;
+	init_rwsem(&mapping->invalidate_lock);
+	lockdep_set_class_and_name(&mapping->invalidate_lock,
+				   &sb->s_type->invalidate_lock_key,
+				   "mapping.invalidate_lock");
+	inode->i_private = NULL;
+	inode->i_mapping = mapping;
+	INIT_HLIST_HEAD(&inode->i_dentry);	/* buggered by rcu freeing */
+#ifdef CONFIG_FS_POSIX_ACL
+	inode->i_acl = inode->i_default_acl = ACL_NOT_CACHED;
+#endif
+
+#ifdef CONFIG_FSNOTIFY
+	inode->i_fsnotify_mask = 0;
+#endif
+	inode->i_flctx = NULL;
+
+	if (unlikely(security_inode_alloc(inode)))
+		return -ENOMEM;
+	this_cpu_inc(nr_inodes);
+
+	return 0;
+}
+
+
+Callee candidate: security_inode_alloc
+Source code:
+int security_inode_alloc(struct inode *inode)
+{
+	int rc = lsm_inode_alloc(inode);
+
+	if (unlikely(rc))
+		return rc;
+	rc = call_int_hook(inode_alloc_security, 0, inode);
+	if (unlikely(rc))
+		security_inode_free(inode);
+	return rc;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of inode_init_always will reach security_inode_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `inode_init_always` explicitly calls `security_inode_alloc(inode)` as part of its initialization sequence. This call is unconditional and occurs after all other inode setup steps. Since `security_inode_alloc` is directly invoked in the code path of `inode_init_always`, and no compile-time or runtime conditions (e.g., `#ifdef`, error checks) bypass this call, it is functionally guaranteed to execute during normal operation. Security enforcement relies on this hook to enforce policies during inode allocation.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: inode_init_always
+
+Callee candidate: security_inode_alloc
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of inode_init_always will reach security_inode_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+inode_init_always is a core VFS function that initializes an inode structure. Security modules, such as SELinux or Smack, often hook into inode operations for policy enforcement. The function security_inode_alloc is a LSM hook called during inode allocation to apply security-specific initialization. Since inode_init_always is part of inode initialization and LSM hooks are integrated at this stage, it is reasonable to expect a call to security_inode_alloc.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- tcp_v4_send_synack
+
+Caller: tcp_v4_send_synack
+Source code:
+static int tcp_v4_send_synack(const struct sock *sk, struct dst_entry *dst,
+			      struct flowi *fl,
+			      struct request_sock *req,
+			      struct tcp_fastopen_cookie *foc,
+			      enum tcp_synack_type synack_type,
+			      struct sk_buff *syn_skb)
+{
+	const struct inet_request_sock *ireq = inet_rsk(req);
+	struct flowi4 fl4;
+	int err = -1;
+	struct sk_buff *skb;
+	u8 tos;
+
+	/* First, grab a route. */
+	if (!dst && (dst = inet_csk_route_req(sk, &fl4, req)) == NULL)
+		return -1;
+
+	skb = tcp_make_synack(sk, dst, req, foc, synack_type, syn_skb);
+
+	if (skb) {
+		__tcp_v4_send_check(skb, ireq->ir_loc_addr, ireq->ir_rmt_addr);
+
+		tos = READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_reflect_tos) ?
+				(tcp_rsk(req)->syn_tos & ~INET_ECN_MASK) |
+				(inet_sk(sk)->tos & INET_ECN_MASK) :
+				inet_sk(sk)->tos;
+
+		if (!INET_ECN_is_capable(tos) &&
+		    tcp_bpf_ca_needs_ecn((struct sock *)req))
+			tos |= INET_ECN_ECT_0;
+
+		rcu_read_lock();
+		err = ip_build_and_send_pkt(skb, sk, ireq->ir_loc_addr,
+					    ireq->ir_rmt_addr,
+					    rcu_dereference(ireq->ireq_opt),
+					    tos);
+		rcu_read_unlock();
+		err = net_xmit_eval(err);
+	}
+
+	return err;
+}
+
+
+Callee candidate: ip_build_and_send_pkt
+Source code:
+int ip_build_and_send_pkt(struct sk_buff *skb, const struct sock *sk,
+			  __be32 saddr, __be32 daddr, struct ip_options_rcu *opt,
+			  u8 tos)
+{
+	struct inet_sock *inet = inet_sk(sk);
+	struct rtable *rt = skb_rtable(skb);
+	struct net *net = sock_net(sk);
+	struct iphdr *iph;
+
+	/* Build the IP header. */
+	skb_push(skb, sizeof(struct iphdr) + (opt ? opt->opt.optlen : 0));
+	skb_reset_network_header(skb);
+	iph = ip_hdr(skb);
+	iph->version  = 4;
+	iph->ihl      = 5;
+	iph->tos      = tos;
+	iph->ttl      = ip_select_ttl(inet, &rt->dst);
+	iph->daddr    = (opt && opt->opt.srr ? opt->opt.faddr : daddr);
+	iph->saddr    = saddr;
+	iph->protocol = sk->sk_protocol;
+	/* Do not bother generating IPID for small packets (eg SYNACK) */
+	if (skb->len <= IPV4_MIN_MTU || ip_dont_fragment(sk, &rt->dst)) {
+		iph->frag_off = htons(IP_DF);
+		iph->id = 0;
+	} else {
+		iph->frag_off = 0;
+		/* TCP packets here are SYNACK with fat IPv4/TCP options.
+		 */
+		if (sk->sk_protocol == IPPROTO_TCP)
+			iph->id = (__force __be16)get_random_u16();
+		else
+			__ip_select_ident(net, iph, 1);
+	}
+
+	if (opt && opt->opt.optlen) {
+		iph->ihl += opt->opt.optlen>>2;
+		ip_options_build(skb, &opt->opt, daddr, rt);
+	}
+
+	skb->priority = sk->sk_priority;
+	if (!skb->mark)
+		skb->mark = sk->sk_mark;
+
+	/* Send it out. */
+	return ip_local_out(net, skb->sk, skb);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of tcp_v4_send_synack will reach ip_build_and_send_pkt? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `tcp_v4_send_synack` conditionally calls `ip_build_and_send_pkt` after validating and preparing the skb. If `tcp_make_synack` successfully creates the skb (non-null), and no errors occur in prior steps (e.g., route allocation), the code explicitly invokes `ip_build_and_send_pkt` within the `if (skb)` block. This is a direct, unconditional control flow under normal execution.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: tcp_v4_send_synack
+
+Callee candidate: ip_build_and_send_pkt
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of tcp_v4_send_synack will reach ip_build_and_send_pkt? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+tcp_v4_send_synack is responsible for sending a SYN-ACK packet during the TCP three-way handshake. To fulfill this duty, it must eventually delegate the actual packet construction and transmission to a lower-level networking function. ip_build_and_send_pkt is a function that constructs and sends an IP packet, which aligns with the expected workflow for sending a TCP segment like a SYN-ACK. Therefore, it is semantically and functionally reasonable for tcp_v4_send_synack to reach ip_build_and_send_pkt during execution.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - tcp_child_process
+          - tcp_rcv_state_process
+            - __tcp_push_pending_frames
+              - tcp_write_xmit
+                - tcp_event_new_data_sent
+                  - tcp_check_space
+            - tcp_ack
+        - tcp_v4_do_rcv
+          - tcp_rcv_established
+
+Caller: tcp_check_space
+Source code:
+void tcp_check_space(struct sock *sk)
+{
+	/* pairs with tcp_poll() */
+	smp_mb();
+	if (sk->sk_socket &&
+	    test_bit(SOCK_NOSPACE, &sk->sk_socket->flags)) {
+		tcp_new_space(sk);
+		if (!test_bit(SOCK_NOSPACE, &sk->sk_socket->flags))
+			tcp_chrono_stop(sk, TCP_CHRONO_SNDBUF_LIMITED);
+	}
+}
+
+
+Callee candidate: tcp_chrono_stop
+Source code:
+void tcp_chrono_stop(struct sock *sk, const enum tcp_chrono type)
+{
+	struct tcp_sock *tp = tcp_sk(sk);
+
+
+	/* There are multiple conditions worthy of tracking in a
+	 */
+	if (tcp_rtx_and_write_queues_empty(sk))
+		tcp_chrono_set(tp, TCP_CHRONO_UNSPEC);
+	else if (type == tp->chrono_type)
+		tcp_chrono_set(tp, TCP_CHRONO_BUSY);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of tcp_check_space will reach tcp_chrono_stop? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `tcp_check_space` calls `tcp_chrono_stop` directly under a conditional branch. The code explicitly states that if `test_bit(SOCK_NOSPACE, ...)` is true, it invokes `tcp_new_space`, and if the `SOCK_NOSPACE` bit is cleared afterward, `tcp_chrono_stop` is called. This is a direct, unconditional control flow path when the condition evaluates to true. The historical execution trace also confirms that `tcp_check_space` is part of a valid execution path involving TCP state processing. There are no security-enforcement barriers or missing conditions preventing this call in the provided code.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: tcp_check_space
+
+Callee candidate: tcp_chrono_stop
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of tcp_check_space will reach tcp_chrono_stop? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+tcp_check_space is part of the TCP stack's receive path, responsible for checking buffer space availability. tcp_chrono_stop is involved in stopping TCP timers related to congestion control and retransmissions. These functions operate in different phases of TCP processing—buffer management vs. timer handling. There is no direct or expected control-flow dependency between them.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - tcp_child_process
+          - tcp_rcv_state_process
+            - tcp_ack
+              - tcp_trim_head
+                - __skb_unclone_keeptruesize
+                  - pskb_expand_head
+                    - __kmalloc_node_track_caller
+        - tcp_v4_do_rcv
+          - tcp_rcv_established
+- __napi_alloc_skb
+  - __alloc_skb
+    - __kmalloc_node_track_caller
+- __dev_queue_xmit
+  - __qdisc_run
+    - sch_direct_xmit
+      - dev_hard_start_xmit
+        - e1000_xmit_frame
+          - __skb_pad
+            - pskb_expand_head
+              - __kmalloc_node_track_caller
+- tcp_v4_send_synack
+  - tcp_make_synack
+    - __alloc_skb
+      - __kmalloc_node_track_caller
+
+Caller: __kmalloc_node_track_caller
+Source code:
+void *__kmalloc_node_track_caller(size_t size, gfp_t gfp,
+					int node, unsigned long caller)
+{
+	return __do_kmalloc_node(size, gfp, node, caller);
+}
+
+
+Callee candidate: __kmem_cache_alloc_node
+Source code:
+void *__kmem_cache_alloc_node(struct kmem_cache *s, gfp_t gfpflags,
+			      int node, size_t orig_size,
+			      unsigned long caller)
+{
+	return slab_alloc_node(s, NULL, gfpflags, node,
+			       caller, orig_size);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __kmalloc_node_track_caller will reach __kmem_cache_alloc_node? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `__kmalloc_node_track_caller` internally calls `__do_kmalloc_node`, which is part of the kernel's memory allocation path. The `__do_kmalloc_node` function is designed to allocate memory using the slab allocator, which ultimately invokes `__kmem_cache_alloc_node` to manage allocations from slab caches. Since `__kmalloc_node_track_caller` is part of the `kmalloc` implementation (used for general memory allocation), and `__kmem_cache_alloc_node` is the slab-specific allocator, the control flow from `__kmalloc_node_track_caller` to `__kmem_cache_alloc_node` is semantically and functionally valid. This is consistent with the kernel's memory management design, where `kmalloc` leverages slab caching for efficiency.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __kmalloc_node_track_caller
+
+Callee candidate: __kmem_cache_alloc_node
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __kmalloc_node_track_caller will reach __kmem_cache_alloc_node? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+`__kmalloc_node_track_caller` is a slab memory allocation wrapper that is used to allocate memory with tracking of the caller for debugging or auditing purposes. Internally, it typically calls `__kmem_cache_alloc_node`, which is the core function responsible for allocating memory from a specific slab cache on a given NUMA node. Since `__kmalloc_node_track_caller` is built on top of `__kmem_cache_alloc_node` and delegates the actual allocation to it, it is functionally and semantically reasonable to expect that execution will reach `__kmem_cache_alloc_node`.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- inet_csk_destroy_sock
+  - sk_free
+    - __sk_free
+      - __sk_destruct
+        - security_sk_free
+- sk_prot_alloc
+  - security_sk_free
+
+Caller: security_sk_free
+Source code:
+void security_sk_free(struct sock *sk)
+{
+	call_void_hook(sk_free_security, sk);
+}
+
+
+Callee candidate: selinux_sk_free_security
+Source code:
+static void selinux_sk_free_security(struct sock *sk)
+{
+	struct sk_security_struct *sksec = sk->sk_security;
+
+	sk->sk_security = NULL;
+	selinux_netlbl_sk_security_free(sksec);
+	kfree(sksec);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of security_sk_free will reach selinux_sk_free_security? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `security_sk_free` invokes the `sk_free_security` hook via `call_void_hook`, which is part of the Linux Security Module (LSM) framework. When SELinux is enabled, it registers its own implementation of the `sk_free_security` hook (`selinux_sk_free_security`) during module initialization. The historical call graph shows `security_sk_free` being triggered during socket destruction, a context where SELinux's hook would perform cleanup (e.g., freeing `sk->sk_security`). Since `selinux_sk_free_security` matches the expected behavior for this hook and SELinux would register it, execution of `security_sk_free` will indeed reach `selinux_sk_free_security` if SELinux is active.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: security_sk_free
+
+Callee candidate: selinux_sk_free_security
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of security_sk_free will reach selinux_sk_free_security? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The `security_sk_free` function is a hook in the Linux Security Module (LSM) infrastructure that is called when a socket is freed. It serves as an entry point for LSMs to perform cleanup operations associated with the socket. The `selinux_sk_free_security` function is part of the SELinux LSM implementation and is responsible for releasing SELinux-specific socket security data.
+
+From a security-enforcement standpoint, it is semantically and functionally reasonable for `security_sk_free` to invoke `selinux_sk_free_security` when SELinux is enabled. This is because the LSM infrastructure is designed to dispatch such hooks to the active security module's corresponding function, allowing SELinux to enforce its security policies during socket cleanup.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- vfs_fstatat
+
+Caller: vfs_fstatat
+Source code:
+int vfs_fstatat(int dfd, const char __user *filename,
+			      struct kstat *stat, int flags)
+{
+	int ret;
+	int statx_flags = flags | AT_NO_AUTOMOUNT;
+	struct filename *name;
+
+	name = getname_flags(filename, getname_statx_lookup_flags(statx_flags), NULL);
+	ret = vfs_statx(dfd, name, statx_flags, stat, STATX_BASIC_STATS);
+	putname(name);
+
+	return ret;
+}
+
+
+Callee candidate: putname
+Source code:
+void putname(struct filename *name)
+{
+	if (IS_ERR(name))
+		return;
+
+	BUG_ON(name->refcnt <= 0);
+
+	if (--name->refcnt > 0)
+		return;
+
+	if (name->name != name->iname) {
+		__putname(name->name);
+		kfree(name);
+	} else
+		__putname(name);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of vfs_fstatat will reach putname? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `vfs_fstatat` explicitly calls `putname(name)` after invoking `vfs_statx`, regardless of the return value from `vfs_statx`. This ensures that the `filename` structure is always released, even in error cases, as resource management is unconditional. The presence of `putname` directly after the critical operation confirms the expected execution flow.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: vfs_fstatat
+
+Callee candidate: putname
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of vfs_fstatat will reach putname? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+vfs_fstatat is a VFS (Virtual File System) function that retrieves file statistics for a path. It uses user-provided pathnames, which are typically passed via the `struct filename` structure. The `putname` function is responsible for releasing the reference to this structure once it is no longer needed, typically after the path has been resolved and processed. Since `vfs_fstatat` processes such a path, it is reasonable to expect that it would eventually call `putname` to release the associated `filename` structure and maintain proper memory management and security boundaries.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- mark_page_accessed
+  - folio_mark_accessed
+    - folio_activate
+- pagecache_get_page
+  - __filemap_get_folio
+    - folio_mark_accessed
+      - folio_activate
+
+Caller: folio_activate
+Source code:
+void folio_activate(struct folio *folio)
+{
+	if (folio_test_lru(folio) && !folio_test_active(folio) &&
+	    !folio_test_unevictable(folio)) {
+		struct folio_batch *fbatch;
+
+		folio_get(folio);
+		local_lock(&cpu_fbatches.lock);
+		fbatch = this_cpu_ptr(&cpu_fbatches.activate);
+		folio_batch_add_and_move(fbatch, folio, folio_activate_fn);
+		local_unlock(&cpu_fbatches.lock);
+	}
+}
+
+
+Callee candidate: folio_batch_move_lru
+Source code:
+static void folio_batch_move_lru(struct folio_batch *fbatch, move_fn_t move_fn)
+{
+	int i;
+	struct lruvec *lruvec = NULL;
+	unsigned long flags = 0;
+
+	for (i = 0; i < folio_batch_count(fbatch); i++) {
+		struct folio *folio = fbatch->folios[i];
+
+		/* block memcg migration while the folio moves between lru */
+		if (move_fn != lru_add_fn && !folio_test_clear_lru(folio))
+			continue;
+
+		lruvec = folio_lruvec_relock_irqsave(folio, lruvec, &flags);
+		move_fn(lruvec, folio);
+
+		folio_set_lru(folio);
+	}
+
+	if (lruvec)
+		unlock_page_lruvec_irqrestore(lruvec, flags);
+	folios_put(fbatch->folios, folio_batch_count(fbatch));
+	folio_batch_init(fbatch);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of folio_activate will reach folio_batch_move_lru? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The `folio_activate` function schedules a folio for LRU activation by adding it to a batch with `folio_batch_add_and_move`, specifying `folio_activate_fn` as the move function. When the batch is processed, `folio_batch_move_lru` is invoked to handle the batched operation, using the provided `move_fn` (in this case, `folio_activate_fn`). This is a direct execution path designed to batch LRU modifications for efficiency. Since the historical call graph confirms `folio_activate` is part of the activation workflow leading to LRU adjustments, and `folio_batch_move_lru` is explicitly used for batched LRU moves, the transition is semantically and functionally valid.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: folio_activate
+
+Callee candidate: folio_batch_move_lru
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of folio_activate will reach folio_batch_move_lru? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification:**
+The function `folio_activate` is typically involved in marking a folio (page) as active, which often occurs during page reclamation or working set management. `folio_batch_move_lru` is used to move a batch of folios between LRU (Least Recently Used) lists, which is part of memory management and page-out strategies. It is semantically and functionally reasonable for `folio_activate` to call or reach `folio_batch_move_lru` as part of updating LRU lists when a folio's status changes.
+
+**FINAL ANSWER -> YES**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- vfs_getattr
+
+Caller: vfs_getattr
+Source code:
+int vfs_getattr(const struct path *path, struct kstat *stat,
+		u32 request_mask, unsigned int query_flags)
+{
+	int retval;
+
+	retval = security_inode_getattr(path);
+	if (retval)
+		return retval;
+	return vfs_getattr_nosec(path, stat, request_mask, query_flags);
+}
+
+
+Callee candidate: security_inode_getattr
+Source code:
+int security_inode_getattr(const struct path *path)
+{
+	if (unlikely(IS_PRIVATE(d_backing_inode(path->dentry))))
+		return 0;
+	return call_int_hook(inode_getattr, 0, path);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of vfs_getattr will reach security_inode_getattr? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `vfs_getattr` explicitly calls `security_inode_getattr` as its first step, and the historical call graph includes `vfs_getattr`. Since `security_inode_getattr` is a direct, unconditional callee in the code path of `vfs_getattr`, and there is no indication of conditions (e.g., compile-time disables or runtime checks) that would bypass this call, the edge is semantically and functionally expected. The security enforcement mechanism (LSM hooks) is designed to intercept such operations, ensuring this call occurs unless explicitly bypassed (which is not the case here).
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: vfs_getattr
+
+Callee candidate: security_inode_getattr
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of vfs_getattr will reach security_inode_getattr? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+Vfs_getattr is a core VFS function responsible for retrieving file attributes. Security enforcement in the Linux kernel is often mediated through LSM (Linux Security Module) hooks, and `security_inode_getattr` is one such hook that allows security modules (like SELinux or AppArmor) to influence or block attribute retrieval operations. It is semantically and functionally reasonable for `vfs_getattr` to invoke `security_inode_getattr` as part of the security enforcement flow before returning attribute information.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- d_alloc
+
+Caller: d_alloc
+Source code:
+struct dentry *d_alloc(struct dentry * parent, const struct qstr *name)
+{
+	struct dentry *dentry = __d_alloc(parent->d_sb, name);
+	if (!dentry)
+		return NULL;
+	spin_lock(&parent->d_lock);
+	/*
+	 */
+	__dget_dlock(parent);
+	dentry->d_parent = parent;
+	list_add(&dentry->d_child, &parent->d_subdirs);
+	spin_unlock(&parent->d_lock);
+
+	return dentry;
+}
+
+
+Callee candidate: __d_alloc
+Source code:
+static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
+{
+	struct dentry *dentry;
+	char *dname;
+	int err;
+
+	dentry = kmem_cache_alloc_lru(dentry_cache, &sb->s_dentry_lru,
+				      GFP_KERNEL);
+	if (!dentry)
+		return NULL;
+
+	/*
+	 */
+	dentry->d_iname[DNAME_INLINE_LEN-1] = 0;
+	if (unlikely(!name)) {
+		name = &slash_name;
+		dname = dentry->d_iname;
+	} else if (name->len > DNAME_INLINE_LEN-1) {
+		size_t size = offsetof(struct external_name, name[1]);
+		struct external_name *p = kmalloc(size + name->len,
+						  GFP_KERNEL_ACCOUNT |
+						  __GFP_RECLAIMABLE);
+		if (!p) {
+			kmem_cache_free(dentry_cache, dentry); 
+			return NULL;
+		}
+		atomic_set(&p->u.count, 1);
+		dname = p->name;
+	} else  {
+		dname = dentry->d_iname;
+	}	
+
+	dentry->d_name.len = name->len;
+	dentry->d_name.hash = name->hash;
+	memcpy(dname, name->name, name->len);
+	dname[name->len] = 0;
+
+	/* Make sure we always see the terminating NUL character */
+	smp_store_release(&dentry->d_name.name, dname); /* ^^^ */
+
+	dentry->d_lockref.count = 1;
+	dentry->d_flags = 0;
+	spin_lock_init(&dentry->d_lock);
+	seqcount_spinlock_init(&dentry->d_seq, &dentry->d_lock);
+	dentry->d_inode = NULL;
+	dentry->d_parent = dentry;
+	dentry->d_sb = sb;
+	dentry->d_op = NULL;
+	dentry->d_fsdata = NULL;
+	INIT_HLIST_BL_NODE(&dentry->d_hash);
+	INIT_LIST_HEAD(&dentry->d_lru);
+	INIT_LIST_HEAD(&dentry->d_subdirs);
+	INIT_HLIST_NODE(&dentry->d_u.d_alias);
+	INIT_LIST_HEAD(&dentry->d_child);
+	d_set_d_op(dentry, dentry->d_sb->s_d_op);
+
+	if (dentry->d_op && dentry->d_op->d_init) {
+		err = dentry->d_op->d_init(dentry);
+		if (err) {
+			if (dname_external(dentry))
+				kfree(external_name(dentry));
+			kmem_cache_free(dentry_cache, dentry);
+			return NULL;
+		}
+	}
+
+	this_cpu_inc(nr_dentry);
+
+	return dentry;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of d_alloc will reach __d_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `d_alloc` explicitly calls `__d_alloc` as its first operation to allocate a dentry object. Since this call is unconditional and directly embedded in the code flow, execution of `d_alloc` will always reach `__d_alloc` during normal operation. Security enforcement relies on this deterministic call path, as the subsequent operations in `d_alloc` (e.g., linking the dentry to its parent) depend on the successful allocation from `__d_alloc`. The static nature of `__d_alloc` ensures it is not externally modifiable, reinforcing the reliability of this call edge.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: d_alloc
+
+Callee candidate: __d_alloc
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of d_alloc will reach __d_alloc? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification:**
+The function `d_alloc` is a higher-level wrapper for allocating a `dentry` structure, which is used in the Linux kernel to represent directory entries. The function `__d_alloc` is a lower-level implementation that performs the actual allocation of the `dentry` object. It is common in kernel code for functions like `d_alloc` to internally call `__d_alloc`, especially when `__d_alloc` is a static inline or helper function. From a security-enforcement standpoint, it is reasonable to expect that `d_alloc` reaches `__d_alloc` as it aligns with typical kernel code structuring and modularity practices.
+
+**FINAL ANSWER -> YES**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_newfstatat
+  - getname_flags
+    - kfree
+      - __free_pages
+- vfs_fstatat
+  - getname_flags
+    - kfree
+      - __free_pages
+
+Caller: __free_pages
+Source code:
+void __free_pages(struct page *page, unsigned int order)
+{
+	if (put_page_testzero(page))
+		free_the_page(page, order);
+	else if (!PageHead(page))
+		while (order-- > 0)
+			free_the_page(page + (1 << order), order);
+}
+
+
+Callee candidate: free_unref_page
+Source code:
+void free_unref_page(struct page *page, unsigned int order)
+{
+	unsigned long flags;
+	unsigned long __maybe_unused UP_flags;
+	struct per_cpu_pages *pcp;
+	struct zone *zone;
+	unsigned long pfn = page_to_pfn(page);
+	int migratetype;
+
+	if (!free_unref_page_prepare(page, pfn, order))
+		return;
+
+	/*
+	 */
+	migratetype = get_pcppage_migratetype(page);
+	if (unlikely(migratetype >= MIGRATE_PCPTYPES)) {
+		if (unlikely(is_migrate_isolate(migratetype))) {
+			free_one_page(page_zone(page), page, pfn, order, migratetype, FPI_NONE);
+			return;
+		}
+		migratetype = MIGRATE_MOVABLE;
+	}
+
+	zone = page_zone(page);
+	pcp_trylock_prepare(UP_flags);
+	pcp = pcp_spin_trylock_irqsave(zone->per_cpu_pageset, flags);
+	if (pcp) {
+		free_unref_page_commit(zone, pcp, page, migratetype, order);
+		pcp_spin_unlock_irqrestore(pcp, flags);
+	} else {
+		free_one_page(zone, page, pfn, order, migratetype, FPI_NONE);
+	}
+	pcp_trylock_finish(UP_flags);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __free_pages will reach free_unref_page? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The function __free_pages directly calls free_the_page in its code path, but there is no indication in the provided source code that free_the_page (or any other function directly called by __free_pages) invokes free_unref_page. The historical call graph also does not show a path from __free_pages to free_unref_page. Since no explicit or implicit call chain exists between these functions based on the given code and execution history, it is not semantically or functionally reasonable to expect this transition.}
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __free_pages
+
+Callee candidate: free_unref_page
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __free_pages will reach free_unref_page? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification**:
+The function `__free_pages` is a low-level memory management routine in the Linux kernel responsible for freeing a set of physically contiguous pages. The function `free_unref_page` is typically used to free an individual page when it is no longer referenced. Since `__free_pages` operates on a set of pages and must handle the freeing of individual pages within that set, it is semantically and functionally reasonable for it to invoke `free_unref_page` as part of its logic when a page is determined to be freeable and unreferenced.
+
+**FINAL ANSWER -> YES**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - inet_twsk_deschedule_put
+          - inet_twsk_kill
+        - tcp_timewait_state_process
+
+Caller: inet_twsk_kill
+Source code:
+static void inet_twsk_kill(struct inet_timewait_sock *tw)
+{
+	struct inet_hashinfo *hashinfo = tw->tw_dr->hashinfo;
+	spinlock_t *lock = inet_ehash_lockp(hashinfo, tw->tw_hash);
+	struct inet_bind_hashbucket *bhead, *bhead2;
+
+	spin_lock(lock);
+	sk_nulls_del_node_init_rcu((struct sock *)tw);
+	spin_unlock(lock);
+
+	/* Disassociate with bind bucket. */
+	bhead = &hashinfo->bhash[inet_bhashfn(twsk_net(tw), tw->tw_num,
+			hashinfo->bhash_size)];
+	bhead2 = inet_bhashfn_portaddr(hashinfo, (struct sock *)tw,
+				       twsk_net(tw), tw->tw_num);
+
+	spin_lock(&bhead->lock);
+	spin_lock(&bhead2->lock);
+	inet_twsk_bind_unhash(tw, hashinfo);
+	spin_unlock(&bhead2->lock);
+	spin_unlock(&bhead->lock);
+
+	refcount_dec(&tw->tw_dr->tw_refcount);
+	inet_twsk_put(tw);
+}
+
+
+Callee candidate: module_put
+Source code:
+void module_put(struct module *module)
+{
+	int ret;
+
+	if (module) {
+		preempt_disable();
+		ret = atomic_dec_if_positive(&module->refcnt);
+		WARN_ON(ret < 0);	/* Failed to put refcount */
+		trace_module_put(module, _RET_IP_);
+		preempt_enable();
+	}
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of inet_twsk_kill will reach module_put? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The execution of `inet_twsk_kill` involves releasing a timewait socket, including decrementing reference counts via `refcount_dec` and `inet_twsk_put`. The `inet_twsk_put` function likely triggers resource cleanup, such as releasing module references if the socket or its associated structures (e.g., `tw_dr`) are tied to a module. Historically, timewait sockets are part of TCP, which may be modularized. If TCP is a module, its reference count would be decremented via `module_put` when the last timewait socket is destroyed. While the direct path is indirect, the semantic context supports this possibility.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: inet_twsk_kill
+
+Callee candidate: module_put
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of inet_twsk_kill will reach module_put? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The function `inet_twsk_kill` is involved in managing TCP timewait sockets, typically during socket closure. `module_put` is used to decrement the reference count of a kernel module, potentially leading to its unloading if the count reaches zero. For `inet_twsk_kill` to call `module_put`, there would need to be a direct or indirect dependency on module reference counting within the timewait socket cleanup path. However, this is not a typical or expected scenario, as timewait socket handling is generally confined to protocol-specific socket state management and does not involve module reference counting.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __lookup_slow
+  - ext4_lookup
+    - __ext4_find_entry
+
+Caller: __ext4_find_entry
+Source code:
+static struct buffer_head *__ext4_find_entry(struct inode *dir,
+					     struct ext4_filename *fname,
+					     struct ext4_dir_entry_2 **res_dir,
+					     int *inlined)
+{
+	struct super_block *sb;
+	struct buffer_head *bh_use[NAMEI_RA_SIZE];
+	struct buffer_head *bh, *ret = NULL;
+	ext4_lblk_t start, block;
+	const u8 *name = fname->usr_fname->name;
+	size_t ra_max = 0;	/* Number of bh's in the readahead
+				   buffer, bh_use[] */
+	size_t ra_ptr = 0;	/* Current index into readahead
+				   buffer */
+	ext4_lblk_t  nblocks;
+	int i, namelen, retval;
+
+	*res_dir = NULL;
+	sb = dir->i_sb;
+	namelen = fname->usr_fname->len;
+	if (namelen > EXT4_NAME_LEN)
+		return NULL;
+
+	if (ext4_has_inline_data(dir)) {
+		int has_inline_data = 1;
+		ret = ext4_find_inline_entry(dir, fname, res_dir,
+					     &has_inline_data);
+		if (has_inline_data) {
+			if (inlined)
+				*inlined = 1;
+			goto cleanup_and_exit;
+		}
+	}
+
+	if ((namelen <= 2) && (name[0] == '.') &&
+	    (name[1] == '.' || name[1] == '\0')) {
+		/*
+		 */
+		block = start = 0;
+		nblocks = 1;
+		goto restart;
+	}
+	if (is_dx(dir)) {
+		ret = ext4_dx_find_entry(dir, fname, res_dir);
+		/*
+		 */
+		if (!IS_ERR(ret) || PTR_ERR(ret) != ERR_BAD_DX_DIR)
+			goto cleanup_and_exit;
+		dxtrace(printk(KERN_DEBUG "ext4_find_entry: dx failed, "
+			       "falling back\n"));
+		ret = NULL;
+	}
+	nblocks = dir->i_size >> EXT4_BLOCK_SIZE_BITS(sb);
+	if (!nblocks) {
+		ret = NULL;
+		goto cleanup_and_exit;
+	}
+	start = EXT4_I(dir)->i_dir_start_lookup;
+	if (start >= nblocks)
+		start = 0;
+	block = start;
+restart:
+	do {
+		/*
+		 */
+		cond_resched();
+		if (ra_ptr >= ra_max) {
+			/* Refill the readahead buffer */
+			ra_ptr = 0;
+			if (block < start)
+				ra_max = start - block;
+			else
+				ra_max = nblocks - block;
+			ra_max = min(ra_max, ARRAY_SIZE(bh_use));
+			retval = ext4_bread_batch(dir, block, ra_max,
+						  false /* wait */, bh_use);
+			if (retval) {
+				ret = ERR_PTR(retval);
+				ra_max = 0;
+				goto cleanup_and_exit;
+			}
+		}
+		if ((bh = bh_use[ra_ptr++]) == NULL)
+			goto next;
+		wait_on_buffer(bh);
+		if (!buffer_uptodate(bh)) {
+			EXT4_ERROR_INODE_ERR(dir, EIO,
+					     "reading directory lblock %lu",
+					     (unsigned long) block);
+			brelse(bh);
+			ret = ERR_PTR(-EIO);
+			goto cleanup_and_exit;
+		}
+		if (!buffer_verified(bh) &&
+		    !is_dx_internal_node(dir, block,
+					 (struct ext4_dir_entry *)bh->b_data) &&
+		    !ext4_dirblock_csum_verify(dir, bh)) {
+			EXT4_ERROR_INODE_ERR(dir, EFSBADCRC,
+					     "checksumming directory "
+					     "block %lu", (unsigned long)block);
+			brelse(bh);
+			ret = ERR_PTR(-EFSBADCRC);
+			goto cleanup_and_exit;
+		}
+		set_buffer_verified(bh);
+		i = search_dirblock(bh, dir, fname,
+			    block << EXT4_BLOCK_SIZE_BITS(sb), res_dir);
+		if (i == 1) {
+			EXT4_I(dir)->i_dir_start_lookup = block;
+			ret = bh;
+			goto cleanup_and_exit;
+		} else {
+			brelse(bh);
+			if (i < 0)
+				goto cleanup_and_exit;
+		}
+	next:
+		if (++block >= nblocks)
+			block = 0;
+	} while (block != start);
+
+	/*
+	 */
+	block = nblocks;
+	nblocks = dir->i_size >> EXT4_BLOCK_SIZE_BITS(sb);
+	if (block < nblocks) {
+		start = 0;
+		goto restart;
+	}
+
+cleanup_and_exit:
+	/* Clean up the read-ahead blocks */
+	for (; ra_ptr < ra_max; ra_ptr++)
+		brelse(bh_use[ra_ptr]);
+	return ret;
+}
+
+
+Callee candidate: __brelse
+Source code:
+void __brelse(struct buffer_head * buf)
+{
+	if (atomic_read(&buf->b_count)) {
+		put_bh(buf);
+		return;
+	}
+	WARN(1, KERN_ERR "VFS: brelse: Trying to free free buffer\n");
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __ext4_find_entry will reach __brelse? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function __ext4_find_entry uses `brelse()` to release buffer heads (e.g., in `cleanup_and_exit` and during loop iterations). Since `brelse()` directly calls `__brelse()`, any execution path in __ext4_find_entry that releases a buffer head (via `brelse()`) will invoke `__brelse()`. This includes both normal cleanup and error handling paths. Security-wise, proper resource cleanup is critical, and `__brelse` ensures correct buffer head reference counting.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __ext4_find_entry
+
+Callee candidate: __brelse
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __ext4_find_entry will reach __brelse? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+__ext4_find_entry is part of the EXT4 filesystem code and is used to locate a directory entry in an inode. It uses buffer heads to access disk blocks and typically calls functions like brelse or __brelse to release and decrement reference counts on buffer heads. For correct memory and resource management, it is semantically and functionally reasonable for __ext4_find_entry to reach __brelse to release buffers it has used during the lookup process.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- run_rebalance_domains
+
+Caller: run_rebalance_domains
+Source code:
+static __latent_entropy void run_rebalance_domains(struct softirq_action *h)
+{
+	struct rq *this_rq = this_rq();
+	enum cpu_idle_type idle = this_rq->idle_balance ?
+						CPU_IDLE : CPU_NOT_IDLE;
+
+	/*
+	 */
+	if (nohz_idle_balance(this_rq, idle))
+		return;
+
+	/* normal load balance */
+	update_blocked_averages(this_rq->cpu);
+	rebalance_domains(this_rq, idle);
+}
+
+
+Callee candidate: rebalance_domains
+Source code:
+static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+{
+	int continue_balancing = 1;
+	int cpu = rq->cpu;
+	int busy = idle != CPU_IDLE && !sched_idle_cpu(cpu);
+	unsigned long interval;
+	struct sched_domain *sd;
+	/* Earliest time when we have to do rebalance again */
+	unsigned long next_balance = jiffies + 60*HZ;
+	int update_next_balance = 0;
+	int need_serialize, need_decay = 0;
+	u64 max_cost = 0;
+
+	rcu_read_lock();
+	for_each_domain(cpu, sd) {
+		/*
+		 */
+		need_decay = update_newidle_cost(sd, 0);
+		max_cost += sd->max_newidle_lb_cost;
+
+		/*
+		 */
+		if (!continue_balancing) {
+			if (need_decay)
+				continue;
+			break;
+		}
+
+		interval = get_sd_balance_interval(sd, busy);
+
+		need_serialize = sd->flags & SD_SERIALIZE;
+		if (need_serialize) {
+			if (!spin_trylock(&balancing))
+				goto out;
+		}
+
+		if (time_after_eq(jiffies, sd->last_balance + interval)) {
+			if (load_balance(cpu, rq, sd, idle, &continue_balancing)) {
+				/*
+				 */
+				idle = idle_cpu(cpu) ? CPU_IDLE : CPU_NOT_IDLE;
+				busy = idle != CPU_IDLE && !sched_idle_cpu(cpu);
+			}
+			sd->last_balance = jiffies;
+			interval = get_sd_balance_interval(sd, busy);
+		}
+		if (need_serialize)
+			spin_unlock(&balancing);
+out:
+		if (time_after(next_balance, sd->last_balance + interval)) {
+			next_balance = sd->last_balance + interval;
+			update_next_balance = 1;
+		}
+	}
+	if (need_decay) {
+		/*
+		 */
+		rq->max_idle_balance_cost =
+			max((u64)sysctl_sched_migration_cost, max_cost);
+	}
+	rcu_read_unlock();
+
+	/*
+	 */
+	if (likely(update_next_balance))
+		rq->next_balance = next_balance;
+
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of run_rebalance_domains will reach rebalance_domains? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The function run_rebalance_domains calls rebalance_domains after checking nohz_idle_balance and update_blocked_averages. If nohz_idle_balance returns false (which is possible during normal load balancing scenarios), the code explicitly invokes rebalance_domains. This is a direct, unconditional call in the code path, making it functionally reasonable to expect execution reaches rebalance_domains.}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: run_rebalance_domains
+
+Callee candidate: rebalance_domains
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of run_rebalance_domains will reach rebalance_domains? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+run_rebalance_domains is a function in the Linux kernel that is designed to trigger or initiate the rebalancing of CPU domains, typically for purposes related to CPU hotplugging or power management. The function rebalance_domains is the actual implementation that performs the domain rebalancing logic. Given the naming and typical kernel structuring, it is semantically and functionally reasonable to expect that run_rebalance_domains calls rebalance_domains directly or indirectly to carry out its intended work.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - inet_twsk_deschedule_put
+        - tcp_timewait_state_process
+
+Caller: inet_twsk_deschedule_put
+Source code:
+void inet_twsk_deschedule_put(struct inet_timewait_sock *tw)
+{
+	if (del_timer_sync(&tw->tw_timer))
+		inet_twsk_kill(tw);
+	inet_twsk_put(tw);
+}
+
+
+Callee candidate: tcp_twsk_destructor
+Source code:
+void tcp_twsk_destructor(struct sock *sk)
+{
+#ifdef CONFIG_TCP_MD5SIG
+	if (static_branch_unlikely(&tcp_md5_needed)) {
+		struct tcp_timewait_sock *twsk = tcp_twsk(sk);
+
+		if (twsk->tw_md5_key)
+			kfree_rcu(twsk->tw_md5_key, rcu);
+	}
+#endif
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of inet_twsk_deschedule_put will reach tcp_twsk_destructor? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `inet_twsk_deschedule_put` releases a reference to the timewait socket via `inet_twsk_put`. When the reference count of the `struct sock` (in this case, a `struct inet_timewait_sock`) reaches zero, its destructor is invoked. The `tcp_twsk_destructor` is registered as the destructor for TCP timewait sockets. Therefore, if `inet_twsk_put` is the final reference release, `tcp_twsk_destructor` will execute. This is a standard reference-counting pattern in the Linux kernel for resource cleanup.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: inet_twsk_deschedule_put
+
+Callee candidate: tcp_twsk_destructor
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of inet_twsk_deschedule_put will reach tcp_twsk_destructor? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The `inet_twsk_deschedule_put` function is part of the handling of TIME_WAIT sockets in the Linux TCP stack, and it is typically called when a TIME_WAIT socket is being descheduled or released. The `tcp_twsk_destructor` is the destructor for TCP TIME_WAIT sockets, which is invoked when such a socket is being freed.
+
+Semantically, `inet_twsk_deschedule_put` may be part of the path that leads to the destruction of a TIME_WAIT socket, and it is functionally reasonable to expect that it could invoke or reach the `tcp_twsk_destructor`, especially if it is part of the socket's cleanup or release path.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- alloc_inode
+  - ext4_alloc_inode
+
+Caller: ext4_alloc_inode
+Source code:
+static struct inode *ext4_alloc_inode(struct super_block *sb)
+{
+	struct ext4_inode_info *ei;
+
+	ei = alloc_inode_sb(sb, ext4_inode_cachep, GFP_NOFS);
+	if (!ei)
+		return NULL;
+
+	inode_set_iversion(&ei->vfs_inode, 1);
+	ei->i_flags = 0;
+	spin_lock_init(&ei->i_raw_lock);
+	INIT_LIST_HEAD(&ei->i_prealloc_list);
+	atomic_set(&ei->i_prealloc_active, 0);
+	spin_lock_init(&ei->i_prealloc_lock);
+	ext4_es_init_tree(&ei->i_es_tree);
+	rwlock_init(&ei->i_es_lock);
+	INIT_LIST_HEAD(&ei->i_es_list);
+	ei->i_es_all_nr = 0;
+	ei->i_es_shk_nr = 0;
+	ei->i_es_shrink_lblk = 0;
+	ei->i_reserved_data_blocks = 0;
+	spin_lock_init(&(ei->i_block_reservation_lock));
+	ext4_init_pending_tree(&ei->i_pending_tree);
+#ifdef CONFIG_QUOTA
+	ei->i_reserved_quota = 0;
+	memset(&ei->i_dquot, 0, sizeof(ei->i_dquot));
+#endif
+	ei->jinode = NULL;
+	INIT_LIST_HEAD(&ei->i_rsv_conversion_list);
+	spin_lock_init(&ei->i_completed_io_lock);
+	ei->i_sync_tid = 0;
+	ei->i_datasync_tid = 0;
+	atomic_set(&ei->i_unwritten, 0);
+	INIT_WORK(&ei->i_rsv_conversion_work, ext4_end_io_rsv_work);
+	ext4_fc_init_inode(&ei->vfs_inode);
+	mutex_init(&ei->i_fc_lock);
+	return &ei->vfs_inode;
+}
+
+
+Callee candidate: ext4_es_init_tree
+Source code:
+void ext4_es_init_tree(struct ext4_es_tree *tree)
+{
+	tree->root = RB_ROOT;
+	tree->cache_es = NULL;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of ext4_alloc_inode will reach ext4_es_init_tree? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The function ext4_alloc_inode explicitly calls ext4_es_init_tree(&ei->i_es_tree) during inode initialization. Since this call is unconditional and placed directly in the execution path after successful memory allocation, it is guaranteed to be reached in normal execution. The historical call graph confirms ext4_alloc_inode is invoked via alloc_inode, establishing the required call chain.}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: ext4_alloc_inode
+
+Callee candidate: ext4_es_init_tree
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of ext4_alloc_inode will reach ext4_es_init_tree? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+When analyzing function call relationships in the Linux kernel, particularly in the context of the ext4 filesystem, `ext4_alloc_inode` is responsible for allocating and initializing a new inode structure. `ext4_es_init_tree` is used to initialize the extent status tree (ES tree) for an inode, which is a data structure used to track the mapping of file blocks.
+
+Semantically and functionally, it is reasonable to expect that `ext4_alloc_inode` may invoke `ext4_es_init_tree` during the initialization of the inode, as setting up the ES tree is a necessary step in preparing an inode for use in ext4.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - sk_filter_trim_cap
+          - security_sock_rcv_skb
+            - selinux_socket_sock_rcv_skb
+              - selinux_netlbl_skbuff_getsid
+                - page_frag_free
+                  - free_unref_page
+              - selinux_netlbl_sock_rcv_skb
+        - tcp_child_process
+          - tcp_rcv_state_process
+            - tcp_ack
+              - tcp_trim_head
+                - __skb_unclone_keeptruesize
+                  - pskb_expand_head
+            - tcp_v4_conn_request
+              - tcp_conn_request
+                - tcp_v4_route_req
+                  - security_inet_conn_request
+                    - selinux_inet_conn_request
+                      - selinux_netlbl_inet_conn_request
+        - tcp_v4_do_rcv
+          - tcp_rcv_established
+- __napi_alloc_skb
+  - page_frag_free
+    - free_unref_page
+- e1000_alloc_rx_buffers
+  - page_frag_free
+    - free_unref_page
+- generic_exec_single
+  - page_frag_free
+    - free_unref_page
+- nf_hook_slow
+  - selinux_ip_postroute
+    - selinux_netlbl_skbuff_getsid
+      - page_frag_free
+        - free_unref_page
+- __dev_queue_xmit
+  - __qdisc_run
+    - sch_direct_xmit
+      - dev_hard_start_xmit
+        - e1000_xmit_frame
+          - __skb_pad
+            - pskb_expand_head
+              - page_frag_free
+                - free_unref_page
+- __x64_sys_newfstatat
+  - getname_flags
+    - kfree
+      - __free_pages
+        - free_unref_page
+- __sysvec_call_function
+  - generic_smp_call_function_single_interrupt
+    - __flush_smp_call_function_queue
+      - page_frag_free
+        - free_unref_page
+- __sysvec_call_function_single
+  - generic_smp_call_function_single_interrupt
+    - __flush_smp_call_function_queue
+      - page_frag_free
+        - free_unref_page
+- kfree_skb_reason
+  - __kfree_skb
+    - skb_release_data
+      - page_frag_free
+        - free_unref_page
+- inet_csk_destroy_sock
+  - sk_free
+    - __sk_free
+      - __sk_destruct
+        - security_sk_free
+          - selinux_sk_free_security
+            - selinux_netlbl_sk_security_free
+              - page_frag_free
+                - free_unref_page
+- complete_walk
+  - try_to_unlazy
+    - page_frag_free
+      - free_unref_page
+- walk_component
+  - handle_dots
+    - step_into
+      - page_frag_free
+        - free_unref_page
+- sk_prot_alloc
+  - security_sk_free
+    - selinux_sk_free_security
+      - selinux_netlbl_sk_security_free
+        - page_frag_free
+          - free_unref_page
+- terminate_walk
+  - page_frag_free
+    - free_unref_page
+- vfs_fstatat
+  - getname_flags
+    - kfree
+      - __free_pages
+        - free_unref_page
+
+Caller: free_unref_page
+Source code:
+void free_unref_page(struct page *page, unsigned int order)
+{
+	unsigned long flags;
+	unsigned long __maybe_unused UP_flags;
+	struct per_cpu_pages *pcp;
+	struct zone *zone;
+	unsigned long pfn = page_to_pfn(page);
+	int migratetype;
+
+	if (!free_unref_page_prepare(page, pfn, order))
+		return;
+
+	/*
+	 */
+	migratetype = get_pcppage_migratetype(page);
+	if (unlikely(migratetype >= MIGRATE_PCPTYPES)) {
+		if (unlikely(is_migrate_isolate(migratetype))) {
+			free_one_page(page_zone(page), page, pfn, order, migratetype, FPI_NONE);
+			return;
+		}
+		migratetype = MIGRATE_MOVABLE;
+	}
+
+	zone = page_zone(page);
+	pcp_trylock_prepare(UP_flags);
+	pcp = pcp_spin_trylock_irqsave(zone->per_cpu_pageset, flags);
+	if (pcp) {
+		free_unref_page_commit(zone, pcp, page, migratetype, order);
+		pcp_spin_unlock_irqrestore(pcp, flags);
+	} else {
+		free_one_page(zone, page, pfn, order, migratetype, FPI_NONE);
+	}
+	pcp_trylock_finish(UP_flags);
+}
+
+
+Callee candidate: free_unref_page_commit
+Source code:
+static void free_unref_page_commit(struct zone *zone, struct per_cpu_pages *pcp,
+				   struct page *page, int migratetype,
+				   unsigned int order)
+{
+	int high;
+	int pindex;
+	bool free_high;
+
+	__count_vm_events(PGFREE, 1 << order);
+	pindex = order_to_pindex(migratetype, order);
+	list_add(&page->pcp_list, &pcp->lists[pindex]);
+	pcp->count += 1 << order;
+
+	/*
+	 */
+	free_high = (pcp->free_factor && order && order <= PAGE_ALLOC_COSTLY_ORDER);
+
+	high = nr_pcp_high(pcp, zone, free_high);
+	if (pcp->count >= high) {
+		int batch = READ_ONCE(pcp->batch);
+
+		free_pcppages_bulk(zone, nr_pcp_free(pcp, high, batch, free_high), pcp, pindex);
+	}
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of free_unref_page will reach free_unref_page_commit? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `free_unref_page` includes a conditional path where `free_unref_page_commit` is invoked if the per-CPU pageset lock is successfully acquired. The code explicitly checks `if (pcp)` after attempting to lock the per-CPU structure, and if true, calls `free_unref_page_commit`. This path is semantically valid and functionally expected in normal execution when the lock is available, which is typical in most memory-freeing scenarios. Historical call-graph edges also confirm `free_unref_page` reaching `free_unref_page_commit` in contexts like `page_frag_free` and `__free_pages`.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: free_unref_page
+
+Callee candidate: free_unref_page_commit
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of free_unref_page will reach free_unref_page_commit? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+{The function `free_unref_page` is commonly found in the Linux kernel's memory management code. The suffix `_commit` in `free_unref_page_commit` suggests it is a helper or continuation function that is likely called by `free_unref_page` to perform the actual commit of the page freeing process. From a security and control-flow enforcement standpoint, it is reasonable to expect that `free_unref_page` would reach `free_unref_page_commit` if the latter is designed to handle the final stage of the operation initiated by the former.}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- terminate_walk
+
+Caller: terminate_walk
+Source code:
+static void terminate_walk(struct nameidata *nd)
+{
+	drop_links(nd);
+	if (!(nd->flags & LOOKUP_RCU)) {
+		int i;
+		path_put(&nd->path);
+		for (i = 0; i < nd->depth; i++)
+			path_put(&nd->stack[i].link);
+		if (nd->state & ND_ROOT_GRABBED) {
+			path_put(&nd->root);
+			nd->state &= ~ND_ROOT_GRABBED;
+		}
+	} else {
+		leave_rcu(nd);
+	}
+	nd->depth = 0;
+	nd->path.mnt = NULL;
+	nd->path.dentry = NULL;
+}
+
+
+Callee candidate: do_sync_core
+Source code:
+static void do_sync_core(void *info)
+{
+	sync_core();
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of terminate_walk will reach do_sync_core? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{Your justification}
+The `terminate_walk` function is responsible for cleaning up path references and RCU state during name resolution, while `do_sync_core` is part of the sync mechanism for writing dirty data to disk. There is no direct or indirect functional dependency between these operations in the provided code. No path from `terminate_walk` (e.g., via `path_put`, `drop_links`, or `leave_rcu`) logically triggers a sync operation like `sync_core`.
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: terminate_walk
+
+Callee candidate: do_sync_core
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of terminate_walk will reach do_sync_core? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+terminate_walk is a function in the Linux VFS (Virtual File System) layer, typically involved in path resolution and name lookup. do_sync_core, on the other hand, is part of the sync mechanism that writes back dirty data to storage. These functions operate in different contexts: one is about path traversal and the other about data synchronization. There is no natural or semantically expected control-flow path from terminate_walk to do_sync_core under normal operation or standard security-enforcement logic.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - tcp_child_process
+          - tcp_rcv_state_process
+            - tcp_v4_conn_request
+              - tcp_conn_request
+                - tcp_v4_route_req
+                  - security_inet_conn_request
+
+Caller: security_inet_conn_request
+Source code:
+int security_inet_conn_request(const struct sock *sk,
+			struct sk_buff *skb, struct request_sock *req)
+{
+	return call_int_hook(inet_conn_request, 0, sk, skb, req);
+}
+
+
+Callee candidate: selinux_inet_conn_request
+Source code:
+static int selinux_inet_conn_request(const struct sock *sk, struct sk_buff *skb,
+				     struct request_sock *req)
+{
+	struct sk_security_struct *sksec = sk->sk_security;
+	int err;
+	u16 family = req->rsk_ops->family;
+	u32 connsid;
+	u32 peersid;
+
+	err = selinux_skb_peerlbl_sid(skb, family, &peersid);
+	if (err)
+		return err;
+	err = selinux_conn_sid(sksec->sid, peersid, &connsid);
+	if (err)
+		return err;
+	req->secid = connsid;
+	req->peer_secid = peersid;
+
+	return selinux_netlbl_inet_conn_request(req, family);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of security_inet_conn_request will reach selinux_inet_conn_request? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `security_inet_conn_request` invokes the LSM hook `inet_conn_request`, which is implemented by SELinux as `selinux_inet_conn_request` when SELinux is active. The historical context shows this hook is triggered during TCP connection setup, and the parameters match. Under SELinux enforcement, the hook is expected to delegate to this implementation.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: security_inet_conn_request
+
+Callee candidate: selinux_inet_conn_request
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of security_inet_conn_request will reach selinux_inet_conn_request? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The `security_inet_conn_request` function is part of the Linux Security Module (LSM) infrastructure, designed to invoke the corresponding hook in each registered LSM for connection request events in the networking stack. SELinux, as one of the LSMs, implements its own handler for this hook, named `selinux_inet_conn_request`. Therefore, when `security_inet_conn_request` is called, it will, by design, invoke `selinux_inet_conn_request` if SELinux is enabled and registered.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- alloc_inode
+
+Caller: alloc_inode
+Source code:
+static struct inode *alloc_inode(struct super_block *sb)
+{
+	const struct super_operations *ops = sb->s_op;
+	struct inode *inode;
+
+	if (ops->alloc_inode)
+		inode = ops->alloc_inode(sb);
+	else
+		inode = alloc_inode_sb(sb, inode_cachep, GFP_KERNEL);
+
+	if (!inode)
+		return NULL;
+
+	if (unlikely(inode_init_always(sb, inode))) {
+		if (ops->destroy_inode) {
+			ops->destroy_inode(inode);
+			if (!ops->free_inode)
+				return NULL;
+		}
+		inode->free_inode = ops->free_inode;
+		i_callback(&inode->i_rcu);
+		return NULL;
+	}
+
+	return inode;
+}
+
+
+Callee candidate: inode_init_always
+Source code:
+int inode_init_always(struct super_block *sb, struct inode *inode)
+{
+	static const struct inode_operations empty_iops;
+	static const struct file_operations no_open_fops = {.open = no_open};
+	struct address_space *const mapping = &inode->i_data;
+
+	inode->i_sb = sb;
+	inode->i_blkbits = sb->s_blocksize_bits;
+	inode->i_flags = 0;
+	atomic64_set(&inode->i_sequence, 0);
+	atomic_set(&inode->i_count, 1);
+	inode->i_op = &empty_iops;
+	inode->i_fop = &no_open_fops;
+	inode->i_ino = 0;
+	inode->__i_nlink = 1;
+	inode->i_opflags = 0;
+	if (sb->s_xattr)
+		inode->i_opflags |= IOP_XATTR;
+	i_uid_write(inode, 0);
+	i_gid_write(inode, 0);
+	atomic_set(&inode->i_writecount, 0);
+	inode->i_size = 0;
+	inode->i_write_hint = WRITE_LIFE_NOT_SET;
+	inode->i_blocks = 0;
+	inode->i_bytes = 0;
+	inode->i_generation = 0;
+	inode->i_pipe = NULL;
+	inode->i_cdev = NULL;
+	inode->i_link = NULL;
+	inode->i_dir_seq = 0;
+	inode->i_rdev = 0;
+	inode->dirtied_when = 0;
+
+#ifdef CONFIG_CGROUP_WRITEBACK
+	inode->i_wb_frn_winner = 0;
+	inode->i_wb_frn_avg_time = 0;
+	inode->i_wb_frn_history = 0;
+#endif
+
+	spin_lock_init(&inode->i_lock);
+	lockdep_set_class(&inode->i_lock, &sb->s_type->i_lock_key);
+
+	init_rwsem(&inode->i_rwsem);
+	lockdep_set_class(&inode->i_rwsem, &sb->s_type->i_mutex_key);
+
+	atomic_set(&inode->i_dio_count, 0);
+
+	mapping->a_ops = &empty_aops;
+	mapping->host = inode;
+	mapping->flags = 0;
+	mapping->wb_err = 0;
+	atomic_set(&mapping->i_mmap_writable, 0);
+#ifdef CONFIG_READ_ONLY_THP_FOR_FS
+	atomic_set(&mapping->nr_thps, 0);
+#endif
+	mapping_set_gfp_mask(mapping, GFP_HIGHUSER_MOVABLE);
+	mapping->private_data = NULL;
+	mapping->writeback_index = 0;
+	init_rwsem(&mapping->invalidate_lock);
+	lockdep_set_class_and_name(&mapping->invalidate_lock,
+				   &sb->s_type->invalidate_lock_key,
+				   "mapping.invalidate_lock");
+	inode->i_private = NULL;
+	inode->i_mapping = mapping;
+	INIT_HLIST_HEAD(&inode->i_dentry);	/* buggered by rcu freeing */
+#ifdef CONFIG_FS_POSIX_ACL
+	inode->i_acl = inode->i_default_acl = ACL_NOT_CACHED;
+#endif
+
+#ifdef CONFIG_FSNOTIFY
+	inode->i_fsnotify_mask = 0;
+#endif
+	inode->i_flctx = NULL;
+
+	if (unlikely(security_inode_alloc(inode)))
+		return -ENOMEM;
+	this_cpu_inc(nr_inodes);
+
+	return 0;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of alloc_inode will reach inode_init_always? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The `alloc_inode` function explicitly calls `inode_init_always(sb, inode)` immediately after allocating an inode. This call is unconditional (except for the initial allocation failure check, which would return early). Since `inode_init_always` is responsible for critical initialization (including security checks via `security_inode_alloc`), the execution path must reach it to ensure proper setup and enforcement. Security enforcement relies on this call to validate inode allocation, making it semantically and functionally required.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: alloc_inode
+
+Callee candidate: inode_init_always
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of alloc_inode will reach inode_init_always? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+alloc_inode is a function responsible for allocating a new inode structure in the Linux kernel. inode_init_always is a function that initializes essential, filesystem-independent parts of the inode. Since initializing the inode is a necessary step after allocation, and alloc_inode is typically responsible for triggering this initialization, it is semantically and functionally reasonable to expect that execution of alloc_inode will reach inode_init_always.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- blk_update_request
+
+Caller: blk_update_request
+Source code:
+bool blk_update_request(struct request *req, blk_status_t error,
+		unsigned int nr_bytes)
+{
+	int total_bytes;
+
+	trace_block_rq_complete(req, error, nr_bytes);
+
+	if (!req->bio)
+		return false;
+
+#ifdef CONFIG_BLK_DEV_INTEGRITY
+	if (blk_integrity_rq(req) && req_op(req) == REQ_OP_READ &&
+	    error == BLK_STS_OK)
+		req->q->integrity.profile->complete_fn(req, nr_bytes);
+#endif
+
+	if (unlikely(error && !blk_rq_is_passthrough(req) &&
+		     !(req->rq_flags & RQF_QUIET)) &&
+		     !test_bit(GD_DEAD, &req->q->disk->state)) {
+		blk_print_req_error(req, error);
+		trace_block_rq_error(req, error, nr_bytes);
+	}
+
+	blk_account_io_completion(req, nr_bytes);
+
+	total_bytes = 0;
+	while (req->bio) {
+		struct bio *bio = req->bio;
+		unsigned bio_bytes = min(bio->bi_iter.bi_size, nr_bytes);
+
+		if (bio_bytes == bio->bi_iter.bi_size)
+			req->bio = bio->bi_next;
+
+		/* Completion has already been traced */
+		bio_clear_flag(bio, BIO_TRACE_COMPLETION);
+		req_bio_endio(req, bio, bio_bytes, error);
+
+		total_bytes += bio_bytes;
+		nr_bytes -= bio_bytes;
+
+		if (!nr_bytes)
+			break;
+	}
+
+	/*
+	 */
+	if (!req->bio) {
+		/*
+		 */
+		req->__data_len = 0;
+		return false;
+	}
+
+	req->__data_len -= total_bytes;
+
+	/* update sector only for requests with clear definition of sector */
+	if (!blk_rq_is_passthrough(req))
+		req->__sector += total_bytes >> 9;
+
+	/* mixed attributes always follow the first bio */
+	if (req->rq_flags & RQF_MIXED_MERGE) {
+		req->cmd_flags &= ~REQ_FAILFAST_MASK;
+		req->cmd_flags |= req->bio->bi_opf & REQ_FAILFAST_MASK;
+	}
+
+	if (!(req->rq_flags & RQF_SPECIAL_PAYLOAD)) {
+		/*
+		 */
+		if (blk_rq_bytes(req) < blk_rq_cur_bytes(req)) {
+			blk_dump_rq_flags(req, "request botched");
+			req->__data_len = blk_rq_cur_bytes(req);
+		}
+
+		/* recalculate the number of segments */
+		req->nr_phys_segments = blk_recalc_rq_segments(req);
+	}
+
+	return true;
+}
+
+
+Callee candidate: bio_endio
+Source code:
+void bio_endio(struct bio *bio)
+{
+again:
+	if (!bio_remaining_done(bio))
+		return;
+	if (!bio_integrity_endio(bio))
+		return;
+
+	rq_qos_done_bio(bio);
+
+	if (bio->bi_bdev && bio_flagged(bio, BIO_TRACE_COMPLETION)) {
+		trace_block_bio_complete(bdev_get_queue(bio->bi_bdev), bio);
+		bio_clear_flag(bio, BIO_TRACE_COMPLETION);
+	}
+
+	/*
+	 */
+	if (bio->bi_end_io == bio_chain_endio) {
+		bio = __bio_chain_endio(bio);
+		goto again;
+	}
+
+	blk_throtl_bio_endio(bio);
+	/* release cgroup info */
+	bio_uninit(bio);
+	if (bio->bi_end_io)
+		bio->bi_end_io(bio);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of blk_update_request will reach bio_endio? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `blk_update_request` processes each `bio` in a request by calling `req_bio_endio`, which is designed to trigger the `bio`'s completion logic. The `req_bio_endio` function ultimately invokes the `bio`'s `bi_end_io` callback, which is typically set to `bio_endio` for standard operations. This creates a direct execution path from `blk_update_request` to `bio_endio`. The historical call graph and code structure confirm this semantic dependency.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: blk_update_request
+
+Callee candidate: bio_endio
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of blk_update_request will reach bio_endio? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+blk_update_request is a function in the Linux block layer responsible for handling the completion of a request, possibly splitting or updating it. bio_endio is used to complete a bio structure's I/O operation. While they operate in the same I/O path, blk_update_request typically does not directly call bio_endio. Instead, it works at the request level, and bio_endio is used lower in the stack or in different contexts (such as direct bio-based I/O). There is no direct control flow edge from blk_update_request to bio_endio in the standard I/O completion path.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- security_inet_csk_clone
+  - selinux_inet_csk_clone
+
+Caller: selinux_inet_csk_clone
+Source code:
+static void selinux_inet_csk_clone(struct sock *newsk,
+				   const struct request_sock *req)
+{
+	struct sk_security_struct *newsksec = newsk->sk_security;
+
+	newsksec->sid = req->secid;
+	newsksec->peer_sid = req->peer_secid;
+	/* NOTE: Ideally, we should also get the isec->sid for the
+	   time it will have been created and available. */
+
+	/* We don't need to take any sort of lock here as we are the only
+	 * thread with access to newsksec */
+	selinux_netlbl_inet_csk_clone(newsk, req->rsk_ops->family);
+}
+
+
+Callee candidate: selinux_netlbl_inet_csk_clone
+Source code:
+void selinux_netlbl_inet_csk_clone(struct sock *sk, u16 family)
+{
+	struct sk_security_struct *sksec = sk->sk_security;
+
+	if (family == PF_INET)
+		sksec->nlbl_state = NLBL_LABELED;
+	else
+		sksec->nlbl_state = NLBL_UNSET;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of selinux_inet_csk_clone will reach selinux_netlbl_inet_csk_clone? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `selinux_inet_csk_clone` explicitly calls `selinux_netlbl_inet_csk_clone` as its final step, unconditionally. This direct invocation is present in the source code, and there are no runtime conditions or guards preventing this call. Historically, the call graph confirms that `selinux_inet_csk_clone` is executed via `security_inet_csk_clone`, which further validates the execution path. Since the call is hardcoded and unconditional, the transition is guaranteed.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: selinux_inet_csk_clone
+
+Callee candidate: selinux_netlbl_inet_csk_clone
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of selinux_inet_csk_clone will reach selinux_netlbl_inet_csk_clone? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+Selinux_inet_csk_clone is responsible with duplicating security context for an inet socket during cloning operations. Selinux_netlbl_inet_csk_clone specifically handles network labeling (NetLabel) aspects of such clones, which are part of the broader SELinux network security enforcement. Given the naming convention and functional overlap, it is reasonable that selinux_inet_csk_clone would invoke selinux_netlbl_inet_csk_clone as part of its execution flow to enforce NetLabel-specific security policies.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- ip_push_pending_frames
+
+Caller: ip_push_pending_frames
+Source code:
+int ip_push_pending_frames(struct sock *sk, struct flowi4 *fl4)
+{
+	struct sk_buff *skb;
+
+	skb = ip_finish_skb(sk, fl4);
+	if (!skb)
+		return 0;
+
+	/* Netfilter gets whole the not fragmented skb. */
+	return ip_send_skb(sock_net(sk), skb);
+}
+
+
+Callee candidate: __ip_local_out
+Source code:
+int __ip_local_out(struct net *net, struct sock *sk, struct sk_buff *skb)
+{
+	struct iphdr *iph = ip_hdr(skb);
+
+	iph->tot_len = htons(skb->len);
+	ip_send_check(iph);
+
+	/* if egress device is enslaved to an L3 master device pass the
+	 */
+	skb = l3mdev_ip_out(sk, skb);
+	if (unlikely(!skb))
+		return 0;
+
+	skb->protocol = htons(ETH_P_IP);
+
+	return nf_hook(NFPROTO_IPV4, NF_INET_LOCAL_OUT,
+		       net, sk, skb, NULL, skb_dst(skb)->dev,
+		       dst_output);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of ip_push_pending_frames will reach __ip_local_out? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `ip_push_pending_frames` calls `ip_send_skb`, which is part of the IP output path. The `__ip_local_out` function is responsible for processing locally originated IP packets (e.g., setting header fields, applying Netfilter hooks, and invoking `dst_output`). Since `ip_send_skb` is designed to handle sending skbs (which includes local output processing), it is part of the call chain that ultimately invokes `__ip_local_out`. The presence of `nf_hook` in `__ip_local_out` aligns with the Netfilter handling in `ip_push_pending_frames`, confirming the semantic and functional connection.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: ip_push_pending_frames
+
+Callee candidate: __ip_local_out
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of ip_push_pending_frames will reach __ip_local_out? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification**:
+`ip_push_pending_frames` is a function in the Linux IPv4 networking stack that processes and pushes pending IP frames for transmission. `__ip_local_out` is a function responsible for sending an IP packet out from the local machine. Given that both functions are part of the same code path handling IP packet output, it is semantically and functionally reasonable for `ip_push_pending_frames` to reach `__ip_local_out` during normal packet transmission flow. This represents a legitimate control-flow edge in the network stack.
+
+**FINAL ANSWER -> YES**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- bvec_free
+  - kmem_cache_free
+    - __slab_free
+      - __unfreeze_partials
+- __x64_sys_newfstatat
+  - getname_flags
+    - kfree
+      - __kmem_cache_free
+        - __slab_free
+          - __unfreeze_partials
+    - kmem_cache_free
+- vfs_fstatat
+  - getname_flags
+    - kfree
+      - __kmem_cache_free
+        - __slab_free
+          - __unfreeze_partials
+    - kmem_cache_free
+
+Caller: __unfreeze_partials
+Source code:
+static void __unfreeze_partials(struct kmem_cache *s, struct slab *partial_slab)
+{
+	struct kmem_cache_node *n = NULL, *n2 = NULL;
+	struct slab *slab, *slab_to_discard = NULL;
+	unsigned long flags = 0;
+
+	while (partial_slab) {
+		struct slab new;
+		struct slab old;
+
+		slab = partial_slab;
+		partial_slab = slab->next;
+
+		n2 = get_node(s, slab_nid(slab));
+		if (n != n2) {
+			if (n)
+				spin_unlock_irqrestore(&n->list_lock, flags);
+
+			n = n2;
+			spin_lock_irqsave(&n->list_lock, flags);
+		}
+
+		do {
+
+			old.freelist = slab->freelist;
+			old.counters = slab->counters;
+			VM_BUG_ON(!old.frozen);
+
+			new.counters = old.counters;
+			new.freelist = old.freelist;
+
+			new.frozen = 0;
+
+		} while (!__cmpxchg_double_slab(s, slab,
+				old.freelist, old.counters,
+				new.freelist, new.counters,
+				"unfreezing slab"));
+
+		if (unlikely(!new.inuse && n->nr_partial >= s->min_partial)) {
+			slab->next = slab_to_discard;
+			slab_to_discard = slab;
+		} else {
+			add_partial(n, slab, DEACTIVATE_TO_TAIL);
+			stat(s, FREE_ADD_PARTIAL);
+		}
+	}
+
+	if (n)
+		spin_unlock_irqrestore(&n->list_lock, flags);
+
+	while (slab_to_discard) {
+		slab = slab_to_discard;
+		slab_to_discard = slab_to_discard->next;
+
+		stat(s, DEACTIVATE_EMPTY);
+		discard_slab(s, slab);
+		stat(s, FREE_SLAB);
+	}
+}
+
+
+Callee candidate: __free_slab
+Source code:
+static void __free_slab(struct kmem_cache *s, struct slab *slab)
+{
+	struct folio *folio = slab_folio(slab);
+	int order = folio_order(folio);
+	int pages = 1 << order;
+
+	if (kmem_cache_debug_flags(s, SLAB_CONSISTENCY_CHECKS)) {
+		void *p;
+
+		slab_pad_check(s, slab);
+		for_each_object(p, s, slab_address(slab), slab->objects)
+			check_object(s, slab, p, SLUB_RED_INACTIVE);
+	}
+
+	__slab_clear_pfmemalloc(slab);
+	__folio_clear_slab(folio);
+	folio->mapping = NULL;
+	if (current->reclaim_state)
+		current->reclaim_state->reclaimed_slab += pages;
+	unaccount_slab(slab, order, s);
+	__free_pages(folio_page(folio, 0), order);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __unfreeze_partials will reach __free_slab? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The __unfreeze_partials function processes slabs to unfreeze them. When a slab is no longer in use and meets conditions (e.g., `!new.inuse`), it is added to `slab_to_discard`. The code then iterates over these slabs and calls `discard_slab(s, slab)`. The provided `__free_slab` function handles the actual freeing of slab memory (e.g., via `__free_pages`). Since `discard_slab` is explicitly called in __unfreeze_partials and __free_slab is the implementation for freeing slabs, the execution path from __unfreeze_partials to __free_slab is semantically and functionally valid.}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __unfreeze_partials
+
+Callee candidate: __free_slab
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __unfreeze_partials will reach __free_slab? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+__unfreeze_partials is part of the memory management subsystem in the Linux kernel, specifically involved in handling page slab allocations and the thawing of frozen slabs during memory pressure or system resume. __free_slab is responsible for freeing an entire slab object. Given their roles in slab management, it is semantically and functionally reasonable for __unfreeze_partials to invoke or reach __free_slab as part of releasing or reinitializing slab resources.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - __netif_receive_skb_core
+    - packet_rcv
+      - skb_clone
+        - kmem_cache_alloc
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - tcp_check_req
+          - tcp_v4_syn_recv_sock
+            - __inet_inherit_port
+        - tcp_child_process
+          - tcp_rcv_state_process
+            - tcp_time_wait
+              - inet_twsk_alloc
+            - tcp_v4_conn_request
+              - tcp_conn_request
+                - inet_reqsk_alloc
+                - tcp_try_fastopen
+- alloc_page_buffers
+  - alloc_buffer_head
+    - kmem_cache_alloc
+- __dev_queue_xmit
+  - __qdisc_run
+    - sch_direct_xmit
+      - dev_hard_start_xmit
+        - dev_queue_xmit_nit
+          - packet_rcv
+            - skb_clone
+              - kmem_cache_alloc
+- __tcp_transmit_skb
+  - skb_clone
+    - kmem_cache_alloc
+- raw_local_deliver
+  - skb_clone
+    - kmem_cache_alloc
+- bio_alloc_bioset
+  - kmem_cache_alloc
+- __x64_sys_newfstatat
+  - getname_flags
+    - kmem_cache_alloc
+- mempool_alloc_slab
+  - kmem_cache_alloc
+- ext4_find_extent
+  - ext4_es_cache_extent
+    - __es_insert_extent
+      - kmem_cache_alloc
+- sk_prot_alloc
+  - kmem_cache_alloc
+- alloc_inode
+  - inode_init_always
+    - security_inode_alloc
+      - kmem_cache_alloc
+- vfs_fstatat
+  - getname_flags
+    - kmem_cache_alloc
+- ext4_es_insert_extent
+  - __es_insert_extent
+    - kmem_cache_alloc
+  - __es_remove_extent
+
+Caller: kmem_cache_alloc
+Source code:
+void *kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags)
+{
+	return slob_alloc_node(cachep, flags, NUMA_NO_NODE);
+}
+
+
+Callee candidate: should_failslab
+Source code:
+int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+{
+	if (__should_failslab(s, gfpflags))
+		return -ENOMEM;
+	return 0;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of kmem_cache_alloc will reach should_failslab? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The execution of `kmem_cache_alloc` in the provided code uses the SLOB allocator (`slob_alloc_node`), which is distinct from the SLAB allocator that `should_failslab` targets. The `should_failslab` function is designed for SLAB/SLUB allocators to simulate failures, but SLOB does not integrate this mechanism. Since the historical call graph and code do not show `kmem_cache_alloc` invoking `should_failslab`, and the allocators differ, it is not semantically or functionally reasonable to expect this path.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: kmem_cache_alloc
+
+Callee candidate: should_failslab
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of kmem_cache_alloc will reach should_failslab? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+kmem_cache_alloc is a function in the Linux kernel responsible for allocating memory from a slab cache. should_failslab is part of the kernel's fault injection framework, which can be used to simulate memory allocation failures for testing purposes. For should_failslab to be invoked, it must be explicitly integrated into the allocation path, typically via a conditional check. Given that should_failslab is not a standard part of the memory allocation logic in a normal, non-testing configuration, it is not semantically or functionally expected that kmem_cache_alloc would normally reach should_failslab during execution.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- bvec_free
+  - kmem_cache_free
+- __x64_sys_newfstatat
+  - getname_flags
+    - kmem_cache_free
+- vfs_fstatat
+  - getname_flags
+    - kmem_cache_free
+
+Caller: kmem_cache_free
+Source code:
+void kmem_cache_free(struct kmem_cache *c, void *b)
+{
+	kmemleak_free_recursive(b, c->flags);
+	trace_kmem_cache_free(_RET_IP_, b, c);
+	if (unlikely(c->flags & SLAB_TYPESAFE_BY_RCU)) {
+		struct slob_rcu *slob_rcu;
+		slob_rcu = b + (c->size - sizeof(struct slob_rcu));
+		slob_rcu->size = c->size;
+		call_rcu(&slob_rcu->head, kmem_rcu_free);
+	} else {
+		__kmem_cache_free(b, c->size);
+	}
+}
+
+
+Callee candidate: __slab_free
+Source code:
+static void __slab_free(struct kmem_cache *s, struct slab *slab,
+			void *head, void *tail, int cnt,
+			unsigned long addr)
+
+{
+	void *prior;
+	int was_frozen;
+	struct slab new;
+	unsigned long counters;
+	struct kmem_cache_node *n = NULL;
+	unsigned long flags;
+
+	stat(s, FREE_SLOWPATH);
+
+	if (kfence_free(head))
+		return;
+
+	if (kmem_cache_debug(s)) {
+		free_debug_processing(s, slab, head, tail, cnt, addr);
+		return;
+	}
+
+	do {
+		if (unlikely(n)) {
+			spin_unlock_irqrestore(&n->list_lock, flags);
+			n = NULL;
+		}
+		prior = slab->freelist;
+		counters = slab->counters;
+		set_freepointer(s, tail, prior);
+		new.counters = counters;
+		was_frozen = new.frozen;
+		new.inuse -= cnt;
+		if ((!new.inuse || !prior) && !was_frozen) {
+
+			if (kmem_cache_has_cpu_partial(s) && !prior) {
+
+				/*
+				 */
+				new.frozen = 1;
+
+			} else { /* Needs to be taken off a list */
+
+				n = get_node(s, slab_nid(slab));
+				/*
+				 */
+				spin_lock_irqsave(&n->list_lock, flags);
+
+			}
+		}
+
+	} while (!cmpxchg_double_slab(s, slab,
+		prior, counters,
+		head, new.counters,
+		"__slab_free"));
+
+	if (likely(!n)) {
+
+		if (likely(was_frozen)) {
+			/*
+			 */
+			stat(s, FREE_FROZEN);
+		} else if (new.frozen) {
+			/*
+			 */
+			put_cpu_partial(s, slab, 1);
+			stat(s, CPU_PARTIAL_FREE);
+		}
+
+		return;
+	}
+
+	if (unlikely(!new.inuse && n->nr_partial >= s->min_partial))
+		goto slab_empty;
+
+	/*
+	 */
+	if (!kmem_cache_has_cpu_partial(s) && unlikely(!prior)) {
+		remove_full(s, n, slab);
+		add_partial(n, slab, DEACTIVATE_TO_TAIL);
+		stat(s, FREE_ADD_PARTIAL);
+	}
+	spin_unlock_irqrestore(&n->list_lock, flags);
+	return;
+
+slab_empty:
+	if (prior) {
+		/*
+		 */
+		remove_partial(n, slab);
+		stat(s, FREE_REMOVE_PARTIAL);
+	} else {
+		/* Slab must be on the full list */
+		remove_full(s, n, slab);
+	}
+
+	spin_unlock_irqrestore(&n->list_lock, flags);
+	stat(s, FREE_SLAB);
+	discard_slab(s, slab);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of kmem_cache_free will reach __slab_free? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{Your justification}
+FINAL ANSWER -> YES
+
+The `kmem_cache_free` function, when not using RCU (i.e., the `else` branch), calls `__kmem_cache_free(b, c->size)`. In the Linux kernel's SLAB allocator implementation, `__kmem_cache_free` directly interacts with slab management logic, which internally invokes `__slab_free` to return freed objects to the slab cache. Since `__slab_free` is the core slab-freeing function and `kmem_cache_free` is part of the slab/SLUB/SLAB interface, it is semantically and functionally reasonable to expect this call path. The historical context and function roles align with this execution flow.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: kmem_cache_free
+
+Callee candidate: __slab_free
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of kmem_cache_free will reach __slab_free? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification**:
+`kmem_cache_free` is part of the SLAB memory allocator in the Linux kernel and is used to free an object from a specific slab cache. Internally, `kmem_cache_free` typically delegates the actual slab freeing logic to `__slab_free`, which handles the low-level details of returning the object to the appropriate slab. From a control-flow and functional perspective, it is semantically reasonable and expected that `kmem_cache_free` would invoke `__slab_free` as part of its execution path.
+
+**FINAL ANSWER -> YES**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - tcp_child_process
+          - tcp_rcv_state_process
+            - tcp_init_transfer
+            - tcp_v4_conn_request
+              - tcp_conn_request
+                - tcp_try_fastopen
+
+Caller: tcp_init_transfer
+Source code:
+void tcp_init_transfer(struct sock *sk, int bpf_op, struct sk_buff *skb)
+{
+	struct inet_connection_sock *icsk = inet_csk(sk);
+	struct tcp_sock *tp = tcp_sk(sk);
+
+	tcp_mtup_init(sk);
+	icsk->icsk_af_ops->rebuild_header(sk);
+	tcp_init_metrics(sk);
+
+	/* Initialize the congestion window to start the transfer.
+	 */
+	if (tp->total_retrans > 1 && tp->undo_marker)
+		tcp_snd_cwnd_set(tp, 1);
+	else
+		tcp_snd_cwnd_set(tp, tcp_init_cwnd(tp, __sk_dst_get(sk)));
+	tp->snd_cwnd_stamp = tcp_jiffies32;
+
+	bpf_skops_established(sk, bpf_op, skb);
+	/* Initialize congestion control unless BPF initialized it already: */
+	if (!icsk->icsk_ca_initialized)
+		tcp_init_congestion_control(sk);
+	tcp_init_buffer_space(sk);
+}
+
+
+Callee candidate: tcp_mtup_init
+Source code:
+void tcp_mtup_init(struct sock *sk)
+{
+	struct tcp_sock *tp = tcp_sk(sk);
+	struct inet_connection_sock *icsk = inet_csk(sk);
+	struct net *net = sock_net(sk);
+
+	icsk->icsk_mtup.enabled = READ_ONCE(net->ipv4.sysctl_tcp_mtu_probing) > 1;
+	icsk->icsk_mtup.search_high = tp->rx_opt.mss_clamp + sizeof(struct tcphdr) +
+			       icsk->icsk_af_ops->net_header_len;
+	icsk->icsk_mtup.search_low = tcp_mss_to_mtu(sk, READ_ONCE(net->ipv4.sysctl_tcp_base_mss));
+	icsk->icsk_mtup.probe_size = 0;
+	if (icsk->icsk_mtup.enabled)
+		icsk->icsk_mtup.probe_timestamp = tcp_jiffies32;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of tcp_init_transfer will reach tcp_mtup_init? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The function `tcp_init_transfer` explicitly calls `tcp_mtup_init` as its first operation, with no conditional checks preventing this call. Since `tcp_mtup_init` is directly invoked at the start of `tcp_init_transfer`, every execution of `tcp_init_transfer` will unconditionally reach `tcp_mtup_init`.}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: tcp_init_transfer
+
+Callee candidate: tcp_mtup_init
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of tcp_init_transfer will reach tcp_mtup_init? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+tcp_init_transfer is part of the TCP connection setup process, responsible for initializing the initial data transfer. tcp_mtup_init is used to initialize the Maximum Transmission Unit Path (PMTU) discovery mechanism. Functionally, PMTU discovery is essential for TCP to optimize data transmission and avoid fragmentation. Therefore, it is semantically and functionally reasonable for tcp_init_transfer to invoke tcp_mtup_init as part of setting up the connection parameters.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+
+Caller: ip_list_rcv
+Source code:
+void ip_list_rcv(struct list_head *head, struct packet_type *pt,
+		 struct net_device *orig_dev)
+{
+	struct net_device *curr_dev = NULL;
+	struct net *curr_net = NULL;
+	struct sk_buff *skb, *next;
+	struct list_head sublist;
+
+	INIT_LIST_HEAD(&sublist);
+	list_for_each_entry_safe(skb, next, head, list) {
+		struct net_device *dev = skb->dev;
+		struct net *net = dev_net(dev);
+
+		skb_list_del_init(skb);
+		skb = ip_rcv_core(skb, net);
+		if (skb == NULL)
+			continue;
+
+		if (curr_dev != dev || curr_net != net) {
+			/* dispatch old sublist */
+			if (!list_empty(&sublist))
+				ip_sublist_rcv(&sublist, curr_dev, curr_net);
+			/* start new sublist */
+			INIT_LIST_HEAD(&sublist);
+			curr_dev = dev;
+			curr_net = net;
+		}
+		list_add_tail(&skb->list, &sublist);
+	}
+	/* dispatch final sublist */
+	if (!list_empty(&sublist))
+		ip_sublist_rcv(&sublist, curr_dev, curr_net);
+}
+
+
+Callee candidate: ip_sublist_rcv
+Source code:
+static void ip_sublist_rcv(struct list_head *head, struct net_device *dev,
+			   struct net *net)
+{
+	NF_HOOK_LIST(NFPROTO_IPV4, NF_INET_PRE_ROUTING, net, NULL,
+		     head, dev, NULL, ip_rcv_finish);
+	ip_list_rcv_finish(net, NULL, head);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of ip_list_rcv will reach ip_sublist_rcv? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `ip_list_rcv` explicitly calls `ip_sublist_rcv` in two scenarios: (1) during iteration when the sublist is non-empty and device/network context changes, and (2) after processing all skbs to dispatch the final sublist. The code directly includes these calls, and the historical call graph confirms `ip_list_rcv` is part of a valid execution path. Since `ip_sublist_rcv` is a static helper called unconditionally when sublists are non-empty, the transition is guaranteed in valid execution flows.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: ip_list_rcv
+
+Callee candidate: ip_sublist_rcv
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of ip_list_rcv will reach ip_sublist_rcv? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In the Linux networking stack, `ip_list_rcv` is a function involved in receiving IP packets, typically as part of processing incoming network traffic. The function `ip_sublist_rcv` is not a standard function in the Linux kernel source, suggesting it may be a custom or renamed variant. However, assuming it is a logical derivative or specialized sub-function, it is plausible that `ip_list_rcv` could invoke `ip_sublist_rcv` for further processing of a subset of the packet list.
+
+From a security-enforcement standpoint, such a call would be semantically reasonable if the sub-function is designed to handle a specific subset of IP packets under controlled conditions. There is no inherent reason to disallow the transition based on security principles alone, provided that proper validation and sanitization are in place.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - tcp_child_process
+          - tcp_rcv_state_process
+            - tcp_v4_conn_request
+              - tcp_conn_request
+                - tcp_v4_route_req
+                  - security_inet_conn_request
+                    - selinux_inet_conn_request
+
+Caller: selinux_inet_conn_request
+Source code:
+static int selinux_inet_conn_request(const struct sock *sk, struct sk_buff *skb,
+				     struct request_sock *req)
+{
+	struct sk_security_struct *sksec = sk->sk_security;
+	int err;
+	u16 family = req->rsk_ops->family;
+	u32 connsid;
+	u32 peersid;
+
+	err = selinux_skb_peerlbl_sid(skb, family, &peersid);
+	if (err)
+		return err;
+	err = selinux_conn_sid(sksec->sid, peersid, &connsid);
+	if (err)
+		return err;
+	req->secid = connsid;
+	req->peer_secid = peersid;
+
+	return selinux_netlbl_inet_conn_request(req, family);
+}
+
+
+Callee candidate: selinux_netlbl_skbuff_getsid
+Source code:
+int selinux_netlbl_skbuff_getsid(struct sk_buff *skb,
+				 u16 family,
+				 u32 *type,
+				 u32 *sid)
+{
+	int rc;
+	struct netlbl_lsm_secattr secattr;
+
+	if (!netlbl_enabled()) {
+		*sid = SECSID_NULL;
+		return 0;
+	}
+
+	netlbl_secattr_init(&secattr);
+	rc = netlbl_skbuff_getattr(skb, family, &secattr);
+	if (rc == 0 && secattr.flags != NETLBL_SECATTR_NONE)
+		rc = selinux_netlbl_sidlookup_cached(skb, family,
+						     &secattr, sid);
+	else
+		*sid = SECSID_NULL;
+	*type = secattr.type;
+	netlbl_secattr_destroy(&secattr);
+
+	return rc;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of selinux_inet_conn_request will reach selinux_netlbl_skbuff_getsid? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `selinux_inet_conn_request` calls `selinux_skb_peerlbl_sid`, which is designed to derive a security identifier (SID) from the packet's peer label. The `selinux_skb_peerlbl_sid` function likely leverages `selinux_netlbl_skbuff_getsid` internally to extract the SID from the `skb` using network label (netlbl) mechanisms. Since `selinux_netlbl_skbuff_getsid` is a standard utility for retrieving SIDs from skbuffs in the SELinux netlbl framework, it is semantically and functionally reasonable to expect that `selinux_skb_peerlbl_sid` invokes it during execution. Thus, the call chain from `selinux_inet_conn_request` to `selinux_netlbl_skbuff_getsid` is valid.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: selinux_inet_conn_request
+
+Callee candidate: selinux_netlbl_skbuff_getsid
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of selinux_inet_conn_request will reach selinux_netlbl_skbuff_getsid? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+selinux_inet_conn_request is responsible for enforcing SELinux policies during the handling of incoming TCP connection requests. selinux_netlbl_skbuff_getsid is involved in retrieving the security identifier (SID) from network labels in skbuff (socket buffer) structures, typically used in conjunction with network labeling mechanisms like CIPSO or RIPSO. While both functions are part of SELinux's networking enforcement, selinux_inet_conn_request operates at the socket/connection layer, while selinux_netlbl_skbuff_getsid is specific to label extraction and is more relevant to packet-level label processing. There is no direct functional dependency between these two functions in the standard SELinux enforcement flow for connection requests.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- blk_update_request
+  - bio_endio
+
+Caller: bio_endio
+Source code:
+void bio_endio(struct bio *bio)
+{
+again:
+	if (!bio_remaining_done(bio))
+		return;
+	if (!bio_integrity_endio(bio))
+		return;
+
+	rq_qos_done_bio(bio);
+
+	if (bio->bi_bdev && bio_flagged(bio, BIO_TRACE_COMPLETION)) {
+		trace_block_bio_complete(bdev_get_queue(bio->bi_bdev), bio);
+		bio_clear_flag(bio, BIO_TRACE_COMPLETION);
+	}
+
+	/*
+	 */
+	if (bio->bi_end_io == bio_chain_endio) {
+		bio = __bio_chain_endio(bio);
+		goto again;
+	}
+
+	blk_throtl_bio_endio(bio);
+	/* release cgroup info */
+	bio_uninit(bio);
+	if (bio->bi_end_io)
+		bio->bi_end_io(bio);
+}
+
+
+Callee candidate: bio_put
+Source code:
+void bio_put(struct bio *bio)
+{
+	if (unlikely(bio_flagged(bio, BIO_REFFED))) {
+		BUG_ON(!atomic_read(&bio->__bi_cnt));
+		if (!atomic_dec_and_test(&bio->__bi_cnt))
+			return;
+	}
+
+	if ((bio->bi_opf & REQ_ALLOC_CACHE) && !WARN_ON_ONCE(in_interrupt())) {
+		struct bio_alloc_cache *cache;
+
+		bio_uninit(bio);
+		cache = per_cpu_ptr(bio->bi_pool->cache, get_cpu());
+		bio->bi_next = cache->free_list;
+		cache->free_list = bio;
+		if (++cache->nr > ALLOC_CACHE_MAX + ALLOC_CACHE_SLACK)
+			bio_alloc_cache_prune(cache, ALLOC_CACHE_SLACK);
+		put_cpu();
+	} else {
+		bio_free(bio);
+	}
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of bio_endio will reach bio_put? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `bio_endio` does not directly call `bio_put` in its code. Instead, it performs `bio_uninit` and invokes the `bi_end_io` callback. Whether `bio_put` is eventually called depends on the implementation of `bi_end_io`, which is not provided here. While typical I/O completion paths may involve `bio_put` via `bi_end_io`, the provided code does not explicitly establish this direct call chain. Thus, based solely on the given code, `bio_endio` does not semantically or functionally reach `bio_put`.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: bio_endio
+
+Callee candidate: bio_put
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of bio_endio will reach bio_put? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+In the Linux kernel, `bio_endio` is responsible for completing I/O operations on a `bio` structure, typically signaling that the I/O has finished and allowing the `bio` to be released. `bio_put` is the function that decrements the reference count of a `bio` and may ultimately free it when the count reaches zero. For proper resource management and to avoid memory leaks, it is semantically and functionally reasonable to expect that `bio_endio` will eventually lead to a call to `bio_put` to release the `bio` structure after I/O completion.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- kfree_skb_reason
+
+Caller: kfree_skb_reason
+Source code:
+None
+
+Callee candidate: __kfree_skb
+Source code:
+void __kfree_skb(struct sk_buff *skb)
+{
+	skb_release_all(skb);
+	kfree_skbmem(skb);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of kfree_skb_reason will reach __kfree_skb? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The function kfree_skb_reason is likely a wrapper or variant of kfree_skb that includes additional context (e.g., logging or tracking reasons for skb release). The __kfree_skb function is the core implementation for freeing skb memory. Given historical call-graph data and standard Linux kernel design patterns, it is reasonable to expect that kfree_skb_reason would invoke __kfree_skb to perform the actual memory deallocation after handling its specific logic.}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: kfree_skb_reason
+
+Callee candidate: __kfree_skb
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of kfree_skb_reason will reach __kfree_skb? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+kfree_skb_reason is a function used in the Linux kernel to free a socket buffer (skb), typically with an associated reason for the freeing, often for debugging or auditing purposes. It is likely a wrapper or helper function that may eventually call __kfree_skb, which is the core implementation for freeing an skb. For security enforcement, ensuring that skb freeing is correctly traced and controlled is important. If kfree_skb_reason is a legitimate and intended path to __kfree_skb, then it is reasonable from a security standpoint to expect the call to reach __kfree_skb.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __dev_queue_xmit
+  - __qdisc_run
+    - sch_direct_xmit
+      - dev_hard_start_xmit
+        - e1000_xmit_frame
+          - __skb_pad
+
+Caller: __skb_pad
+Source code:
+int __skb_pad(struct sk_buff *skb, int pad, bool free_on_error)
+{
+	int err;
+	int ntail;
+
+	/* If the skbuff is non linear tailroom is always zero.. */
+	if (!skb_cloned(skb) && skb_tailroom(skb) >= pad) {
+		memset(skb->data+skb->len, 0, pad);
+		return 0;
+	}
+
+	ntail = skb->data_len + pad - (skb->end - skb->tail);
+	if (likely(skb_cloned(skb) || ntail > 0)) {
+		err = pskb_expand_head(skb, 0, ntail, GFP_ATOMIC);
+		if (unlikely(err))
+			goto free_skb;
+	}
+
+	/* FIXME: The use of this function with non-linear skb's really needs
+	 */
+	err = skb_linearize(skb);
+	if (unlikely(err))
+		goto free_skb;
+
+	memset(skb->data + skb->len, 0, pad);
+	return 0;
+
+free_skb:
+	if (free_on_error)
+		kfree_skb(skb);
+	return err;
+}
+
+
+Callee candidate: pskb_expand_head
+Source code:
+int pskb_expand_head(struct sk_buff *skb, int nhead, int ntail,
+		     gfp_t gfp_mask)
+{
+	int i, osize = skb_end_offset(skb);
+	int size = osize + nhead + ntail;
+	long off;
+	u8 *data;
+
+	BUG_ON(nhead < 0);
+
+	BUG_ON(skb_shared(skb));
+
+	skb_zcopy_downgrade_managed(skb);
+
+	size = SKB_DATA_ALIGN(size);
+
+	if (skb_pfmemalloc(skb))
+		gfp_mask |= __GFP_MEMALLOC;
+	data = kmalloc_reserve(size + SKB_DATA_ALIGN(sizeof(struct skb_shared_info)),
+			       gfp_mask, NUMA_NO_NODE, NULL);
+	if (!data)
+		goto nodata;
+	size = SKB_WITH_OVERHEAD(ksize(data));
+
+	/* Copy only real data... and, alas, header. This should be
+	 */
+	memcpy(data + nhead, skb->head, skb_tail_pointer(skb) - skb->head);
+
+	memcpy((struct skb_shared_info *)(data + size),
+	       skb_shinfo(skb),
+	       offsetof(struct skb_shared_info, frags[skb_shinfo(skb)->nr_frags]));
+
+	/*
+	 */
+	if (skb_cloned(skb)) {
+		if (skb_orphan_frags(skb, gfp_mask))
+			goto nofrags;
+		if (skb_zcopy(skb))
+			refcount_inc(&skb_uarg(skb)->refcnt);
+		for (i = 0; i < skb_shinfo(skb)->nr_frags; i++)
+			skb_frag_ref(skb, i);
+
+		if (skb_has_frag_list(skb))
+			skb_clone_fraglist(skb);
+
+		skb_release_data(skb);
+	} else {
+		skb_free_head(skb);
+	}
+	off = (data + nhead) - skb->head;
+
+	skb->head     = data;
+	skb->head_frag = 0;
+	skb->data    += off;
+
+	skb_set_end_offset(skb, size);
+#ifdef NET_SKBUFF_DATA_USES_OFFSET
+	off           = nhead;
+#endif
+	skb->tail	      += off;
+	skb_headers_offset_update(skb, nhead);
+	skb->cloned   = 0;
+	skb->hdr_len  = 0;
+	skb->nohdr    = 0;
+	atomic_set(&skb_shinfo(skb)->dataref, 1);
+
+	skb_metadata_clear(skb);
+
+	/* It is not generally safe to change skb->truesize.
+	 */
+	if (!skb->sk || skb->destructor == sock_edemux)
+		skb->truesize += size - osize;
+
+	return 0;
+
+nofrags:
+	kfree(data);
+nodata:
+	return -ENOMEM;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __skb_pad will reach pskb_expand_head? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+In the provided code, `__skb_pad` calls `pskb_expand_head` when the skb lacks sufficient tailroom and cloning is involved or additional tail space is needed. The historical execution path shows `__skb_pad` being invoked by `e1000_xmit_frame` during skb padding. Given that the `e1000_xmit_frame` context involves skb manipulation where tailroom constraints are plausible (e.g., due to hardware-specific padding requirements), the conditions for `pskb_expand_head` execution (e.g., `skb_cloned(skb)` or `ntail > 0`) are semantically valid here. Thus, the call to `pskb_expand_head` is functionally reasonable.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __skb_pad
+
+Callee candidate: pskb_expand_head
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __skb_pad will reach pskb_expand_head? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification:**
+The `__skb_pad` function in the Linux kernel is used to pad a socket buffer (`skb`) to ensure a minimum headroom. If padding requires more space than is currently available in the `skb`, it may be necessary to reallocate the buffer with more headroom. The `pskb_expand_head` function is responsible for expanding the headroom of an `skb`, which can be invoked when the current allocation is insufficient. Therefore, it is semantically and functionally reasonable for `__skb_pad` to call `pskb_expand_head` when padding requires additional space.
+
+**FINAL ANSWER -> YES**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_newfstatat
+  - getname_flags
+    - kfree
+      - __kmem_cache_free
+- vfs_fstatat
+  - getname_flags
+    - kfree
+      - __kmem_cache_free
+
+Caller: __kmem_cache_free
+Source code:
+static void __kmem_cache_free(void *b, int size)
+{
+	if (size < PAGE_SIZE)
+		slob_free(b, size);
+	else
+		slob_free_pages(b, get_order(size));
+}
+
+
+Callee candidate: __slab_free
+Source code:
+static void __slab_free(struct kmem_cache *s, struct slab *slab,
+			void *head, void *tail, int cnt,
+			unsigned long addr)
+
+{
+	void *prior;
+	int was_frozen;
+	struct slab new;
+	unsigned long counters;
+	struct kmem_cache_node *n = NULL;
+	unsigned long flags;
+
+	stat(s, FREE_SLOWPATH);
+
+	if (kfence_free(head))
+		return;
+
+	if (kmem_cache_debug(s)) {
+		free_debug_processing(s, slab, head, tail, cnt, addr);
+		return;
+	}
+
+	do {
+		if (unlikely(n)) {
+			spin_unlock_irqrestore(&n->list_lock, flags);
+			n = NULL;
+		}
+		prior = slab->freelist;
+		counters = slab->counters;
+		set_freepointer(s, tail, prior);
+		new.counters = counters;
+		was_frozen = new.frozen;
+		new.inuse -= cnt;
+		if ((!new.inuse || !prior) && !was_frozen) {
+
+			if (kmem_cache_has_cpu_partial(s) && !prior) {
+
+				/*
+				 */
+				new.frozen = 1;
+
+			} else { /* Needs to be taken off a list */
+
+				n = get_node(s, slab_nid(slab));
+				/*
+				 */
+				spin_lock_irqsave(&n->list_lock, flags);
+
+			}
+		}
+
+	} while (!cmpxchg_double_slab(s, slab,
+		prior, counters,
+		head, new.counters,
+		"__slab_free"));
+
+	if (likely(!n)) {
+
+		if (likely(was_frozen)) {
+			/*
+			 */
+			stat(s, FREE_FROZEN);
+		} else if (new.frozen) {
+			/*
+			 */
+			put_cpu_partial(s, slab, 1);
+			stat(s, CPU_PARTIAL_FREE);
+		}
+
+		return;
+	}
+
+	if (unlikely(!new.inuse && n->nr_partial >= s->min_partial))
+		goto slab_empty;
+
+	/*
+	 */
+	if (!kmem_cache_has_cpu_partial(s) && unlikely(!prior)) {
+		remove_full(s, n, slab);
+		add_partial(n, slab, DEACTIVATE_TO_TAIL);
+		stat(s, FREE_ADD_PARTIAL);
+	}
+	spin_unlock_irqrestore(&n->list_lock, flags);
+	return;
+
+slab_empty:
+	if (prior) {
+		/*
+		 */
+		remove_partial(n, slab);
+		stat(s, FREE_REMOVE_PARTIAL);
+	} else {
+		/* Slab must be on the full list */
+		remove_full(s, n, slab);
+	}
+
+	spin_unlock_irqrestore(&n->list_lock, flags);
+	stat(s, FREE_SLAB);
+	discard_slab(s, slab);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __kmem_cache_free will reach __slab_free? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function __kmem_cache_free is part of the SLOB memory allocator, which is a simple, low-overhead allocator. It directly calls slob_free or slob_free_pages, which are internal to SLOB. The __slab_free function belongs to the SLAB allocator, a separate and more complex memory management system. SLOB and SLAB are distinct allocators with no direct interaction in the provided code. Since __kmem_cache_free does not invoke any SLAB-specific functions and the two allocators operate independently, there is no valid execution path from __kmem_cache_free to __slab_free under normal circumstances.
+FINAL ANSWER -> NO
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __kmem_cache_free
+
+Callee candidate: __slab_free
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __kmem_cache_free will reach __slab_free? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+**Justification:**
+The function `__kmem_cache_free` is part of the Linux kernel's slab memory management system and is responsible for freeing an object from a slab cache. The function `__slab_free` is a lower-level slab management function that handles the actual freeing of the object, possibly returning it to a partial or free slab. Since `__kmem_cache_free` serves as a higher-level abstraction for slab object freeing, it is semantically and functionally reasonable to expect that it calls `__slab_free` as part of its execution path.
+
+**FINAL ANSWER -> YES**
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __netif_receive_skb_list_core
+  - ip_list_rcv
+    - ip_sublist_rcv
+      - tcp_v4_rcv
+        - tcp_child_process
+          - tcp_rcv_state_process
+            - tcp_time_wait
+
+Caller: tcp_time_wait
+Source code:
+void tcp_time_wait(struct sock *sk, int state, int timeo)
+{
+	const struct inet_connection_sock *icsk = inet_csk(sk);
+	const struct tcp_sock *tp = tcp_sk(sk);
+	struct net *net = sock_net(sk);
+	struct inet_timewait_sock *tw;
+
+	tw = inet_twsk_alloc(sk, &net->ipv4.tcp_death_row, state);
+
+	if (tw) {
+		struct tcp_timewait_sock *tcptw = tcp_twsk((struct sock *)tw);
+		const int rto = (icsk->icsk_rto << 2) - (icsk->icsk_rto >> 1);
+		struct inet_sock *inet = inet_sk(sk);
+
+		tw->tw_transparent	= inet->transparent;
+		tw->tw_mark		= sk->sk_mark;
+		tw->tw_priority		= sk->sk_priority;
+		tw->tw_rcv_wscale	= tp->rx_opt.rcv_wscale;
+		tcptw->tw_rcv_nxt	= tp->rcv_nxt;
+		tcptw->tw_snd_nxt	= tp->snd_nxt;
+		tcptw->tw_rcv_wnd	= tcp_receive_window(tp);
+		tcptw->tw_ts_recent	= tp->rx_opt.ts_recent;
+		tcptw->tw_ts_recent_stamp = tp->rx_opt.ts_recent_stamp;
+		tcptw->tw_ts_offset	= tp->tsoffset;
+		tcptw->tw_last_oow_ack_time = 0;
+		tcptw->tw_tx_delay	= tp->tcp_tx_delay;
+#if IS_ENABLED(CONFIG_IPV6)
+		if (tw->tw_family == PF_INET6) {
+			struct ipv6_pinfo *np = inet6_sk(sk);
+
+			tw->tw_v6_daddr = sk->sk_v6_daddr;
+			tw->tw_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
+			tw->tw_tclass = np->tclass;
+			tw->tw_flowlabel = be32_to_cpu(np->flow_label & IPV6_FLOWLABEL_MASK);
+			tw->tw_txhash = sk->sk_txhash;
+			tw->tw_ipv6only = sk->sk_ipv6only;
+		}
+#endif
+
+#ifdef CONFIG_TCP_MD5SIG
+		/*
+		 */
+		do {
+			tcptw->tw_md5_key = NULL;
+			if (static_branch_unlikely(&tcp_md5_needed)) {
+				struct tcp_md5sig_key *key;
+
+				key = tp->af_specific->md5_lookup(sk, sk);
+				if (key) {
+					tcptw->tw_md5_key = kmemdup(key, sizeof(*key), GFP_ATOMIC);
+					BUG_ON(tcptw->tw_md5_key && !tcp_alloc_md5sig_pool());
+				}
+			}
+		} while (0);
+#endif
+
+		/* Get the TIME_WAIT timeout firing. */
+		if (timeo < rto)
+			timeo = rto;
+
+		if (state == TCP_TIME_WAIT)
+			timeo = TCP_TIMEWAIT_LEN;
+
+		/* tw_timer is pinned, so we need to make sure BH are disabled
+		 */
+		local_bh_disable();
+		inet_twsk_schedule(tw, timeo);
+		/* Linkage updates.
+		 */
+		inet_twsk_hashdance(tw, sk, net->ipv4.tcp_death_row.hashinfo);
+		local_bh_enable();
+	} else {
+		/* Sorry, if we're out of memory, just CLOSE this
+		 */
+		NET_INC_STATS(net, LINUX_MIB_TCPTIMEWAITOVERFLOW);
+	}
+
+	tcp_update_metrics(sk);
+	tcp_done(sk);
+}
+
+
+Callee candidate: inet_twsk_hashdance
+Source code:
+void inet_twsk_hashdance(struct inet_timewait_sock *tw, struct sock *sk,
+			   struct inet_hashinfo *hashinfo)
+{
+	const struct inet_sock *inet = inet_sk(sk);
+	const struct inet_connection_sock *icsk = inet_csk(sk);
+	struct inet_ehash_bucket *ehead = inet_ehash_bucket(hashinfo, sk->sk_hash);
+	spinlock_t *lock = inet_ehash_lockp(hashinfo, sk->sk_hash);
+	struct inet_bind_hashbucket *bhead, *bhead2;
+
+	/* Step 1: Put TW into bind hash. Original socket stays there too.
+	 */
+	bhead = &hashinfo->bhash[inet_bhashfn(twsk_net(tw), inet->inet_num,
+			hashinfo->bhash_size)];
+	bhead2 = inet_bhashfn_portaddr(hashinfo, sk, twsk_net(tw), inet->inet_num);
+
+	spin_lock(&bhead->lock);
+	spin_lock(&bhead2->lock);
+
+	tw->tw_tb = icsk->icsk_bind_hash;
+	WARN_ON(!icsk->icsk_bind_hash);
+	inet_twsk_add_bind_node(tw, &tw->tw_tb->owners);
+
+	tw->tw_tb2 = icsk->icsk_bind2_hash;
+	WARN_ON(!icsk->icsk_bind2_hash);
+	inet_twsk_add_bind2_node(tw, &tw->tw_tb2->deathrow);
+
+	spin_unlock(&bhead2->lock);
+	spin_unlock(&bhead->lock);
+
+	spin_lock(lock);
+
+	inet_twsk_add_node_tail_rcu(tw, &ehead->chain);
+
+	/* Step 3: Remove SK from hash chain */
+	if (__sk_nulls_del_node_init_rcu(sk))
+		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
+
+	spin_unlock(lock);
+
+	/* tw_refcnt is set to 3 because we have :
+	 */
+	refcount_set(&tw->tw_refcnt, 3);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of tcp_time_wait will reach inet_twsk_hashdance? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `tcp_time_wait` explicitly calls `inet_twsk_hashdance` as part of its logic to transition a socket into the TIME_WAIT state. The code shows that after allocating the `inet_timewait_sock` structure (`tw`), `inet_twsk_hashdance` is invoked unconditionally (provided `tw` is not null) to manage the socket's placement in hash tables and linkage. This aligns with the historical call graph and the function's purpose of handling TIME_WAIT state transitions.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: tcp_time_wait
+
+Callee candidate: inet_twsk_hashdance
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of tcp_time_wait will reach inet_twsk_hashdance? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+tcp_time_wait is a function in the Linux TCP stack that handles the TIME-WAIT state of TCP connections. The inet_twsk_hashdance function is involved in managing the hashing and bookkeeping of TIME-WAIT sockets in the system. Given that tcp_time_wait is responsible for handling TIME-WAIT state transitions and socket management, it is semantically and functionally reasonable for it to invoke or transition to inet_twsk_hashdance as part of socket tracking and resource cleanup.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- submit_bio
+  - submit_bio_noacct
+    - submit_bio_noacct_nocheck
+      - blk_mq_submit_bio
+        - __blk_mq_try_issue_directly
+          - scsi_queue_rq
+            - virtscsi_queuecommand
+
+Caller: virtscsi_queuecommand
+Source code:
+static int virtscsi_queuecommand(struct Scsi_Host *shost,
+				 struct scsi_cmnd *sc)
+{
+	struct virtio_scsi *vscsi = shost_priv(shost);
+	struct virtio_scsi_vq *req_vq = virtscsi_pick_vq_mq(vscsi, sc);
+	struct virtio_scsi_cmd *cmd = scsi_cmd_priv(sc);
+	bool kick;
+	unsigned long flags;
+	int req_size;
+	int ret;
+
+	BUG_ON(scsi_sg_count(sc) > shost->sg_tablesize);
+
+	/* TODO: check feature bit and fail if unsupported?  */
+	BUG_ON(sc->sc_data_direction == DMA_BIDIRECTIONAL);
+
+	dev_dbg(&sc->device->sdev_gendev,
+		"cmd %p CDB: %#02x\n", sc, sc->cmnd[0]);
+
+	cmd->sc = sc;
+
+	BUG_ON(sc->cmd_len > VIRTIO_SCSI_CDB_SIZE);
+
+#ifdef CONFIG_BLK_DEV_INTEGRITY
+	if (virtio_has_feature(vscsi->vdev, VIRTIO_SCSI_F_T10_PI)) {
+		virtio_scsi_init_hdr_pi(vscsi->vdev, &cmd->req.cmd_pi, sc);
+		memcpy(cmd->req.cmd_pi.cdb, sc->cmnd, sc->cmd_len);
+		req_size = sizeof(cmd->req.cmd_pi);
+	} else
+#endif
+	{
+		virtio_scsi_init_hdr(vscsi->vdev, &cmd->req.cmd, sc);
+		memcpy(cmd->req.cmd.cdb, sc->cmnd, sc->cmd_len);
+		req_size = sizeof(cmd->req.cmd);
+	}
+
+	kick = (sc->flags & SCMD_LAST) != 0;
+	ret = virtscsi_add_cmd(req_vq, cmd, req_size, sizeof(cmd->resp.cmd), kick);
+	if (ret == -EIO) {
+		cmd->resp.cmd.response = VIRTIO_SCSI_S_BAD_TARGET;
+		spin_lock_irqsave(&req_vq->vq_lock, flags);
+		virtscsi_complete_cmd(vscsi, cmd);
+		spin_unlock_irqrestore(&req_vq->vq_lock, flags);
+	} else if (ret != 0) {
+		return SCSI_MLQUEUE_HOST_BUSY;
+	}
+	return 0;
+}
+
+
+Callee candidate: virtscsi_complete_cmd
+Source code:
+static void virtscsi_complete_cmd(struct virtio_scsi *vscsi, void *buf)
+{
+	struct virtio_scsi_cmd *cmd = buf;
+	struct scsi_cmnd *sc = cmd->sc;
+	struct virtio_scsi_cmd_resp *resp = &cmd->resp.cmd;
+
+	dev_dbg(&sc->device->sdev_gendev,
+		"cmd %p response %u status %#02x sense_len %u\n",
+		sc, resp->response, resp->status, resp->sense_len);
+
+	sc->result = resp->status;
+	virtscsi_compute_resid(sc, virtio32_to_cpu(vscsi->vdev, resp->resid));
+	switch (resp->response) {
+	case VIRTIO_SCSI_S_OK:
+		set_host_byte(sc, DID_OK);
+		break;
+	case VIRTIO_SCSI_S_OVERRUN:
+		set_host_byte(sc, DID_ERROR);
+		break;
+	case VIRTIO_SCSI_S_ABORTED:
+		set_host_byte(sc, DID_ABORT);
+		break;
+	case VIRTIO_SCSI_S_BAD_TARGET:
+		set_host_byte(sc, DID_BAD_TARGET);
+		break;
+	case VIRTIO_SCSI_S_RESET:
+		set_host_byte(sc, DID_RESET);
+		break;
+	case VIRTIO_SCSI_S_BUSY:
+		set_host_byte(sc, DID_BUS_BUSY);
+		break;
+	case VIRTIO_SCSI_S_TRANSPORT_FAILURE:
+		set_host_byte(sc, DID_TRANSPORT_DISRUPTED);
+		break;
+	case VIRTIO_SCSI_S_TARGET_FAILURE:
+		set_host_byte(sc, DID_BAD_TARGET);
+		break;
+	case VIRTIO_SCSI_S_NEXUS_FAILURE:
+		set_status_byte(sc, SAM_STAT_RESERVATION_CONFLICT);
+		break;
+	default:
+		scmd_printk(KERN_WARNING, sc, "Unknown response %d",
+			    resp->response);
+		fallthrough;
+	case VIRTIO_SCSI_S_FAILURE:
+		set_host_byte(sc, DID_ERROR);
+		break;
+	}
+
+	WARN_ON(virtio32_to_cpu(vscsi->vdev, resp->sense_len) >
+		VIRTIO_SCSI_SENSE_SIZE);
+	if (resp->sense_len) {
+		memcpy(sc->sense_buffer, resp->sense,
+		       min_t(u32,
+			     virtio32_to_cpu(vscsi->vdev, resp->sense_len),
+			     VIRTIO_SCSI_SENSE_SIZE));
+	}
+
+	scsi_done(sc);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of virtscsi_queuecommand will reach virtscsi_complete_cmd? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+{The function virtscsi_queuecommand calls virtscsi_complete_cmd directly when virtscsi_add_cmd returns -EIO, indicating an I/O error. This creates a direct execution path from the caller (virtscsi_queuecommand) to the callee (virtscsi_complete_cmd) under error conditions. The historical call graph confirms that virtscsi_queuecommand is part of the SCSI command submission flow, and the code explicitly includes a conditional branch to virtscsi_complete_cmd.}
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: virtscsi_queuecommand
+
+Callee candidate: virtscsi_complete_cmd
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of virtscsi_queuecommand will reach virtscsi_complete_cmd? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+virtscsi_queuecommand is responsible for queuing SCSI commands for processing in the virtio SCSI driver. For the system to function correctly, there must be a corresponding completion handler, such as virtscsi_complete_cmd, to manage the completion of those commands. It is semantically and functionally reasonable to expect that a command queued by virtscsi_queuecommand would eventually be completed by virtscsi_complete_cmd, as this reflects the standard I/O request lifecycle in block and storage drivers.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- __x64_sys_newfstatat
+
+Caller: __x64_sys_newfstatat
+Source code:
+None
+
+Callee candidate: putname
+Source code:
+void putname(struct filename *name)
+{
+	if (IS_ERR(name))
+		return;
+
+	BUG_ON(name->refcnt <= 0);
+
+	if (--name->refcnt > 0)
+		return;
+
+	if (name->name != name->iname) {
+		__putname(name->name);
+		kfree(name);
+	} else
+		__putname(name);
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of __x64_sys_newfstatat will reach putname? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `__x64_sys_newfstatat` processes a file path argument, which is typically parsed into a `struct filename`. Kernel code handling filenames usually calls `putname` to decrement the reference count and free the structure when it is no longer needed, preventing memory leaks. Since `__x64_sys_newfstatat` involves file path operations, it is reasonable to expect `putname` is invoked to release the filename resource after processing.
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: __x64_sys_newfstatat
+
+Callee candidate: putname
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of __x64_sys_newfstatat will reach putname? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+The `__x64_sys_newfstatat` system call is used to retrieve file status information for a file referenced by a path, relative to a directory file descriptor. The `putname` function, in contrast, is used for parsing and validating pathnames, typically in the context of resolving pathnames for system calls like `open`, `execve`, or `stat`.
+
+While both functions may appear in the context of path-based system calls, `putname` is not typically involved in the execution path of `__x64_sys_newfstatat`. The `newfstatat` system call usually validates the file descriptor and path internally, but it does not require the full pathname parsing that `putname` provides, which is more specific to open or exec-type operations.
+
+FINAL ANSWER -> NO
+
+PROMPT (ctx: True):
+Please first read the above functions' source code.
+You are a Linux security expert analyzing kernel call-graph edges.
+Historical dynamic function call-graph (from prior executions):
+- neigh_resolve_output
+
+Caller: neigh_resolve_output
+Source code:
+int neigh_resolve_output(struct neighbour *neigh, struct sk_buff *skb)
+{
+	int rc = 0;
+
+	if (!neigh_event_send(neigh, skb)) {
+		int err;
+		struct net_device *dev = neigh->dev;
+		unsigned int seq;
+
+		if (dev->header_ops->cache && !READ_ONCE(neigh->hh.hh_len))
+			neigh_hh_init(neigh);
+
+		do {
+			__skb_pull(skb, skb_network_offset(skb));
+			seq = read_seqbegin(&neigh->ha_lock);
+			err = dev_hard_header(skb, dev, ntohs(skb->protocol),
+					      neigh->ha, NULL, skb->len);
+		} while (read_seqretry(&neigh->ha_lock, seq));
+
+		if (err >= 0)
+			rc = dev_queue_xmit(skb);
+		else
+			goto out_kfree_skb;
+	}
+out:
+	return rc;
+out_kfree_skb:
+	rc = -EINVAL;
+	kfree_skb(skb);
+	goto out;
+}
+
+
+Callee candidate: eth_header
+Source code:
+int eth_header(struct sk_buff *skb, struct net_device *dev,
+	       unsigned short type,
+	       const void *daddr, const void *saddr, unsigned int len)
+{
+	struct ethhdr *eth = skb_push(skb, ETH_HLEN);
+
+	if (type != ETH_P_802_3 && type != ETH_P_802_2)
+		eth->h_proto = htons(type);
+	else
+		eth->h_proto = htons(len);
+
+	/*
+	 */
+
+	if (!saddr)
+		saddr = dev->dev_addr;
+	memcpy(eth->h_source, saddr, ETH_ALEN);
+
+	if (daddr) {
+		memcpy(eth->h_dest, daddr, ETH_ALEN);
+		return ETH_HLEN;
+	}
+
+	/*
+	 */
+
+	if (dev->flags & (IFF_LOOPBACK | IFF_NOARP)) {
+		eth_zero_addr(eth->h_dest);
+		return ETH_HLEN;
+	}
+
+	return -ETH_HLEN;
+}
+
+
+
+From a security-enforcement standpoint, and given the historical execution contexts, please predict is it semantically and functionally reasonable to expect that execution of neigh_resolve_output will reach eth_header? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'
+
+RESPONSE:
+The function `neigh_resolve_output` invokes `dev_hard_header`, which is a function pointer from the `net_device`'s `header_ops`. For Ethernet devices, this pointer is typically assigned to `eth_header`. Since the code path in `neigh_resolve_output` explicitly calls `dev_hard_header`, and `eth_header` is a valid implementation of this interface for Ethernet, it is semantically and functionally reasonable to expect this call edge in execution contexts involving Ethernet devices.
+
+FINAL ANSWER -> YES
+
+PROMPT (ctx: False):
+You are a Linux security expert analyzing kernel call-graph edges.
+Caller: neigh_resolve_output
+
+Callee candidate: eth_header
+
+From a security-enforcement standpoint, please predict is it semantically and functionally reasonable to expect that execution of neigh_resolve_output will reach eth_header? Provide a concise justification, then a literal answer: '{Your justification}
+FINAL ANSWER -> YES/NO'\nothink
+
+RESPONSE:
+neigh_resolve_output is responsible for resolving the neighbor (ARP/ND) for an outgoing packet, and it typically calls dev_queue_xmit to send the packet. eth_header, on the other hand, is used to build Ethernet headers for packets. While both functions are part of the networking stack, eth_header is generally called earlier in the packet transmission process, such as by dev_hard_header, before neighbor resolution is needed. Therefore, it is not semantically or functionally reasonable to expect that neigh_resolve_output would reach eth_header in normal execution flow.
+
+FINAL ANSWER -> NO
+

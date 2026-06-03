@@ -1,0 +1,8 @@
+__audit_syscall_entry
+__audit_syscall_exit
+__cond_resched
+__x64_sys_newuname
+down_read
+ktime_get_coarse_real_ts64
+syscall_exit_work
+up_read

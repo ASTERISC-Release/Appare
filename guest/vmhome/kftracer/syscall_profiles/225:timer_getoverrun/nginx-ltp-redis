@@ -1,0 +1,8 @@
+__lock_timer
+__rcu_read_lock
+__rcu_read_unlock
+__x64_sys_timer_getoverrun
+_raw_spin_lock_irqsave
+_raw_spin_unlock_irqrestore
+preempt_count_add
+preempt_count_sub

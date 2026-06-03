@@ -1,0 +1,255 @@
+Subgraph has 253 nodes and 368 edges.
+Markdown tree representation:
+- __x64_sys_pipe2
+  - do_pipe2
+    - __do_pipe_flags
+      - create_pipe_files
+        - alloc_file_clone
+          - alloc_file
+            - alloc_empty_file
+              - __alloc_file
+                - __put_cred
+                - kmem_cache_alloc <profiled>
+                  - should_failslab <profiled>
+                - security_file_alloc
+                  - selinux_file_alloc_security
+                  - selinux_file_open
+                    - avc_has_perm <profiled>
+                    - avc_policy_seqno
+                    - inode_doinit_with_dentry
+                      - __get_free_pages
+                      - d_find_alias
+                      - d_find_any_alias <profiled>
+                      - dentry_path_raw
+                        - __dentry_path
+                          - copy_from_kernel_nofault
+                            - copy_from_kernel_nofault_allowed
+                      - free_pages <profiled>
+                      - inode_doinit_use_xattr
+                        - __kmalloc <profiled>
+                          - __kmalloc_large_node
+                            - dump_stack
+                              - dump_stack_lvl
+                                - __printk_cpu_sync_put
+                                - __printk_cpu_sync_try_get
+                                - __printk_cpu_sync_wait
+                                - dump_stack_print_info
+                                  - kexec_crash_loaded
+                                  - print_stop_info
+                                  - print_tainted
+                                  - print_worker_info
+                                    - kthread_probe_data
+                                    - strcmp
+                                  - strcspn
+                                - show_stack
+                                  - show_trace_log_lvl
+                                    - __kernel_text_address
+                                      - kernel_text_address
+                                        - __is_insn_slot_addr
+                                        - ct_nmi_enter
+                                          - ct_kernel_enter_state
+                                        - ct_nmi_exit
+                                          - ct_kernel_exit_state
+                                        - in_gate_area_no_mm
+                                        - is_module_text_address
+                                          - mod_find
+                                    - __show_regs
+                                      - show_iret_regs
+                                        - show_opcodes
+                                          - copy_from_user_nmi
+                                            - nmi_uaccess_okay
+                                    - __unwind_start
+                                      - get_stack_info
+                                        - get_stack_info_noinstr
+                                          - in_entry_stack
+                                            - get_cpu_entry_area
+                                          - in_task_stack
+                                      - unwind_next_frame
+                                        - __module_address
+                                        - rethook_find_ret_addr
+                                    - stack_type_name
+                                    - unwind_get_return_address_ptr
+                            - mod_node_page_state <profiled>
+                          - __kmem_cache_alloc_node <profiled>
+                        - kmalloc_trace <profiled>
+                        - security_context_to_sid_default
+                          - security_context_to_sid_core
+                            - ebitmap_destroy
+                            - kmemdup_nul
+                              - __kmalloc_node_track_caller <profiled>
+                            - kstrdup
+                              - strlen
+                            - sidtab_context_to_sid
+                              - context_compute_hash
+                                - ebitmap_hash
+                                - full_name_hash
+                              - context_to_sid
+                                - ebitmap_cmp
+                                  - bcmp
+                              - convert_context
+                                - context_struct_to_string
+                                  - mls_compute_context_len
+                                    - _find_first_bit
+                                    - _find_next_bit
+                                  - mls_sid_to_context
+                                    - strcpy
+                                  - sprintf
+                                - mls_convert_context
+                                  - ebitmap_set_bit
+                                  - symtab_search
+                                - mls_range_set
+                                  - ebitmap_cpy
+                                - policydb_context_isvalid
+                                  - ebitmap_get_bit
+                                  - mls_context_isvalid
+                                    - ebitmap_contains
+                                    - mls_range_isvalid
+                                - string_to_context_struct
+                                  - mls_context_to_sid
+                                    - sidtab_search_entry
+                                    - strchr
+                              - sidtab_do_lookup
+                      - security_genfs_sid
+                        - __security_genfs_sid
+                          - ocontext_to_sid
+                          - strncmp
+                      - security_transition_sid
+                        - security_compute_sid
+                          - avtab_search
+                          - avtab_search_node
+                          - avtab_search_node_next
+                          - mls_compute_sid
+                            - ebitmap_and
+                            - policydb_rangetr_search
+                          - policydb_filenametr_search
+                          - policydb_roletr_search
+                          - security_is_socket_class
+                          - sidtab_sid2str_get
+                            - kmemdup
+                            - sidtab_sid2str_put
+                  - selinux_file_receive
+                  - selinux_file_set_fowner
+              - __percpu_counter_sum
+              - percpu_counter_add_batch
+            - errseq_sample
+          - path_get
+            - mntget <profiled>
+        - alloc_file_pseudo
+          - d_alloc_pseudo
+            - __d_alloc <profiled>
+              - d_set_d_op <profiled>
+          - d_instantiate
+            - __d_instantiate
+            - security_d_instantiate
+              - selinux_d_instantiate
+          - ihold
+          - path_put
+        - alloc_pipe_info
+          - __init_waitqueue_head <profiled>
+          - free_uid <profiled>
+            - percpu_counter_destroy
+              - free_percpu
+                - pcpu_free_area
+                  - __bitmap_clear
+                  - _find_last_bit
+                  - pcpu_chunk_refresh_hint
+                - queue_work_on <profiled>
+                - vmalloc_to_page
+          - refcount_warn_saturate
+            - __warn_printk
+        - current_time <profiled>
+        - fput <profiled>
+          - llist_add_batch
+          - queue_delayed_work_on <profiled>
+            - __queue_delayed_work <profiled>
+        - free_pipe_info
+          - anon_pipe_buf_release
+          - generic_pipe_buf_release
+          - page_cache_pipe_buf_release
+          - relay_pipe_buf_release
+        - get_next_ino
+        - new_inode_pseudo
+          - alloc_inode
+            - bdev_alloc_inode
+            - bdev_free_inode
+              - bdi_put
+                - fprop_local_destroy_percpu
+              - blk_free_ext_minor
+            - debugfs_free_inode
+            - ext4_alloc_inode
+              - ext4_es_init_tree
+              - ext4_fc_init_inode
+              - ext4_init_pending_tree
+            - ext4_destroy_inode <profiled>
+              - __ext4_msg
+              - print_hex_dump
+                - hex_dump_to_buffer
+            - ext4_free_in_core_inode <profiled>
+            - fat_alloc_inode
+              - __init_rwsem
+            - fat_free_inode
+            - hugetlbfs_alloc_inode
+              - mpol_shared_policy_init
+                - mpol_new
+                - mpol_set_nodemask
+                  - __bitmap_and
+                  - __bitmap_weight
+                  - bitmap_fold
+                  - bitmap_onto
+                  - mpol_new_nodemask
+                  - mpol_new_preferred
+                - mpol_set_shared_policy
+                  - __mpol_dup
+                    - cpuset_mems_allowed
+                      - __bitmap_intersects
+                    - current_cpuset_is_being_rebound
+                    - mpol_rebind_default
+                    - mpol_rebind_nodemask
+                      - bitmap_remap
+                        - __find_nth_bit
+                    - mpol_rebind_preferred
+                  - rb_erase
+                  - rb_insert_color
+                  - rb_next
+                  - rb_prev
+            - hugetlbfs_destroy_inode
+              - mpol_free_shared_policy <profiled>
+                - rb_first
+            - hugetlbfs_free_inode
+            - inode_init_always
+              - security_inode_alloc
+                - integrity_inode_free <profiled>
+                - selinux_inode_alloc_security
+                - selinux_inode_free_security <profiled>
+                - selinux_inode_invalidate_secctx
+            - isofs_alloc_inode
+            - isofs_free_inode
+            - mqueue_alloc_inode
+            - mqueue_free_inode
+            - nfs_alloc_inode
+            - nfs_free_inode
+            - proc_alloc_inode
+            - proc_free_inode
+            - rpc_alloc_inode
+            - rpc_free_inode
+            - shmem_alloc_inode
+            - shmem_destroy_inode <profiled>
+            - shmem_free_in_core_inode
+            - sock_alloc_inode
+            - sock_free_inode <profiled>
+            - v9fs_alloc_inode
+            - v9fs_free_inode
+        - stream_open
+      - get_unused_fd_flags
+        - alloc_fd
+          - _find_next_zero_bit
+          - expand_files
+            - alloc_fdtable
+              - kvfree
+                - is_vmalloc_addr <profiled>
+            - finish_wait <profiled>
+            - init_wait_entry <profiled>
+            - prepare_to_wait_event <profiled>
+      - put_unused_fd
+    - _copy_to_user
+    - fd_install

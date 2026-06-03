@@ -1,0 +1,522 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d3" for="edge" attr.name="indirect" attr.type="boolean" />
+  <key id="d2" for="edge" attr.name="inferred" attr.type="boolean" />
+  <key id="d1" for="node" attr.name="has_indirect" attr.type="boolean" />
+  <key id="d0" for="node" attr.name="profiled" attr.type="boolean" />
+  <graph edgedefault="directed">
+    <node id="housekeeping_cpumask">
+      <data key="d0">True</data>
+    </node>
+    <node id="calc_wheel_index">
+      <data key="d0">True</data>
+    </node>
+    <node id="swake_up_one">
+      <data key="d0">True</data>
+    </node>
+    <node id="group_balance_cpu">
+      <data key="d0">True</data>
+    </node>
+    <node id="process_timeout">
+      <data key="d0">True</data>
+    </node>
+    <node id="update_curr_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="__x64_sys_times">
+      <data key="d0">True</data>
+    </node>
+    <node id="resched_curr">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="generic_smp_call_function_single_interrupt">
+      <data key="d0">True</data>
+    </node>
+    <node id="update_group_capacity">
+      <data key="d0">True</data>
+    </node>
+    <node id="__wake_up">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="cpus_share_cache">
+      <data key="d0">True</data>
+    </node>
+    <node id="select_task_rq_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="second_overflow">
+      <data key="d0">True</data>
+    </node>
+    <node id="sched_ttwu_pending">
+      <data key="d0">True</data>
+    </node>
+    <node id="migrate_task_rq_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="__flush_smp_call_function_queue">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="run_rebalance_domains">
+      <data key="d0">True</data>
+    </node>
+    <node id="default_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="set_task_rq_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="wake_up_process">
+      <data key="d0">True</data>
+    </node>
+    <node id="rebalance_domains">
+      <data key="d0">True</data>
+    </node>
+    <node id="autoremove_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="smp_call_function_single_async">
+      <data key="d0">True</data>
+    </node>
+    <node id="task_sched_runtime">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="enqueue_task_fair">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="attach_entity_load_avg">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="__msecs_to_jiffies">
+      <data key="d0">True</data>
+    </node>
+    <node id="kthread_is_per_cpu">
+      <data key="d0">True</data>
+    </node>
+    <node id="set_task_cpu">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="update_dl_rq_load_avg">
+      <data key="d0">True</data>
+    </node>
+    <node id="__sysvec_call_function_single">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="load_balance">
+      <data key="d0">True</data>
+    </node>
+    <node id="update_rt_rq_load_avg">
+      <data key="d0">True</data>
+    </node>
+    <node id="generic_exec_single">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="__note_gp_changes">
+      <data key="d0">True</data>
+    </node>
+    <node id="migrate_task_rq_dl" />
+    <node id="ttwu_do_activate" />
+    <node id="task_woken_dl" />
+    <node id="_find_next_bit" />
+    <node id="_find_first_bit" />
+    <node id="__blk_mq_complete_request_remote" />
+    <node id="__warn_printk" />
+    <node id="__wrmsr_safe_regs_on_cpu" />
+    <node id="acpi_ev_asynch_enable_gpe" />
+    <node id="do_drv_read" />
+    <node id="do_nothing" />
+    <node id="do_sync_core" />
+    <node id="llist_reverse_order" />
+    <node id="mce_disable_cmci" />
+    <node id="nfs3_nlm_alloc_call" />
+    <node id="nfs3_nlm_release_call" />
+    <node id="nfs4_open_release" />
+    <node id="nfs_async_rename_release" />
+    <node id="nfs_async_unlink_release" />
+    <node id="nfs_commit_release" />
+    <node id="nfs_pgio_release" />
+    <node id="nohz_csd_func" />
+    <node id="regmap_parse_32_le_inplace" />
+    <node id="trigger_card_free" />
+    <node id="acpi_ev_finish_gpe" />
+    <node id="cpu_freq_read_intel" />
+    <node id="cpu_freq_read_io" />
+    <node id="cmci_clear" />
+    <node id="get_nfs_open_context" />
+    <node id="put_nfs_open_context" />
+    <node id="nfs4_opendata_put" />
+    <node id="__put_cred" />
+    <node id="nfs_force_lookup_revalidate" />
+    <node id="up_read" />
+    <node id="nfs_direct_commit_complete" />
+    <node id="nfs_direct_read_completion" />
+    <node id="nfs_direct_write_completion" />
+    <node id="nfs_read_completion" />
+    <node id="put_device" />
+    <node id="__bitmap_and" />
+    <node id="__bitmap_subset" />
+    <node id="detach_tasks" />
+    <node id="need_active_balance" />
+    <node id="stop_one_cpu_nowait" />
+    <node id="can_migrate_task" />
+    <node id="cpu_stop_queue_work" />
+    <node id="__mce_disable_bank" />
+    <node id="__perf_event_exit_context" />
+    <node id="apply_microcode_local" />
+    <node id="flush_tlb_func" />
+    <node id="llist_add_batch" />
+    <node id="nfs4_delegreturn_release" />
+    <node id="nfs4_free_closedata" />
+    <node id="cmci_disable_bank" />
+    <node id="ctx_sched_out" />
+    <node id="__ctzsi2" />
+    <node id="apply_microcode_amd" />
+    <node id="apply_microcode_intel" />
+    <node id="nfs_refresh_inode" />
+    <node id="nfs_sb_deactive" />
+    <node id="nfs4_put_open_state" />
+    <node id="nfs4_put_state_owner" />
+    <node id="nfs_free_seqid" />
+    <node id="enqueue_entity" />
+    <node id="reweight_entity" />
+    <node id="update_load_avg" />
+    <node id="__update_stats_enqueue_sleeper" />
+    <node id="rb_insert_color" />
+    <node id="detach_entity_load_avg" />
+    <node id="aio_poll_wake" />
+    <node id="cwt_wakefn" />
+    <node id="ep_autoremove_wake_function" />
+    <node id="io_async_buf_func" />
+    <node id="io_poll_wake" />
+    <node id="iocg_wake_fn" />
+    <node id="kyber_domain_wake" />
+    <node id="p9_pollwake" />
+    <node id="unix_dgram_peer_wake_relay" />
+    <node id="wake_page_function" />
+    <node id="iocb_put" />
+    <node id="queue_work_on" />
+    <node id="io_req_task_queue" />
+    <node id="__io_req_task_work_add" />
+    <node id="io_pollfree_wake" />
+    <node id="sbitmap_del_wait_queue" />
+    <node id="wake_up_state" />
+    <node id="native_smp_send_reschedule" />
+    <edge source="group_balance_cpu" target="_find_first_bit">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="resched_curr" target="native_smp_send_reschedule">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="generic_smp_call_function_single_interrupt" target="__flush_smp_call_function_queue">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="update_group_capacity" target="__msecs_to_jiffies">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="update_group_capacity" target="_find_next_bit">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="autoremove_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="default_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="aio_poll_wake">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="cwt_wakefn">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="ep_autoremove_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_async_buf_func">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_poll_wake">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="iocg_wake_fn">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="kyber_domain_wake">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="p9_pollwake">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="unix_dgram_peer_wake_relay">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="wake_page_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="sched_ttwu_pending" target="set_task_cpu">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="sched_ttwu_pending" target="ttwu_do_activate">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="sched_ttwu_pending">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="__blk_mq_complete_request_remote">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="__warn_printk">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="__wrmsr_safe_regs_on_cpu">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="acpi_ev_asynch_enable_gpe">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="do_drv_read">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="do_nothing">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="do_sync_core">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="llist_reverse_order">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="mce_disable_cmci">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="nfs3_nlm_alloc_call">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="nfs3_nlm_release_call">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="nfs4_open_release">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="nfs_async_rename_release">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="nfs_async_unlink_release">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="nfs_commit_release">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="nfs_pgio_release">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="nohz_csd_func">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="regmap_parse_32_le_inplace">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__flush_smp_call_function_queue" target="trigger_card_free">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="run_rebalance_domains" target="rebalance_domains">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="rebalance_domains" target="__msecs_to_jiffies">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="rebalance_domains" target="load_balance">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="autoremove_wake_function" target="default_wake_function">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="task_sched_runtime" target="update_curr_fair">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="enqueue_task_fair" target="enqueue_entity">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="enqueue_task_fair" target="reweight_entity">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="enqueue_task_fair" target="update_load_avg">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="set_task_cpu" target="migrate_task_rq_fair">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="set_task_cpu" target="set_task_rq_fair">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="set_task_cpu" target="migrate_task_rq_dl">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__sysvec_call_function_single" target="generic_smp_call_function_single_interrupt">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="load_balance" target="group_balance_cpu">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="load_balance" target="update_group_capacity">
+      <data key="d3">False</data>
+    </edge>
+    <edge source="load_balance" target="__bitmap_and">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="load_balance" target="__bitmap_subset">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="load_balance" target="detach_tasks">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="load_balance" target="need_active_balance">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="load_balance" target="stop_one_cpu_nowait">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="generic_exec_single" target="__mce_disable_bank">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="generic_exec_single" target="__perf_event_exit_context">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="generic_exec_single" target="apply_microcode_local">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="generic_exec_single" target="flush_tlb_func">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="generic_exec_single" target="llist_add_batch">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="generic_exec_single" target="nfs4_delegreturn_release">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="generic_exec_single" target="nfs4_free_closedata">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="ttwu_do_activate" target="task_woken_dl">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="acpi_ev_asynch_enable_gpe" target="acpi_ev_finish_gpe">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="do_drv_read" target="cpu_freq_read_intel">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="do_drv_read" target="cpu_freq_read_io">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="mce_disable_cmci" target="cmci_clear">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs3_nlm_alloc_call" target="get_nfs_open_context">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs3_nlm_release_call" target="put_nfs_open_context">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs4_open_release" target="nfs4_opendata_put">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs_async_rename_release" target="__put_cred">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs_async_rename_release" target="nfs_force_lookup_revalidate">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs_async_unlink_release" target="up_read">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs_commit_release" target="nfs_direct_commit_complete">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs_pgio_release" target="nfs_direct_read_completion">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs_pgio_release" target="nfs_direct_write_completion">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs_pgio_release" target="nfs_read_completion">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="trigger_card_free" target="put_device">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="detach_tasks" target="can_migrate_task">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="stop_one_cpu_nowait" target="cpu_stop_queue_work">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__mce_disable_bank" target="cmci_disable_bank">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__perf_event_exit_context" target="ctx_sched_out">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="apply_microcode_local" target="__ctzsi2">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="apply_microcode_local" target="apply_microcode_amd">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="apply_microcode_local" target="apply_microcode_intel">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs4_delegreturn_release" target="nfs_refresh_inode">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs4_delegreturn_release" target="nfs_sb_deactive">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs4_free_closedata" target="nfs4_put_open_state">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs4_free_closedata" target="nfs4_put_state_owner">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="nfs4_free_closedata" target="nfs_free_seqid">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="enqueue_entity" target="__update_stats_enqueue_sleeper">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="enqueue_entity" target="rb_insert_color">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="update_load_avg" target="detach_entity_load_avg">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="iocb_put">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="queue_work_on">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="io_async_buf_func" target="io_req_task_queue">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="io_poll_wake" target="__io_req_task_work_add">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="io_poll_wake" target="io_pollfree_wake">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="kyber_domain_wake" target="sbitmap_del_wait_queue">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="wake_page_function" target="wake_up_state">
+      <data key="d2">True</data>
+    </edge>
+  </graph>
+</graphml>

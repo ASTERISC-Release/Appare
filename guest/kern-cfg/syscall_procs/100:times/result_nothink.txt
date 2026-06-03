@@ -1,0 +1,125 @@
+Subgraph has 123 nodes and 103 edges.
+Markdown tree representation:
+- housekeeping_cpumask <profiled>
+- calc_wheel_index <profiled>
+- swake_up_one <profiled>
+- process_timeout <profiled>
+- __x64_sys_times <profiled>
+- resched_curr <profiled>
+  - native_smp_send_reschedule
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - aio_poll_wake
+    - iocb_put
+    - queue_work_on
+  - cwt_wakefn
+  - ep_autoremove_wake_function
+  - io_async_buf_func
+    - io_req_task_queue
+  - io_poll_wake
+    - __io_req_task_work_add
+    - io_pollfree_wake
+  - iocg_wake_fn
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - p9_pollwake
+  - unix_dgram_peer_wake_relay
+  - wake_page_function
+    - wake_up_state
+- cpus_share_cache <profiled>
+- select_task_rq_fair <profiled>
+- second_overflow <profiled>
+- run_rebalance_domains <profiled>
+  - rebalance_domains <profiled>
+    - __msecs_to_jiffies <profiled>
+    - load_balance <profiled>
+      - group_balance_cpu <profiled>
+        - _find_first_bit
+      - update_group_capacity <profiled>
+        - _find_next_bit
+      - __bitmap_and
+      - __bitmap_subset
+      - detach_tasks
+        - can_migrate_task
+      - need_active_balance
+      - stop_one_cpu_nowait
+        - cpu_stop_queue_work
+- wake_up_process <profiled>
+- smp_call_function_single_async <profiled>
+- task_sched_runtime <profiled>
+  - update_curr_fair <profiled>
+- enqueue_task_fair <profiled>
+  - enqueue_entity
+    - __update_stats_enqueue_sleeper
+    - rb_insert_color
+  - reweight_entity
+  - update_load_avg
+    - detach_entity_load_avg
+- attach_entity_load_avg <profiled>
+- kthread_is_per_cpu <profiled>
+- update_dl_rq_load_avg <profiled>
+- __sysvec_call_function_single <profiled>
+  - generic_smp_call_function_single_interrupt <profiled>
+    - __flush_smp_call_function_queue <profiled>
+      - sched_ttwu_pending <profiled>
+        - set_task_cpu <profiled>
+          - migrate_task_rq_fair <profiled>
+          - set_task_rq_fair <profiled>
+          - migrate_task_rq_dl
+        - ttwu_do_activate
+          - task_woken_dl
+      - __blk_mq_complete_request_remote
+      - __warn_printk
+      - __wrmsr_safe_regs_on_cpu
+      - acpi_ev_asynch_enable_gpe
+        - acpi_ev_finish_gpe
+      - do_drv_read
+        - cpu_freq_read_intel
+        - cpu_freq_read_io
+      - do_nothing
+      - do_sync_core
+      - llist_reverse_order
+      - mce_disable_cmci
+        - cmci_clear
+      - nfs3_nlm_alloc_call
+        - get_nfs_open_context
+      - nfs3_nlm_release_call
+        - put_nfs_open_context
+      - nfs4_open_release
+        - nfs4_opendata_put
+      - nfs_async_rename_release
+        - __put_cred
+        - nfs_force_lookup_revalidate
+      - nfs_async_unlink_release
+        - up_read
+      - nfs_commit_release
+        - nfs_direct_commit_complete
+      - nfs_pgio_release
+        - nfs_direct_read_completion
+        - nfs_direct_write_completion
+        - nfs_read_completion
+      - nohz_csd_func
+      - regmap_parse_32_le_inplace
+      - trigger_card_free
+        - put_device
+- update_rt_rq_load_avg <profiled>
+- generic_exec_single <profiled>
+  - __mce_disable_bank
+    - cmci_disable_bank
+  - __perf_event_exit_context
+    - ctx_sched_out
+  - apply_microcode_local
+    - __ctzsi2
+    - apply_microcode_amd
+    - apply_microcode_intel
+  - flush_tlb_func
+  - llist_add_batch
+  - nfs4_delegreturn_release
+    - nfs_refresh_inode
+    - nfs_sb_deactive
+  - nfs4_free_closedata
+    - nfs4_put_open_state
+    - nfs4_put_state_owner
+    - nfs_free_seqid
+- __note_gp_changes <profiled>

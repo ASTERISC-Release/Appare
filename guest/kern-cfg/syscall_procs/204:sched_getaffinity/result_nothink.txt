@@ -1,0 +1,59 @@
+Subgraph has 57 nodes and 53 edges.
+Markdown tree representation:
+- bad_area_access_error <profiled>
+  - __bad_area_nosemaphore <profiled>
+    - kernelmode_fixup_or_oops <profiled>
+      - fixup_exception <profiled>
+        - search_exception_tables <profiled>
+          - search_module_extables
+      - force_sig_fault
+  - up_read <profiled>
+    - rwsem_mark_wake
+      - wake_q_add
+      - wake_q_add_safe
+- find_vma <profiled>
+  - mt_find
+    - mas_next_entry
+- __cond_resched <profiled>
+  - __schedule
+    - dequeue_task_dl
+    - dequeue_task_fair
+    - dequeue_task_rt
+    - finish_task_switch
+    - perf_event_task_sched_out
+    - pick_next_task_fair
+    - set_next_task_dl
+    - set_next_task_fair
+    - set_next_task_rt
+- select_task_rq_fair <profiled>
+  - _find_first_bit
+  - _find_next_and_bit
+- __x64_sys_sched_getaffinity <profiled>
+  - sched_getaffinity <profiled>
+    - find_task_by_vpid <profiled>
+    - security_task_getscheduler <profiled>
+      - selinux_task_getioprio <profiled>
+        - avc_has_perm <profiled>
+      - selinux_task_getscheduler <profiled>
+    - __bitmap_and
+  - __copy_overflow
+  - _copy_to_user
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - aio_poll_wake
+    - iocb_put
+    - queue_work_on
+  - cwt_wakefn
+  - i915_sw_fence_wake
+  - io_async_buf_func
+    - io_req_task_queue
+  - io_poll_wake
+    - io_pollfree_wake
+  - io_wake_function
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - p9_pollwake
+  - percpu_rwsem_wake_function
+  - wake_page_function
+    - wake_up_state

@@ -1,0 +1,216 @@
+Subgraph has 188 nodes and 198 edges.
+Markdown tree representation:
+- unmap_region <profiled>
+  - free_pgtables <profiled>
+    - free_pgd_range <profiled>
+      - free_p4d_range
+        - ___p4d_free_tlb
+        - free_pud_range
+        - p4d_clear_bad
+      - pgd_clear_bad
+    - unlink_anon_vmas <profiled>
+      - __put_anon_vma <profiled>
+        - down_write <profiled>
+          - __down_write_common
+        - up_write <profiled>
+          - rwsem_mark_wake
+            - wake_q_add
+            - wake_q_add_safe
+      - anon_vma_interval_tree_remove <profiled>
+        - __rb_erase_color
+          - __anon_vma_interval_tree_augment_rotate
+          - interval_augment_rotate
+          - interval_tree_augment_rotate
+          - vma_interval_tree_augment_rotate
+          - vma_res_itree_augment_rotate
+        - rb_next
+    - unlink_file_vma <profiled>
+      - vma_interval_tree_remove
+    - mas_find
+      - mas_next_entry
+      - mas_walk
+  - lru_add_drain <profiled>
+    - lru_add_drain_cpu <profiled>
+      - folio_batch_move_lru <profiled>
+        - lru_add_fn <profiled>
+          - __mod_node_page_state <profiled>
+          - __mod_zone_page_state <profiled>
+          - folio_mapping <profiled>
+        - release_pages <profiled>
+          - free_unref_page_list <profiled>
+            - free_pcppages_bulk
+              - __free_one_page
+          - mod_zone_page_state
+        - folio_activate_fn
+        - lru_deactivate_file_fn
+          - folio_mapped
+        - lru_deactivate_fn
+        - lru_lazyfree_fn
+        - lru_move_tail_fn
+  - tlb_finish_mmu <profiled>
+    - tlb_flush_mmu <profiled>
+      - free_pages_and_swap_cache <profiled>
+        - free_swap_cache <profiled>
+          - folio_free_swap
+            - delete_from_swap_cache
+            - pm_suspended_storage
+  - tlb_gather_mmu <profiled>
+  - unmap_vmas <profiled>
+    - unmap_page_range <profiled>
+      - zap_p4d_range
+        - pmd_clear_bad
+        - pud_clear_bad
+        - zap_pte_range
+    - __mmu_notifier_invalidate_range_end
+      - mn_itree_inv_end
+- __x64_sys_brk <profiled>
+  - do_brk_flags <profiled>
+    - anon_vma_interval_tree_remove <profiled>
+      - __rb_erase_color
+        - __anon_vma_interval_tree_augment_rotate
+        - interval_augment_rotate
+        - interval_tree_augment_rotate
+        - vma_interval_tree_augment_rotate
+        - vma_res_itree_augment_rotate
+      - rb_next
+    - down_write <profiled>
+      - __down_write_common
+    - perf_event_mmap <profiled>
+    - security_vm_enough_memory_mm <profiled>
+      - __vm_enough_memory <profiled>
+      - cap_vm_enough_memory <profiled>
+      - selinux_vm_enough_memory <profiled>
+    - up_write <profiled>
+      - rwsem_mark_wake
+        - wake_q_add
+        - wake_q_add_safe
+    - vm_area_alloc <profiled>
+      - kmem_cache_alloc <profiled>
+        - should_failslab <profiled>
+    - vm_area_free <profiled>
+    - mas_preallocate
+      - mas_alloc_nodes
+      - mas_destroy
+    - mas_store_gfp
+      - mas_nomem
+      - mas_wr_store_entry
+    - mas_store_prealloc
+    - percpu_counter_add_batch
+    - vm_get_page_prot
+  - down_write_killable <profiled>
+  - get_unmapped_area <profiled>
+    - security_mmap_addr <profiled>
+      - cap_mmap_addr <profiled>
+      - selinux_mmap_addr <profiled>
+        - avc_has_perm
+  - up_read <profiled>
+  - capable
+- flush_tlb_mm_range <profiled>
+  - flush_tlb_func <profiled>
+- cred_has_capability <profiled>
+- kmem_cache_alloc_bulk <profiled>
+  - kmem_cache_free_bulk <profiled>
+  - should_failslab <profiled>
+- vm_normal_page <profiled>
+  - print_bad_pte
+    - dump_page
+    - dump_stack
+    - linear_hugepage_index
+- page_remove_rmap <profiled>
+  - __mod_node_page_state <profiled>
+- cap_capable <profiled>
+- sync_mm_rss <profiled>
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - blk_mq_dispatch_wake
+    - blk_mq_run_hw_queue
+  - cwt_wakefn
+  - ep_autoremove_wake_function
+  - ep_poll_callback
+    - __pm_stay_awake
+  - i915_sw_fence_wake
+  - io_poll_wake
+    - __io_req_task_work_add
+    - io_pollfree_wake
+  - io_wqe_hash_wake
+    - io_wqe_activate_free_worker
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - pollwake
+  - receiver_wake_function
+  - synchronous_wake_function
+  - wake_page_function
+    - wake_up_state
+- native_flush_tlb_one_user <profiled>
+- may_expand_vm <profiled>
+- resched_curr <profiled>
+  - native_smp_send_reschedule
+    - __warn_printk
+- wake_up_process <profiled>
+- enqueue_task_fair <profiled>
+  - enqueue_entity
+    - reweight_entity
+    - update_load_avg
+      - attach_entity_load_avg
+      - detach_entity_load_avg
+- kthread_is_per_cpu <profiled>
+- cpus_share_cache <profiled>
+- flush_tlb_batched_pending <profiled>
+- free_pcp_prepare <profiled>
+- arch_get_unmapped_area_topdown <profiled>
+  - arch_get_unmapped_area
+    - find_vma
+      - mt_find
+    - vm_unmapped_area
+      - mas_empty_area
+      - mas_empty_area_rev
+  - get_mmap_base
+- kmem_cache_free <profiled>
+  - __slab_free <profiled>
+    - __free_slab
+      - check_object
+      - mod_node_page_state
+      - slab_pad_check
+    - cmpxchg_double_slab
+    - free_debug_processing
+- __cond_resched <profiled>
+  - __schedule
+    - __delayacct_blkio_start
+    - dequeue_task_dl
+    - dequeue_task_fair
+    - dequeue_task_rt
+    - enter_lazy_tlb
+    - finish_task_switch
+    - perf_event_task_sched_out
+    - pick_next_task_fair
+    - set_next_task_fair
+    - set_next_task_rt
+- ___slab_alloc <profiled>
+  - __cmpxchg_double_slab
+  - allocate_slab
+    - mod_node_page_state
+  - deactivate_slab
+    - __free_slab
+      - check_object
+      - slab_pad_check
+    - cmpxchg_double_slab
+    - slab_bug
+  - get_any_partial
+    - __cpuset_node_allowed
+    - __next_zones_zonelist
+    - get_partial_node
+      - alloc_debug_processing
+      - gfp_pfmemalloc_allowed
+    - mempolicy_slab_node
+  - slab_out_of_memory
+- free_unref_page_commit <profiled>
+  - free_pcppages_bulk
+    - __free_one_page
+- select_task_rq_fair <profiled>
+- downgrade_write <profiled>
+  - rwsem_mark_wake
+    - wake_q_add
+    - wake_q_add_safe
+- __tlb_remove_page_size <profiled>
+- process_timeout <profiled>

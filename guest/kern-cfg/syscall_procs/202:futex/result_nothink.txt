@@ -1,0 +1,99 @@
+Subgraph has 97 nodes and 91 edges.
+Markdown tree representation:
+- __note_gp_changes <profiled>
+- select_task_rq_fair <profiled>
+  - _find_first_bit
+  - _find_next_and_bit
+  - _find_next_bit
+- wake_up_q <profiled>
+- i_callback <profiled>
+  - sock_free_inode <profiled>
+  - autofs_evict_inode
+  - bdev_free_inode
+    - bdi_put
+    - free_percpu
+  - bm_evict_inode
+  - debugfs_free_inode
+  - efivarfs_evict_inode
+  - ext4_evict_inode
+    - __ext4_journal_stop
+    - __ext4_std_error
+    - __ext4_warning
+    - dquot_initialize
+    - ext4_clear_inode
+    - ext4_evict_ea_inode
+    - ext4_free_inode
+    - ext4_orphan_del
+    - ext4_truncate
+    - ext4_xattr_delete_inode
+    - ext4_xattr_inode_array_free
+    - is_bad_inode
+    - jbd2_journal_begin_ordered_truncate
+  - ext4_free_in_core_inode
+  - fat_free_inode
+  - hugetlbfs_evict_inode
+    - remove_inode_hugepages
+    - resv_map_release
+  - hugetlbfs_free_inode
+  - isofs_free_inode
+  - mqueue_evict_inode
+    - dec_rlimit_ucounts
+    - free_msg
+    - msg_get
+    - put_ipc_ns
+    - put_ucounts
+  - mqueue_free_inode
+  - nfs4_evict_inode
+    - nfs_inode_evict_delegation
+  - nfs_evict_inode
+  - nfs_free_inode
+  - nsfs_evict
+    - cgroupns_put
+    - ipcns_put
+    - mntns_put
+    - netns_put
+    - pidns_put
+    - timens_put
+    - utsns_put
+  - proc_free_inode
+  - shmem_destroy_inode
+    - mpol_free_shared_policy
+  - shmem_evict_inode
+    - __var_waitqueue
+    - finish_wait
+    - init_wait_var_entry
+    - prepare_to_wait_event
+    - shmem_undo_range
+  - shmem_free_in_core_inode
+  - v9fs_evict_inode
+    - filemap_fdatawrite
+  - v9fs_free_inode
+- kmem_cache_free <profiled>
+- __x64_sys_futex <profiled>
+  - do_futex <profiled>
+    - futex_wake <profiled>
+      - futex_hash <profiled>
+      - futex_wake_mark <profiled>
+        - __futex_unqueue <profiled>
+          - plist_del
+        - wake_q_add_safe <profiled>
+        - __warn_printk
+      - get_futex_key <profiled>
+    - futex_requeue
+      - fault_in_user_writeable
+      - get_pi_state
+      - put_pi_state
+      - refill_pi_state_cache
+      - wait_for_owner_exiting
+      - wake_up_state
+    - futex_wait
+      - __futex_queue
+      - futex_unqueue
+      - futex_wait_setup
+    - futex_wait_requeue_pi
+      - fixup_pi_owner
+      - futex_unqueue_pi
+      - futex_wait_queue
+    - futex_wake_op
+  - get_timespec64
+    - _copy_from_user

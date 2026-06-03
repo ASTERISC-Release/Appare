@@ -1,0 +1,24 @@
+Subgraph has 22 nodes and 27 edges.
+Markdown tree representation:
+- __x64_sys_sched_getaffinity
+  - __copy_overflow
+    - __warn_printk
+  - _copy_to_user
+  - sched_getaffinity
+    - __bitmap_and
+    - find_task_by_vpid
+      - idr_find
+        - radix_tree_lookup
+    - security_task_getscheduler
+      - cap_ptrace_traceme
+        - has_ns_capability
+      - cap_task_setscheduler
+        - ns_capable
+      - selinux_ptrace_traceme
+        - avc_has_perm <profiled>
+      - selinux_task_getioprio
+      - selinux_task_getpgid
+      - selinux_task_getscheduler
+      - selinux_task_getsid
+      - selinux_task_movememory
+      - selinux_task_setscheduler

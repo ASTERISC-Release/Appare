@@ -1,0 +1,60 @@
+Subgraph has 58 nodes and 63 edges.
+Markdown tree representation:
+- __x64_sys_rt_sigtimedwait
+  - _copy_from_user
+  - _copy_to_user
+  - do_sigtimedwait
+    - dequeue_signal
+      - __dequeue_signal
+        - dec_rlimit_put_ucounts
+      - __get_current_cr3_fast
+      - __static_call_return0
+      - cr4_read_shadow
+      - freezing_slow_path
+        - cgroup_freezing
+      - get_max_files <profiled>
+      - get_random_u64
+        - crng_make_state <profiled>
+          - extract_entropy
+            - blake2s_final
+            - blake2s_update
+      - hv_get_tsc_khz
+      - iommu_dma_opt_mapping_size
+        - iova_rcache_range
+      - kvm_get_tsc_khz
+      - native_calibrate_cpu
+        - native_calibrate_cpu_early
+          - cpu_khz_from_msr
+            - x86_match_cpu
+      - native_calibrate_tsc
+      - nfs_inc_attr_generation_counter
+      - nr_free_buffer_pages
+        - __next_zones_zonelist
+      - paddr_vmcoreinfo_note
+      - pc_nvram_get_size
+      - pc_nvram_initialize
+        - rtc_cmos_read
+        - rtc_cmos_write
+      - pc_nvram_set_checksum
+      - random_get_entropy_fallback
+        - acpi_pm_read
+        - acpi_pm_read_slow
+        - jiffies_read
+        - read_hpet
+        - read_tsc
+      - si_mem_available
+        - first_online_pgdat
+          - _find_first_bit
+        - next_zone
+          - _find_next_bit
+      - spec_ctrl_current
+      - vm_memory_committed
+        - __percpu_counter_sum
+      - vmware_get_tsc_khz
+      - x86_default_get_root_pointer
+      - xstate_get_guest_group_perm
+      - zstd_dctx_workspace_bound
+        - ZSTD_estimateDCtxSize
+    - schedule_hrtimeout_range
+    - wake_up_state <profiled>
+  - get_timespec64

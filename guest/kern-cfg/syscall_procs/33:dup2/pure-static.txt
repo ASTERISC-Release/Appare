@@ -1,0 +1,15 @@
+Subgraph has 13 nodes and 13 edges.
+Markdown tree representation:
+- __x64_sys_dup2
+  - ksys_dup3
+    - do_dup2
+    - expand_files <profiled>
+      - alloc_fdtable <profiled>
+        - kmalloc_trace <profiled>
+          - __kmem_cache_alloc_node <profiled>
+            - should_failslab <profiled>
+        - kvfree
+          - is_vmalloc_addr
+      - finish_wait
+      - init_wait_entry
+      - prepare_to_wait_event

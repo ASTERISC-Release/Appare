@@ -1,0 +1,14 @@
+__rcu_read_lock
+__rcu_read_unlock
+__x64_sys_iopl
+cap_capable
+capable
+cred_has_capability
+native_tss_update_io_bitmap
+ns_capable_common
+preempt_count_add
+preempt_count_sub
+security_capable
+security_locked_down
+selinux_capable
+task_update_io_bitmap

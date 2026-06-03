@@ -1,0 +1,14 @@
+__audit_syscall_entry
+__audit_syscall_exit
+__cond_resched
+__rcu_read_lock
+__rcu_read_unlock
+__x64_sys_msync
+down_read
+find_vma
+fput
+ktime_get_coarse_real_ts64
+noop_fsync
+syscall_exit_work
+up_read
+vfs_fsync_range

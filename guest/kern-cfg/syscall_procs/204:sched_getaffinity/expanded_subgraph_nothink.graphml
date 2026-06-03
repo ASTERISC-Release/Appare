@@ -1,0 +1,265 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d3" for="edge" attr.name="inferred" attr.type="boolean" />
+  <key id="d2" for="edge" attr.name="indirect" attr.type="boolean" />
+  <key id="d1" for="node" attr.name="has_indirect" attr.type="boolean" />
+  <key id="d0" for="node" attr.name="profiled" attr.type="boolean" />
+  <graph edgedefault="directed">
+    <node id="default_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="bad_area_access_error">
+      <data key="d0">True</data>
+    </node>
+    <node id="find_task_by_vpid">
+      <data key="d0">True</data>
+    </node>
+    <node id="fixup_exception">
+      <data key="d0">True</data>
+    </node>
+    <node id="up_read">
+      <data key="d0">True</data>
+    </node>
+    <node id="autoremove_wake_function">
+      <data key="d0">True</data>
+    </node>
+    <node id="sched_getaffinity">
+      <data key="d0">True</data>
+    </node>
+    <node id="find_vma">
+      <data key="d0">True</data>
+    </node>
+    <node id="__cond_resched">
+      <data key="d0">True</data>
+    </node>
+    <node id="select_task_rq_fair">
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_task_getscheduler">
+      <data key="d0">True</data>
+    </node>
+    <node id="selinux_task_getioprio">
+      <data key="d0">True</data>
+    </node>
+    <node id="security_task_getscheduler">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="kernelmode_fixup_or_oops">
+      <data key="d0">True</data>
+    </node>
+    <node id="__x64_sys_sched_getaffinity">
+      <data key="d0">True</data>
+    </node>
+    <node id="avc_has_perm">
+      <data key="d0">True</data>
+    </node>
+    <node id="search_exception_tables">
+      <data key="d0">True</data>
+    </node>
+    <node id="__bad_area_nosemaphore">
+      <data key="d0">True</data>
+    </node>
+    <node id="__wake_up">
+      <data key="d1">True</data>
+      <data key="d0">True</data>
+    </node>
+    <node id="search_module_extables" />
+    <node id="force_sig_fault" />
+    <node id="__bitmap_and" />
+    <node id="rwsem_mark_wake" />
+    <node id="wake_q_add" />
+    <node id="wake_q_add_safe" />
+    <node id="aio_poll_wake" />
+    <node id="cwt_wakefn" />
+    <node id="i915_sw_fence_wake" />
+    <node id="io_async_buf_func" />
+    <node id="io_poll_wake" />
+    <node id="io_wake_function" />
+    <node id="kyber_domain_wake" />
+    <node id="p9_pollwake" />
+    <node id="percpu_rwsem_wake_function" />
+    <node id="wake_page_function" />
+    <node id="iocb_put" />
+    <node id="queue_work_on" />
+    <node id="io_req_task_queue" />
+    <node id="io_pollfree_wake" />
+    <node id="sbitmap_del_wait_queue" />
+    <node id="wake_up_state" />
+    <node id="__copy_overflow" />
+    <node id="_copy_to_user" />
+    <node id="_find_first_bit" />
+    <node id="_find_next_and_bit" />
+    <node id="__schedule" />
+    <node id="dequeue_task_dl" />
+    <node id="dequeue_task_fair" />
+    <node id="dequeue_task_rt" />
+    <node id="finish_task_switch" />
+    <node id="perf_event_task_sched_out" />
+    <node id="pick_next_task_fair" />
+    <node id="set_next_task_dl" />
+    <node id="set_next_task_fair" />
+    <node id="set_next_task_rt" />
+    <node id="mt_find" />
+    <node id="mas_next_entry" />
+    <edge source="bad_area_access_error" target="__bad_area_nosemaphore">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="bad_area_access_error" target="up_read">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="fixup_exception" target="search_exception_tables">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="up_read" target="rwsem_mark_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="autoremove_wake_function" target="default_wake_function">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="sched_getaffinity" target="find_task_by_vpid">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="sched_getaffinity" target="security_task_getscheduler">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="sched_getaffinity" target="__bitmap_and">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="find_vma" target="mt_find">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__cond_resched" target="__schedule">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_first_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="select_task_rq_fair" target="_find_next_and_bit">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="selinux_task_getscheduler" target="avc_has_perm">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="selinux_task_getioprio" target="avc_has_perm">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="security_task_getscheduler" target="selinux_task_getioprio">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="security_task_getscheduler" target="selinux_task_getscheduler">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="kernelmode_fixup_or_oops" target="fixup_exception">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="kernelmode_fixup_or_oops" target="force_sig_fault">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__x64_sys_sched_getaffinity" target="sched_getaffinity">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__x64_sys_sched_getaffinity" target="__copy_overflow">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__x64_sys_sched_getaffinity" target="_copy_to_user">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="search_exception_tables" target="search_module_extables">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__bad_area_nosemaphore" target="kernelmode_fixup_or_oops">
+      <data key="d2">False</data>
+    </edge>
+    <edge source="__wake_up" target="autoremove_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="default_wake_function">
+      <data key="d2">True</data>
+    </edge>
+    <edge source="__wake_up" target="aio_poll_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="cwt_wakefn">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="i915_sw_fence_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_async_buf_func">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_poll_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="io_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="kyber_domain_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="p9_pollwake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="percpu_rwsem_wake_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__wake_up" target="wake_page_function">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="rwsem_mark_wake" target="wake_q_add">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="rwsem_mark_wake" target="wake_q_add_safe">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="iocb_put">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="aio_poll_wake" target="queue_work_on">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_async_buf_func" target="io_req_task_queue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="io_poll_wake" target="io_pollfree_wake">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="kyber_domain_wake" target="sbitmap_del_wait_queue">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="wake_page_function" target="wake_up_state">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="dequeue_task_dl">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="dequeue_task_fair">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="dequeue_task_rt">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="finish_task_switch">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="perf_event_task_sched_out">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="pick_next_task_fair">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="set_next_task_dl">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="set_next_task_fair">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="__schedule" target="set_next_task_rt">
+      <data key="d3">True</data>
+    </edge>
+    <edge source="mt_find" target="mas_next_entry">
+      <data key="d3">True</data>
+    </edge>
+  </graph>
+</graphml>

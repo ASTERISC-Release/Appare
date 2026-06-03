@@ -1,0 +1,14 @@
+__audit_syscall_entry
+__audit_syscall_exit
+__fdget_raw
+__fget_light
+__x64_sys_fcntl
+_raw_spin_lock
+_raw_spin_unlock
+file_has_perm
+ktime_get_coarse_real_ts64
+preempt_count_add
+preempt_count_sub
+security_file_fcntl
+selinux_file_fcntl
+syscall_exit_work

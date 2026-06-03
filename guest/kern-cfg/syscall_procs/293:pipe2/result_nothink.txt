@@ -1,0 +1,217 @@
+Subgraph has 214 nodes and 209 edges.
+Markdown tree representation:
+- timestamp_truncate <profiled>
+- find_vma <profiled>
+  - mt_find
+    - mas_next_entry
+- native_flush_tlb_one_user <profiled>
+- select_task_rq_fair <profiled>
+  - _find_next_and_bit
+- __wake_up <profiled>
+  - autoremove_wake_function <profiled>
+    - default_wake_function <profiled>
+  - aio_poll_wake
+    - iocb_put
+    - queue_work_on
+  - blk_mq_dispatch_wake
+    - blk_mq_run_hw_queue
+  - cwt_wakefn
+  - ep_autoremove_wake_function
+  - i915_sw_fence_wake
+  - io_async_buf_func
+    - io_req_task_queue
+  - io_poll_wake
+    - __io_req_task_work_add
+    - io_pollfree_wake
+  - kyber_domain_wake
+    - sbitmap_del_wait_queue
+  - percpu_rwsem_wake_function
+  - pollwake
+  - receiver_wake_function
+  - rq_qos_wake_function
+    - iolat_acquire_inflight
+- flush_tlb_mm_range <profiled>
+  - flush_tlb_func <profiled>
+- __cond_resched <profiled>
+  - __schedule
+    - balance_fair
+    - dequeue_task_fair
+    - finish_task_switch
+    - pick_next_task_fair
+    - put_prev_task_dl
+    - put_prev_task_fair
+    - set_next_task_dl
+- should_fail_alloc_page <profiled>
+- __get_vma_policy <profiled>
+- __x64_sys_pipe2 <profiled>
+  - do_pipe2 <profiled>
+    - __do_pipe_flags <profiled>
+      - create_pipe_files <profiled>
+        - alloc_file_clone <profiled>
+          - alloc_file <profiled>
+            - alloc_empty_file <profiled>
+              - __alloc_file <profiled>
+                - kmem_cache_alloc <profiled>
+                  - should_failslab <profiled>
+                - security_file_alloc <profiled>
+                  - selinux_file_alloc_security <profiled>
+                  - selinux_file_receive
+                    - avc_has_perm
+              - __percpu_counter_sum
+              - percpu_counter_add_batch
+            - errseq_sample
+          - path_get <profiled>
+            - mntget <profiled>
+        - alloc_file_pseudo <profiled>
+          - d_alloc_pseudo <profiled>
+            - __d_alloc <profiled>
+              - __kmalloc <profiled>
+                - __kmem_cache_alloc_node <profiled>
+              - d_set_d_op <profiled>
+          - d_instantiate <profiled>
+            - __d_instantiate <profiled>
+            - security_d_instantiate <profiled>
+              - selinux_d_instantiate <profiled>
+                - inode_doinit_with_dentry <profiled>
+                  - d_find_alias
+                  - d_find_any_alias
+                  - inode_doinit_use_xattr
+                    - security_context_to_sid_default
+                  - security_genfs_sid
+                    - __security_genfs_sid
+                  - security_transition_sid
+                    - security_compute_sid
+          - ihold
+          - path_put
+          - strlen
+        - alloc_pipe_info <profiled>
+          - __init_waitqueue_head <profiled>
+          - kmalloc_trace <profiled>
+          - free_uid
+        - current_time <profiled>
+          - __warn_printk
+        - get_next_ino <profiled>
+        - new_inode_pseudo <profiled>
+          - alloc_inode <profiled>
+            - inode_init_always <profiled>
+              - __init_rwsem <profiled>
+              - security_inode_alloc <profiled>
+                - selinux_inode_alloc_security <profiled>
+            - isofs_alloc_inode
+            - proc_free_inode
+            - sock_free_inode
+        - stream_open <profiled>
+        - free_pipe_info
+          - anon_pipe_buf_release
+          - generic_pipe_buf_release
+          - page_cache_pipe_buf_release
+      - get_unused_fd_flags <profiled>
+        - alloc_fd <profiled>
+          - expand_files <profiled>
+            - alloc_fdtable
+            - finish_wait
+            - init_wait_entry
+            - prepare_to_wait_event
+          - _find_next_zero_bit
+      - put_unused_fd
+    - fd_install <profiled>
+    - _copy_to_user
+- policy_nodemask <profiled>
+- __alloc_pages <profiled>
+  - get_page_from_freelist <profiled>
+    - __next_zones_zonelist
+    - rmqueue
+      - rmqueue_pcplist
+      - wakeup_kswapd
+    - zone_watermark_ok
+  - __alloc_pages_slowpath
+    - __alloc_pages_direct_compact
+    - compaction_zonelist_suitable
+    - try_to_free_pages
+    - wake_all_kswapds
+    - warn_alloc
+    - zone_reclaimable_pages
+- kmalloc_slab <profiled>
+- handle_mm_fault <profiled>
+  - __handle_mm_fault <profiled>
+    - do_wp_page <profiled>
+      - vm_normal_page <profiled>
+        - print_bad_pte
+          - dump_page
+          - dump_stack
+      - wp_page_copy <profiled>
+        - free_swap_cache <profiled>
+          - folio_free_swap
+            - delete_from_swap_cache
+            - pm_suspended_storage
+          - folio_mapped
+        - lru_cache_add_inactive_or_unevictable <profiled>
+          - folio_add_lru_vma <profiled>
+            - folio_add_lru <profiled>
+              - folio_batch_move_lru
+                - lru_add_fn
+                - lru_deactivate_fn
+                - lru_move_tail_fn
+        - page_add_new_anon_rmap <profiled>
+          - __mod_node_page_state <profiled>
+          - __page_set_anon_rmap <profiled>
+            - linear_hugepage_index
+        - page_remove_rmap <profiled>
+        - ptep_clear_flush <profiled>
+        - vma_alloc_folio <profiled>
+          - __folio_alloc <profiled>
+          - alloc_page_interleave
+          - shm_get_policy
+        - __anon_vma_prepare
+          - down_write
+          - find_mergeable_anon_vma
+          - up_write
+        - __delayacct_wpcopy_end
+        - __delayacct_wpcopy_start
+        - __mmu_notifier_invalidate_range
+        - __mmu_notifier_invalidate_range_end
+          - mn_itree_inv_end
+      - lru_add_drain
+        - lru_add_drain_cpu
+      - page_move_anon_rmap
+      - wp_page_shared
+        - ext4_page_mkwrite
+        - fault_dirty_shared_page
+        - filemap_page_mkwrite
+        - kernfs_vma_page_mkwrite
+        - nfs_vm_page_mkwrite
+        - v9fs_vm_page_mkwrite
+    - __p4d_alloc
+    - __pmd_alloc
+    - __pud_alloc
+    - do_anonymous_page
+      - __pte_alloc
+    - do_swap_page
+      - __swap_count
+      - get_shadow_from_swap_cache
+      - get_swap_device
+      - migration_entry_wait
+      - page_add_anon_rmap
+      - swap_cache_get_folio
+      - swap_free
+      - swap_readpage
+      - swapin_readahead
+      - workingset_refault
+  - hugetlb_fault
+    - __vma_reservation_common
+    - huge_pte_alloc
+    - hugetlb_no_page
+    - hugetlb_wp
+    - migration_entry_wait_huge
+- kmem_cache_alloc_lru <profiled>
+  - ___slab_alloc <profiled>
+    - allocate_slab
+      - mod_node_page_state
+    - deactivate_slab
+      - __free_slab
+      - cmpxchg_double_slab
+    - get_partial_node
+    - gfp_pfmemalloc_allowed
+    - slab_out_of_memory
+  - should_failslab <profiled>
+- up_read <profiled>
